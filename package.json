@@ -1,0 +1,22 @@
+{
+  "name": "setup-sda",
+  "version": "1.0.0",
+  "description": "Minimalist setup scripts for the JavaScript library simple-data-analysis.",
+  "main": "setup-sda.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "simple-data-analysis": "simple-data-analysis.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nshiab/setup-sda.git"
+  },
+  "author": "nael.shiab@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nshiab/setup-sda/issues"
+  },
+  "homepage": "https://github.com/nshiab/setup-sda#readme"
+}
