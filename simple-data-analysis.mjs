@@ -1,11 +1,19 @@
 #!/usr/bin/env node
 
 import { execSync } from "node:child_process";
-import { existsSync, writeFileSync } from "fs";
+import { mkdirSync, readdirSync, writeFileSync } from "node:fs";
+import process from "node:process";
 
-console.log("\nStarting sda setup for NodeJS...");
+console.log("\nStarting sda setup...");
 
-const indexContent = `import { SimpleDB } from "simple-data-analysis";
+const files = readdirSync(".");
+if (files.length > 0) {
+  throw new Error(
+    "The folder is not empty. Please start over in an empty folder."
+  );
+}
+
+let mainContent = `import { SimpleDB } from "simple-data-analysis";
 import { prettyDuration } from "journalism";
 
 const start = Date.now();
@@ -36,128 +44,180 @@ const tsconfigContent = `{
 }
 `;
 
-const args = process.argv.slice(2);
+console.log("\n1 - Checking runtime and options...");
 
-const runtime = args.includes("--bun") ? "bun" : "nodejs";
-let language = args.includes("--js") ? "js" : "ts";
-const force = args.includes("--force");
-
-if (existsSync("package.json") && force === false) {
-  console.log(
-    "\n/!\\ There is already a package.json here. Not doing the setup."
-  );
-  console.log(
-    "/!\\ Start over in a new folder or pass the option --force to overwrite files."
-  );
-  console.log("/!\\ Bye bye!\n");
-  process.exit(1);
+let runtime;
+const userAgent = navigator.userAgent.toLocaleLowerCase();
+if (userAgent.includes("bun")) {
+  runtime = "bun";
+} else if (userAgent.includes("deno")) {
+  runtime = "deno";
+} else if (userAgent.includes("node")) {
+  runtime = "nodejs";
 } else {
-  console.log("\n1 - Checking options...");
+  throw new Error("Unknown runtime.");
+}
 
-  if (runtime === "bun") {
-    console.log("    => Setting things up for Bun.");
-    if (language === "js") {
-      console.log("    => Setting things up for JavaScript.");
+let language = args.includes("--js") ? "js" : "ts";
+
+if (runtime === "bun") {
+  console.log("    => Setting things up for Bun.");
+  if (language === "js") {
+    console.log("    => Setting things up for JavaScript.");
+  } else {
+    console.log("    => Setting things up for TypeScript.");
+  }
+} else if (runtime === "deno") {
+  console.log("    => Setting things up for Deno.");
+  if (language === "ts") {
+    console.log("    => Setting things up for TypeScript.");
+  } else {
+    console.log("    => Setting things up for JavaScript.");
+    language = "js";
+  }
+} else {
+  console.log("    => Setting things up for Node.js.");
+  if (language === "ts") {
+    const nodeVersion = process.version
+      .split(".")
+      .map((d) => parseInt(d.replace("v", "")));
+    if (nodeVersion[0] >= 22 && nodeVersion[1] >= 6) {
+      console.log(
+        "    => Node.js version is >= 22.6.0. Setting things up for TypeScript."
+      );
     } else {
-      console.log("    => Setting things up for TypeScript.");
+      console.log(
+        "    => Node.js version is < 22.6.0. Setting things up for JavaScript."
+      );
+      language = "js";
     }
   } else {
-    console.log("    => Setting things up for Node.js.");
-    if (language === "ts") {
-      const nodeVersion = process.version
-        .split(".")
-        .map((d) => parseInt(d.replace("v", "")));
-      if (nodeVersion[0] >= 22 && nodeVersion[1] >= 6) {
-        console.log(
-          "    => Node.js version is >= 22.6.0. Setting things up for TypeScript."
-        );
-      } else {
-        console.log(
-          "    => Node.js version is < 22.6.0. Setting things up for JavaScript."
-        );
-        language = "js";
-      }
-    } else {
-      console.log("    => Setting things up for JavaScript.");
-    }
+    console.log("    => Setting things up for JavaScript.");
   }
-  if (force) {
-    console.log("    => Option force is true. Files will be overwritten.");
-  }
+}
 
-  console.log("\n2 - Creating relevant files...");
+console.log("\n2 - Creating relevant files...");
+
+if (runtime === "bun" || runtime === "nodejs") {
   const packageJson = {
     type: "module",
   };
   if (runtime === "bun") {
     if (language === "ts") {
       packageJson.scripts = {
-        sda: "bun --watch index.ts",
+        sda: "bun --watch main.ts",
       };
     } else {
       packageJson.scripts = {
-        sda: "bun --watch index.js",
+        sda: "bun --watch main.js",
       };
     }
   } else {
     if (language === "ts") {
       packageJson.scripts = {
-        sda: "node --experimental-strip-types --no-warnings --watch index.ts",
+        sda: "node --experimental-strip-types --no-warnings --watch main.ts",
       };
     } else {
       packageJson.scripts = {
-        sda: "node --no-warnings --watch index.js",
+        sda: "node --no-warnings --watch main.js",
       };
     }
   }
   packageJson.scripts.clean = "rm -rf .sda-cache && rm -rf .temp";
   writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
   console.log("    => package.json has been created.");
-
-  if (runtime === "nodejs" && language === "ts") {
-    writeFileSync("tsconfig.json", tsconfigContent);
-    console.log("    => tsconfig.json has been created.");
-  }
-
-  writeFileSync(".gitignore", "node_modules\n.temp\n.sda-cache");
-  console.log("    => .gitignore has been created.");
-
-  if (language === "ts") {
-    writeFileSync("index.ts", indexContent);
-    console.log("    => index.ts has been created.");
-  } else {
-    writeFileSync("index.js", indexContent);
-    console.log("    => index.js has been created.");
-  }
-
-  if (runtime === "nodejs") {
-    console.log("\n3 - Installing libraries with npm...");
-    execSync("npm i simple-data-analysis --silent", {
-      stdio: "ignore",
-    });
-    console.log("    => simple-data-analysis has been installed.");
-    execSync("npm i journalism --silent", {
-      stdio: "ignore",
-    });
-    console.log("    => journalism has been installed.");
-  } else {
-    console.log("\n3 - Installing libraries with Bun...");
-    execSync("bun add simple-data-analysis", {
-      stdio: "ignore",
-    });
-    console.log("    => simple-data-analysis has been installed.");
-    execSync("bun add journalism", {
-      stdio: "ignore",
-    });
-    console.log("    => journalism has been installed.");
-  }
-
-  console.log("\nSetup is done!");
-  if (language === "ts") {
-    console.log("    => Run 'npm run sda' to watch index.ts.");
-  } else {
-    console.log("    => Run 'npm run sda' to watch index.js.");
-  }
-
-  console.log("    => Have fun. ^_^\n");
+} else if (runtime === "deno") {
+  const denoConfig = {
+    tasks: {
+      sda: "deno run --node-modules-dir=auto -A --watch main.ts",
+      clean: "rm -rf .sda-cache && rm -rf .temp",
+    },
+    nodeModulesDir: "auto",
+  };
+  writeFileSync("deno.json", JSON.stringify(denoConfig, null, 2));
+  console.log("    => deno.json has been created.");
 }
+
+if (runtime === "nodejs" && language === "ts") {
+  writeFileSync("tsconfig.json", tsconfigContent);
+  console.log("    => tsconfig.json has been created.");
+}
+
+writeFileSync(".gitignore", "node_modules\n.temp\n.sda-cache");
+console.log("    => .gitignore has been created.");
+
+if (runtime === "deno") {
+  // NEED TO DO SAME THING FOR JOURNALISM
+  mainContent = mainContent.replace(
+    `import { SimpleDB } from "simple-data-analysis";`,
+    `import { SimpleDB } from "@nshiab/simple-data-analysis";`
+  );
+}
+mkdirSync("src");
+if (language === "ts") {
+  writeFileSync("src/main.ts", mainContent);
+  console.log("    => src/main.ts has been created.");
+} else {
+  writeFileSync("main.js", mainContent);
+  console.log("    => src/main.js has been created.");
+}
+
+if (runtime === "nodejs") {
+  console.log("\n3 - Installing libraries with NPM...");
+  execSync("npm i simple-data-analysis --silent", {
+    stdio: "ignore",
+  });
+  console.log("    => simple-data-analysis has been installed.");
+  execSync("npm i journalism --silent", {
+    stdio: "ignore",
+  });
+  console.log("    => journalism has been installed.");
+} else if (runtime === "bun") {
+  console.log("\n3 - Installing libraries with Bun from NPM...");
+  execSync("bun add simple-data-analysis", {
+    stdio: "ignore",
+  });
+  console.log("    => simple-data-analysis has been installed.");
+  execSync("bun add journalism", {
+    stdio: "ignore",
+  });
+  console.log("    => journalism has been installed.");
+} else if (runtime === "deno") {
+  console.log("\n3 - Installing libraries with Deno from JSR...");
+  execSync(
+    "deno install --node-modules-dir=auto --allow-scripts=npm:duckdb jsr:@nshiab/simple-data-analysis",
+    {
+      stdio: "ignore",
+    }
+  );
+  console.log("    => simple-data-analysis has been installed.");
+  // NEEDS TO BE UPDATED. JOURNALISM ON JSR. NEED TO UPDATE IMPORTS TOO.
+  execSync("deno install --node-modules-dir=auto npm:journalism", {
+    stdio: "ignore",
+  });
+  console.log("    => journalism has been installed.");
+}
+
+console.log("\nSetup is done!");
+
+if (runtime === "nodejs") {
+  if (language === "ts") {
+    console.log("    => Run 'npm run sda' to watch main.ts.");
+  } else {
+    console.log("    => Run 'npm run sda' to watch main.js.");
+  }
+} else if (runtime === "bun") {
+  if (language === "ts") {
+    console.log("    => Run 'bun run sda' to watch main.ts.");
+  } else {
+    console.log("    => Run 'bun run sda' to watch main.js.");
+  }
+} else if (runtime === "deno") {
+  if (language === "ts") {
+    console.log("    => Run 'deno task sda' to watch main.ts.");
+  } else {
+    console.log("    => Run 'deno task sda' to watch main.js.");
+  }
+}
+
+console.log("    => Have fun. ^_^\n");
