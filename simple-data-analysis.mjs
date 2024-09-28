@@ -49,6 +49,7 @@ const tsconfigContent = `{
 console.log("\n1 - Checking runtime and options...");
 
 let runtime;
+console.log(`    => Your navigator userAgent is: ${navigator.userAgent}`);
 const userAgent = navigator.userAgent.toLocaleLowerCase();
 if (userAgent.includes("bun")) {
   runtime = "bun";
