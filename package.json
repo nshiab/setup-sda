@@ -1,6 +1,6 @@
 {
   "name": "setup-sda",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Minimalist setup scripts for the JavaScript library simple-data-analysis.",
   "main": "setup-sda.mjs",
   "scripts": {
