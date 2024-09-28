@@ -108,21 +108,21 @@ if (runtime === "bun" || runtime === "nodejs") {
   if (runtime === "bun") {
     if (language === "ts") {
       packageJson.scripts = {
-        sda: "bun --watch main.ts",
+        sda: "bun --watch src/main.ts",
       };
     } else {
       packageJson.scripts = {
-        sda: "bun --watch main.js",
+        sda: "bun --watch src/main.js",
       };
     }
   } else {
     if (language === "ts") {
       packageJson.scripts = {
-        sda: "node --experimental-strip-types --no-warnings --watch main.ts",
+        sda: "node --experimental-strip-types --no-warnings --watch src/main.ts",
       };
     } else {
       packageJson.scripts = {
-        sda: "node --no-warnings --watch main.js",
+        sda: "node --no-warnings --watch src/main.js",
       };
     }
   }
@@ -132,7 +132,7 @@ if (runtime === "bun" || runtime === "nodejs") {
 } else if (runtime === "deno") {
   const denoConfig = {
     tasks: {
-      sda: "deno run --node-modules-dir=auto -A --watch main.ts",
+      sda: "deno run --node-modules-dir=auto -A --watch src/main.ts",
       clean: "rm -rf .sda-cache && rm -rf .temp",
     },
     nodeModulesDir: "auto",
