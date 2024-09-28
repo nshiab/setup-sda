@@ -6,6 +6,8 @@ import process from "node:process";
 
 console.log("\nStarting sda setup...");
 
+const args = process.argv.slice(2);
+
 const files = readdirSync(".");
 if (files.length > 0) {
   throw new Error(
