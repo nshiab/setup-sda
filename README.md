@@ -10,7 +10,7 @@ npx setup-sda
 bunx setup-sda
 
 # Deno
-deno run -A npm:setup-sda
+deno run -A jsr:@nshiab/setup-sda
 ```
 
 There is one option:
