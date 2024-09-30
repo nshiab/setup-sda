@@ -150,14 +150,15 @@ writeFileSync(".gitignore", "node_modules\n.temp\n.sda-cache");
 console.log("    => .gitignore has been created.");
 
 if (runtime === "deno") {
-  mainContent = mainContent.replace(
-    `import { SimpleDB } from "simple-data-analysis";`,
-    `import { SimpleDB } from "@nshiab/simple-data-analysis";`
-  );
-  mainContent = mainContent.replace(
-    `import { prettyDuration } from "journalism";";`,
-    `import { prettyDuration } from "@nshiab/journalism";`
-  );
+  mainContent = mainContent
+    .replace(
+      `import { SimpleDB } from "simple-data-analysis";`,
+      `import { SimpleDB } from "@nshiab/simple-data-analysis";`
+    )
+    .replace(
+      `import { prettyDuration } from "journalism";`,
+      `import { prettyDuration } from "@nshiab/journalism";`
+    );
 }
 mkdirSync("src");
 if (language === "ts") {
