@@ -150,10 +150,13 @@ writeFileSync(".gitignore", "node_modules\n.temp\n.sda-cache");
 console.log("    => .gitignore has been created.");
 
 if (runtime === "deno") {
-  // NEED TO DO SAME THING FOR JOURNALISM
   mainContent = mainContent.replace(
     `import { SimpleDB } from "simple-data-analysis";`,
     `import { SimpleDB } from "@nshiab/simple-data-analysis";`
+  );
+  mainContent = mainContent.replace(
+    `import { prettyDuration } from "journalism";";`,
+    `import { prettyDuration } from "@nshiab/journalism";`
   );
 }
 mkdirSync("src");
@@ -194,10 +197,12 @@ if (runtime === "nodejs") {
     }
   );
   console.log("    => simple-data-analysis has been installed.");
-  // NEEDS TO BE UPDATED. JOURNALISM ON JSR. NEED TO UPDATE IMPORTS TOO.
-  execSync("deno install --node-modules-dir=auto npm:journalism", {
-    stdio: "ignore",
-  });
+  execSync(
+    "deno install --node-modules-dir=auto --allow-scripts=npm:duckdb jsr:@nshiab/journalism",
+    {
+      stdio: "ignore",
+    }
+  );
   console.log("    => journalism has been installed.");
 }
 
