@@ -7,7 +7,7 @@ folder and run:
 npx setup-sda
 
 # Bun
-bunx setup-sda
+bunx --bun setup-sda
 
 # Deno
 deno run -A jsr:@nshiab/setup-sda
