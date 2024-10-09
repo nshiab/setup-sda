@@ -40,7 +40,7 @@ await temp.logLineChart("decade", "meanTemp", {
 
 await sdb.done();
 
-prettyDuration(start, { log: true, prefix: "\\nDone in " });
+prettyDuration(start, { log: true, prefix: "Done in " });
 `;
 const tsconfigContent = `{
   "compilerOptions": {
