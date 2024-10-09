@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { execSync } from "node:child_process";
-import { mkdirSync, readdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import process from "node:process";
 
 console.log("\nStarting sda setup...");
@@ -201,7 +201,9 @@ if (runtime === "deno") {
       `import { prettyDuration } from "@nshiab/journalism";`
     );
 }
-mkdirSync("src");
+if (!existsSync("src")) {
+  mkdirSync("src");
+}
 if (language === "ts") {
   writeFileSync("src/main.ts", mainContent);
   console.log("    => src/main.ts has been created.");
@@ -209,7 +211,10 @@ if (language === "ts") {
   writeFileSync("main.js", mainContent);
   console.log("    => src/main.js has been created.");
 }
-mkdirSync("data");
+
+if (!existsSync("data")) {
+  mkdirSync("data");
+}
 writeFileSync("data/temp.csv", data);
 console.log("    => data/temp.csv has been created.");
 
