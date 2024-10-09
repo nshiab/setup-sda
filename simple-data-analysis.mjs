@@ -35,7 +35,7 @@ await temp.logTable();
 await temp.logLineChart("decade", "meanTemp", {
   smallMultiples: "city",
   fixedScales: true,
-  formatY: (d) => \`${d}°C\`,
+  formatY: (d) => \`\${d}°C\`,
 });
 
 await sdb.done();
