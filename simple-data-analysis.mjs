@@ -32,7 +32,7 @@ await temp.loadData("data/temp.csv");
 
 await temp.logTable();
 
-await temp.logDotChart("decade", "meanTemp", {
+await temp.logLineChart("decade", "meanTemp", {
   smallMultiples: "city",
   fixedScales: true,
   formatY: (d) => \`${d}°C\`,
