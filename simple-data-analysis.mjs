@@ -409,7 +409,15 @@ export default function getTempChange(
   }
   console.log("    => Done");
 
-  console.log("\nSetup is done!");
+  if (args.includes("--git")) {
+    console.log("\n4 - Initializing Git repository...");
+    execSync("git init && git add -A && git commit -m 'Setup done'", {
+      stdio: "ignore",
+    });
+    console.log("    => First commit done");
+  }
+
+  console.log("\nSetup is done!\n");
 
   if (runtime === "nodejs") {
     console.log("    => Run 'npm run sda' to watch main.ts.");
@@ -428,7 +436,7 @@ export default function getTempChange(
     );
   }
 
-  console.log("    => Have fun. ^_^\n");
+  console.log("\nHave fun. ^_^\n");
 } else {
   let readme = `This repository has been created with [setup-sda](https://github.com/nshiab/setup-sda/).
 
