@@ -471,8 +471,8 @@ When working on your project, use the following command:
     },
     nodeModulesDir: "auto",
     imports: {
-      "@nshiab/journalism": "jsr:@nshiab/journalism@latest",
-      "@nshiab/simple-data-analysis": "jsr:@nshiab/simple-data-analysis@latest",
+      "@nshiab/journalism": "jsr:@nshiab/journalism",
+      "@nshiab/simple-data-analysis": "jsr:@nshiab/simple-data-analysis",
     },
   };
 
