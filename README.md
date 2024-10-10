@@ -25,3 +25,5 @@ bunx --bun setup-sda --framework
 # Deno >= 2.x.x
 deno -A jsr:@nshiab/setup-sda --framework
 ```
+
+To initialize a git repository, pass the `--git` flag.

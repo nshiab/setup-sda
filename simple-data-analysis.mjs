@@ -30,6 +30,10 @@ if (userAgent.includes("bun")) {
 
 const args = process.argv.slice(2);
 
+if (args.includes("--git")) {
+  console.log(`    => You passed the option --git`);
+}
+
 if (args.includes("--framework")) {
   console.log(`    => You passed the option --framework`);
 
@@ -618,7 +622,15 @@ Toronto,2010.0,9.9
   }
   console.log("    => Done");
 
-  console.log("\nSetup is done!");
+  if (args.includes("--git")) {
+    console.log("\n4 - Initializing Git repository...");
+    execSync("git init && git add -A && git commit -m 'Setup done'", {
+      stdio: "ignore",
+    });
+    console.log("    => First commit done");
+  }
+
+  console.log("\nSetup is done!\n");
 
   if (runtime === "nodejs") {
     console.log("    => Run 'npm run sda' to watch main.ts.");
@@ -628,5 +640,5 @@ Toronto,2010.0,9.9
     console.log("    => Run 'deno task sda' to watch main.ts.");
   }
 
-  console.log("    => Have fun. ^_^\n");
+  console.log("\nHave fun. ^_^\n");
 }
