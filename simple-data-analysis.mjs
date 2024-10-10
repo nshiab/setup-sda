@@ -334,6 +334,12 @@ export default function getTempChange(
   writeFileSync("README.md", readme);
   console.log("    => README.md has been created.");
 
+  if (runtime === "bun") {
+    packageJson.scripts.sda = "bun --watch src/main.ts";
+  } else if (runtime === "deno") {
+    packageJson.scripts.sda =
+      "deno run --node-modules-dir=auto -A --watch src/main.ts";
+  }
   writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
   console.log("    => package.json has been created.");
 
