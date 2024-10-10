@@ -8,16 +8,10 @@ console.log("\nStarting sda setup...");
 
 const args = process.argv.slice(2);
 
-if (!args.includes("--force")) {
-  const files = readdirSync(".");
-  if (files.length > 0) {
-    throw new Error(
-      "The folder is not empty. Please start over in an empty folder or pass the option --force."
-    );
-  }
-} else {
-  console.log(
-    "    => The folder is not empty but --force option is used. Overwriting files."
+const files = readdirSync(".");
+if (files.length > 0) {
+  throw new Error(
+    "The folder is not empty. Please start over in an empty folder."
   );
 }
 
@@ -102,44 +96,6 @@ if (userAgent.includes("bun")) {
   throw new Error("Unknown runtime.");
 }
 
-let language = args.includes("--js") ? "js" : "ts";
-
-if (runtime === "bun") {
-  console.log("    => Setting things up for Bun.");
-  if (language === "js") {
-    console.log("    => Setting things up for JavaScript.");
-  } else {
-    console.log("    => Setting things up for TypeScript.");
-  }
-} else if (runtime === "deno") {
-  console.log("    => Setting things up for Deno.");
-  if (language === "ts") {
-    console.log("    => Setting things up for TypeScript.");
-  } else {
-    console.log("    => Setting things up for JavaScript.");
-    language = "js";
-  }
-} else {
-  console.log("    => Setting things up for Node.js.");
-  if (language === "ts") {
-    const nodeVersion = process.version
-      .split(".")
-      .map((d) => parseInt(d.replace("v", "")));
-    if (nodeVersion[0] >= 22 && nodeVersion[1] >= 6) {
-      console.log(
-        "    => Node.js version is >= 22.6.0. Setting things up for TypeScript."
-      );
-    } else {
-      console.log(
-        "    => Node.js version is < 22.6.0. Setting things up for JavaScript."
-      );
-      language = "js";
-    }
-  } else {
-    console.log("    => Setting things up for JavaScript.");
-  }
-}
-
 console.log("\n2 - Creating relevant files...");
 
 if (runtime === "bun" || runtime === "nodejs") {
@@ -147,29 +103,20 @@ if (runtime === "bun" || runtime === "nodejs") {
     type: "module",
   };
   if (runtime === "bun") {
-    if (language === "ts") {
-      packageJson.scripts = {
-        sda: "bun --watch src/main.ts",
-      };
-    } else {
-      packageJson.scripts = {
-        sda: "bun --watch src/main.js",
-      };
-    }
+    packageJson.scripts = {
+      sda: "bun --watch src/main.ts",
+    };
   } else {
-    if (language === "ts") {
-      packageJson.scripts = {
-        sda: "node --experimental-strip-types --no-warnings --watch src/main.ts",
-      };
-    } else {
-      packageJson.scripts = {
-        sda: "node --no-warnings --watch src/main.js",
-      };
-    }
+    packageJson.scripts = {
+      sda: "node --experimental-strip-types --no-warnings --watch src/main.ts",
+    };
   }
   packageJson.scripts.clean = "rm -rf .sda-cache && rm -rf .temp";
   writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
   console.log("    => package.json has been created.");
+
+  writeFileSync("tsconfig.json", tsconfigContent);
+  console.log("    => tsconfig.json has been created.");
 } else if (runtime === "deno") {
   const denoConfig = {
     tasks: {
@@ -180,11 +127,6 @@ if (runtime === "bun" || runtime === "nodejs") {
   };
   writeFileSync("deno.json", JSON.stringify(denoConfig, null, 2));
   console.log("    => deno.json has been created.");
-}
-
-if (runtime === "nodejs" && language === "ts") {
-  writeFileSync("tsconfig.json", tsconfigContent);
-  console.log("    => tsconfig.json has been created.");
 }
 
 writeFileSync(".gitignore", "node_modules\n.temp\n.sda-cache");
@@ -204,17 +146,13 @@ if (runtime === "deno") {
 if (!existsSync("src")) {
   mkdirSync("src");
 }
-if (language === "ts") {
-  writeFileSync("src/main.ts", mainContent);
-  console.log("    => src/main.ts has been created.");
-} else {
-  writeFileSync("main.js", mainContent);
-  console.log("    => src/main.js has been created.");
-}
 
+writeFileSync("src/main.ts", mainContent);
+console.log("    => src/main.ts has been created.");
 if (!existsSync("data")) {
   mkdirSync("data");
 }
+
 writeFileSync("data/temp.csv", data);
 console.log("    => data/temp.csv has been created.");
 
@@ -247,35 +185,20 @@ if (runtime === "nodejs") {
     }
   );
   console.log("    => simple-data-analysis has been installed.");
-  execSync(
-    "deno install --node-modules-dir=auto --allow-scripts=npm:duckdb jsr:@nshiab/journalism",
-    {
-      stdio: "ignore",
-    }
-  );
+  execSync("deno install --node-modules-dir=auto jsr:@nshiab/journalism", {
+    stdio: "ignore",
+  });
   console.log("    => journalism has been installed.");
 }
 
 console.log("\nSetup is done!");
 
 if (runtime === "nodejs") {
-  if (language === "ts") {
-    console.log("    => Run 'npm run sda' to watch main.ts.");
-  } else {
-    console.log("    => Run 'npm run sda' to watch main.js.");
-  }
+  console.log("    => Run 'npm run sda' to watch main.ts.");
 } else if (runtime === "bun") {
-  if (language === "ts") {
-    console.log("    => Run 'bun run sda' to watch main.ts.");
-  } else {
-    console.log("    => Run 'bun run sda' to watch main.js.");
-  }
+  console.log("    => Run 'bun run sda' to watch main.ts.");
 } else if (runtime === "deno") {
-  if (language === "ts") {
-    console.log("    => Run 'deno task sda' to watch main.ts.");
-  } else {
-    console.log("    => Run 'deno task sda' to watch main.js.");
-  }
+  console.log("    => Run 'deno task sda' to watch main.ts.");
 }
 
 console.log("    => Have fun. ^_^\n");
