@@ -479,7 +479,7 @@ const sdb = new SimpleDB();
 
 // The mean temperature per decade.
 const temp = sdb.newTable("temp");
-await temp.loadData("data-raw/temp.csv");
+await temp.loadData("src/data-raw/temp.csv");
 
 // We log the table.
 await temp.logTable();
