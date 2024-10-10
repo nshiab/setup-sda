@@ -583,11 +583,11 @@ Toronto,2010.0,9.9
   writeFileSync("src/main.ts", mainContent);
   console.log("    => src/main.ts has been created.");
 
-  mkdirSync("data-raw");
-  writeFileSync("data-raw/temp.csv", data);
-  console.log("    => data-raw/temp.csv has been created.");
-  mkdirSync("data");
-  console.log("    => data/ has been created.");
+  mkdirSync("src/data-raw");
+  writeFileSync("src/data-raw/temp.csv", data);
+  console.log("    => src/data-raw/temp.csv has been created.");
+  mkdirSync("src/data");
+  console.log("    => src/data/ has been created.");
 
   writeFileSync("README.md", readme);
   console.log("    => README.md has been created.");
