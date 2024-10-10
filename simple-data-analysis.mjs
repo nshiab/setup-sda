@@ -64,13 +64,13 @@ By opening two terminals each running one of the above commands, you'll be able 
       sda: "node --experimental-strip-types --no-warnings --watch src/main.ts",
     },
     dependencies: {
-      "@observablehq/framework": "^1.12.0",
-      "@observablehq/plot": "^0.6.16",
-      journalism: "^1.18.9",
-      "simple-data-analysis": "^3.12.0",
+      "@observablehq/framework": "latest",
+      "@observablehq/plot": "latest",
+      journalism: "latest",
+      "simple-data-analysis": "latest",
     },
     devDependencies: {
-      rimraf: "^5.0.5",
+      rimraf: "latest",
     },
     engines: {
       node: ">=18",
@@ -459,8 +459,8 @@ When working on your project, use the following command:
       clean: "rm -rf .sda-cache && rm -rf .temp",
     },
     dependencies: {
-      journalism: "^1.18.9",
-      "simple-data-analysis": "^3.12.0",
+      journalism: "latest",
+      "simple-data-analysis": "latest",
     },
   };
 
@@ -471,9 +471,8 @@ When working on your project, use the following command:
     },
     nodeModulesDir: "auto",
     imports: {
-      "@nshiab/journalism": "jsr:@nshiab/journalism@^1.18.9",
-      "@nshiab/simple-data-analysis":
-        "jsr:@nshiab/simple-data-analysis@^3.12.0",
+      "@nshiab/journalism": "jsr:@nshiab/journalism@latest",
+      "@nshiab/simple-data-analysis": "jsr:@nshiab/simple-data-analysis@latest",
     },
   };
 
