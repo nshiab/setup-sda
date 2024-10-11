@@ -232,7 +232,9 @@ This project uses a simple linear regression to estimate the temperature change 
 To compute the regressions, we used the [simple-data-analysis](https://github.com/nshiab/simple-data-analysis) library.
 
 \`\`\`ts
-display(await getHighlightedCode(FileAttachment("./main.ts")));
+display(
+  await getHighlightedCode(FileAttachment("./sda/computeRegressions.ts"))
+);
 \`\`\`
 `;
 
