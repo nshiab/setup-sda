@@ -148,32 +148,41 @@ Toronto,2010.0,9.9
 
   const mainTs = `import { SimpleDB } from "simple-data-analysis";
 import { prettyDuration } from "journalism";
+import computeRegressions from "./sda/computeRegressions.ts";
 
 const start = Date.now();
 const sdb = new SimpleDB();
 
-// The mean temperature per decade.
-const temp = sdb.newTable("temp");
-await temp.loadData("src/data-raw/temp.csv");
-await temp.logTable();
-
-// We compute a linear regression for each city.
-const tempRegressions = await temp.linearRegressions({
-  x: "decade",
-  y: "meanTemp",
-  categories: "city",
-  decimals: 4,
-  outputTable: "tempRegressions",
-});
-await tempRegressions.logTable();
-
-// We write the results to src/data.
-await temp.writeData("src/data/temp.json");
-await tempRegressions.writeData("src/data/temp-regressions.json");
+await computeRegressions(sdb);
 
 await sdb.done();
 
 prettyDuration(start, { log: true, prefix: "Done in " });
+
+`;
+
+  const computeRegressionsTs = `import { SimpleDB } from "simple-data-analysis";
+
+export default async function computeRegressions(sdb: SimpleDB) {
+  // The mean temperature per decade.
+  const temp = sdb.newTable("temp");
+  await temp.loadData("src/data-raw/temp.csv");
+  await temp.logTable();
+
+  // We compute a linear regression for each city.
+  const tempRegressions = await temp.linearRegressions({
+    x: "decade",
+    y: "meanTemp",
+    categories: "city",
+    decimals: 4,
+    outputTable: "tempRegressions",
+  });
+  await tempRegressions.logTable();
+
+  // We write the results to src/data.
+  await temp.writeData("src/data/temp.json");
+  await tempRegressions.writeData("src/data/temp-regressions.json");
+}
 `;
 
   const indexMd = `\`\`\`ts
@@ -378,6 +387,11 @@ export default function getTempChange(
 
   writeFileSync("src/helpers/getTempChange.ts", getTempChangeTs);
   console.log("    => src/helpers/getTempChange.ts has been created.");
+
+  mkdirSync("src/sda");
+
+  writeFileSync("src/sda/computeRegressions.ts", computeRegressionsTs);
+  console.log("    => src/sda/computeRegressions.ts has been created.");
 
   if (runtime === "nodejs") {
     console.log("\n3 - Installing libraries with NPM...");
