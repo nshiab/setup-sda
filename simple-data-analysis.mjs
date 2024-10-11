@@ -67,15 +67,6 @@ By opening two terminals each running one of the above commands, you'll be able 
       observable: "observable",
       sda: "node --experimental-strip-types --no-warnings --watch src/main.ts",
     },
-    dependencies: {
-      "@observablehq/framework": "latest",
-      "@observablehq/plot": "latest",
-      journalism: "latest",
-      "simple-data-analysis": "latest",
-    },
-    devDependencies: {
-      rimraf: "latest",
-    },
     engines: {
       node: ">=18",
     },
@@ -390,24 +381,76 @@ export default function getTempChange(
 
   if (runtime === "nodejs") {
     console.log("\n3 - Installing libraries with NPM...");
-    execSync("npm i --silent", {
+    execSync("npm i rimraf  --save-dev --silent", {
+      stdio: "ignore",
+    });
+    console.log("    => journalism has been installed.");
+    execSync("npm i @observablehq/framework --silent", {
+      stdio: "ignore",
+    });
+    console.log("    => framework has been installed.");
+    execSync("npm i @observablehq/plot --silent", {
+      stdio: "ignore",
+    });
+    console.log("    => rimraf has been installed.");
+    execSync("npm i simple-data-analaysis --silent", {
+      stdio: "ignore",
+    });
+    console.log("    => simple-data-analysis has been installed.");
+    execSync("npm i journalism --silent", {
       stdio: "ignore",
     });
   } else if (runtime === "bun") {
     console.log("\n3 - Installing libraries with Bun...");
-    execSync("bun install", {
+    execSync("bun add rimraf --dev", {
       stdio: "ignore",
     });
+    console.log("    => rimraf has been installed.");
+    execSync("bun add @observablehq/framework", {
+      stdio: "ignore",
+    });
+    console.log("    => framework has been installed.");
+    execSync("bun add @observablehq/plot", {
+      stdio: "ignore",
+    });
+    console.log("    => plot has been installed.");
+    execSync("bun add simple-data-analysis", {
+      stdio: "ignore",
+    });
+    console.log("    => simple-data-analysis has been installed.");
+    execSync("bun add journalism", {
+      stdio: "ignore",
+    });
+    console.log("    => journalism has been installed.");
   } else if (runtime === "deno") {
     console.log("\n3 - Installing libraries with Deno...");
+    execSync("deno install --node-modules-dir=auto --dev npm:rimraf", {
+      stdio: "ignore",
+    });
+    console.log("    => rimraf has been installed.");
     execSync(
-      "deno install --node-modules-dir=auto --allow-scripts=npm:duckdb",
+      "deno install --node-modules-dir=auto npm:@observablehq/framework",
       {
         stdio: "ignore",
       }
     );
+    console.log("    => framework has been installed.");
+    execSync("deno install --node-modules-dir=auto npm:@observablehq/plot", {
+      stdio: "ignore",
+    });
+    console.log("    => plot has been installed.");
+    execSync(
+      "deno install --node-modules-dir=auto --allow-scripts=npm:duckdb jsr:@nshiab/simple-data-analysis",
+      {
+        stdio: "ignore",
+      }
+    );
+    console.log("    => simple-data-analysis has been installed.");
+    execSync("deno install --node-modules-dir=auto jsr:@nshiab/journalism", {
+      stdio: "ignore",
+    });
+    console.log("    => journalism has been installed.");
   }
-  console.log("    => Done");
 
   if (args.includes("--git")) {
     console.log("\n4 - Initializing Git repository...");
@@ -470,10 +513,6 @@ When working on your project, use the following command:
       sda: "node --experimental-strip-types --no-warnings --watch src/main.ts",
       clean: "rm -rf .sda-cache && rm -rf .temp",
     },
-    dependencies: {
-      journalism: "latest",
-      "simple-data-analysis": "latest",
-    },
   };
 
   const denoJson = {
@@ -482,10 +521,6 @@ When working on your project, use the following command:
       clean: "rm -rf .sda-cache && rm -rf .temp",
     },
     nodeModulesDir: "auto",
-    imports: {
-      "@nshiab/journalism": "jsr:@nshiab/journalism",
-      "@nshiab/simple-data-analysis": "jsr:@nshiab/simple-data-analysis",
-    },
   };
 
   let mainContent = `import { SimpleDB } from "simple-data-analysis";
@@ -611,24 +646,38 @@ Toronto,2010.0,9.9
 
   if (runtime === "nodejs") {
     console.log("\n3 - Installing libraries with NPM...");
-    execSync("npm i --silent", {
+    execSync("npm i simple-data-analaysis --silent", {
       stdio: "ignore",
     });
+    console.log("    => simple-data-analysis has been installed.");
+    execSync("npm i journalism --silent", {
+      stdio: "ignore",
+    });
+    console.log("    => journalism has been installed.");
   } else if (runtime === "bun") {
     console.log("\n3 - Installing libraries with Bun...");
-    execSync("bun install", {
+    execSync("bun add simple-data-analysis", {
       stdio: "ignore",
     });
+    console.log("    => simple-data-analysis has been installed.");
+    execSync("bun add journalism", {
+      stdio: "ignore",
+    });
+    console.log("    => journalism has been installed.");
   } else if (runtime === "deno") {
     console.log("\n3 - Installing libraries with Deno...");
     execSync(
-      "deno install --node-modules-dir=auto --allow-scripts=npm:duckdb",
+      "deno install --node-modules-dir=auto --allow-scripts=npm:duckdb jsr:@nshiab/simple-data-analysis",
       {
         stdio: "ignore",
       }
     );
+    console.log("    => simple-data-analysis has been installed.");
+    execSync("deno install --node-modules-dir=auto jsr:@nshiab/journalism", {
+      stdio: "ignore",
+    });
+    console.log("    => journalism has been installed.");
   }
-  console.log("    => Done");
 
   if (args.includes("--git")) {
     console.log("\n4 - Initializing Git repository...");
