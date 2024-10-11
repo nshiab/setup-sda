@@ -290,10 +290,10 @@ export default function createChart(
 }
 `;
 
-  const getHighlightedCodeTs = `import { FileAttachment } from "@observablehq/stdlib";
-import { html } from "htl";
-import hljs from "highlight.js/lib/core";
-import typescript from "highlight.js/lib/languages/typescript";
+  const getHighlightedCodeTs = `import { FileAttachment } from "npm:@observablehq/stdlib";
+import { html } from "npm:htl";
+import hljs from "npm:highlight.js/lib/core";
+import typescript from "npm:highlight.js/lib/languages/typescript";
 
 hljs.registerLanguage("typescript", typescript);
 
@@ -315,6 +315,7 @@ export default async function getHighlightedCode(file: FileAttachment) {
 
   return wrappedCode;
 }
+
 `;
 
   const getTempChangeTs = `import { formatNumber } from "journalism";
