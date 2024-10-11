@@ -646,7 +646,7 @@ Toronto,2010.0,9.9
 
   if (runtime === "nodejs") {
     console.log("\n3 - Installing libraries with NPM...");
-    execSync("npm i simple-data-analaysis --silent", {
+    execSync("npm i simple-data-analysis --silent", {
       stdio: "ignore",
     });
     console.log("    => simple-data-analysis has been installed.");
