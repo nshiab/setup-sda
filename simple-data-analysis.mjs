@@ -455,13 +455,14 @@ export default function getTempChange(
     });
     console.log("    => @observablehq/plot has been installed.");
     execSync(
-      "deno install --node-modules-dir=auto --allow-scripts=npm:duckdb jsr:@nshiab/simple-data-analysis",
+      // Can't use JSR here. Don't know why.
+      "deno install --node-modules-dir=auto --allow-scripts=npm:duckdb npm:simple-data-analysis",
       {
         stdio: "ignore",
       }
     );
     console.log("    => simple-data-analysis has been installed.");
-    execSync("deno install --node-modules-dir=auto jsr:@nshiab/journalism", {
+    execSync("deno install --node-modules-dir=auto npm:journalism", {
       stdio: "ignore",
     });
     console.log("    => journalism has been installed.");
