@@ -393,7 +393,7 @@ export default function getTempChange(
       stdio: "ignore",
     });
     console.log("    => rimraf has been installed.");
-    execSync("npm i simple-data-analaysis --silent", {
+    execSync("npm i simple-data-analysis --silent", {
       stdio: "ignore",
     });
     console.log("    => simple-data-analysis has been installed.");
