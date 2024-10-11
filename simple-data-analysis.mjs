@@ -384,15 +384,15 @@ export default function getTempChange(
     execSync("npm i rimraf  --save-dev --silent", {
       stdio: "ignore",
     });
-    console.log("    => journalism has been installed.");
+    console.log("    => rimraf has been installed.");
     execSync("npm i @observablehq/framework --silent", {
       stdio: "ignore",
     });
-    console.log("    => framework has been installed.");
+    console.log("    => @observablehq/framework has been installed.");
     execSync("npm i @observablehq/plot --silent", {
       stdio: "ignore",
     });
-    console.log("    => rimraf has been installed.");
+    console.log("    => @observablehq/plot has been installed.");
     execSync("npm i simple-data-analysis --silent", {
       stdio: "ignore",
     });
@@ -400,6 +400,7 @@ export default function getTempChange(
     execSync("npm i journalism --silent", {
       stdio: "ignore",
     });
+    console.log("    => journalism has been installed.");
   } else if (runtime === "bun") {
     console.log("\n3 - Installing libraries with Bun...");
     execSync("bun add rimraf --dev", {
@@ -409,11 +410,11 @@ export default function getTempChange(
     execSync("bun add @observablehq/framework", {
       stdio: "ignore",
     });
-    console.log("    => framework has been installed.");
+    console.log("    => @observablehq/framework has been installed.");
     execSync("bun add @observablehq/plot", {
       stdio: "ignore",
     });
-    console.log("    => plot has been installed.");
+    console.log("    => @observablehq/plot has been installed.");
     execSync("bun add simple-data-analysis", {
       stdio: "ignore",
     });
@@ -434,11 +435,11 @@ export default function getTempChange(
         stdio: "ignore",
       }
     );
-    console.log("    => framework has been installed.");
+    console.log("    => @observablehq/framework has been installed.");
     execSync("deno install --node-modules-dir=auto npm:@observablehq/plot", {
       stdio: "ignore",
     });
-    console.log("    => plot has been installed.");
+    console.log("    => @observablehq/plot has been installed.");
     execSync(
       "deno install --node-modules-dir=auto --allow-scripts=npm:duckdb jsr:@nshiab/simple-data-analysis",
       {
