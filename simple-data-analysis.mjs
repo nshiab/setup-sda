@@ -538,42 +538,52 @@ When working on your project, use the following command:
     nodeModulesDir: "auto",
   };
 
-  let mainContent = `import { SimpleDB } from "simple-data-analysis";
+  let mainTs = `import { SimpleDB } from "simple-data-analysis";
 import { prettyDuration } from "journalism";
+import computeRegressions from "./sda/computeRegressions.ts";
 
 const start = Date.now();
 const sdb = new SimpleDB();
 
-// The mean temperature per decade.
-const temp = sdb.newTable("temp");
-await temp.loadData("src/data-raw/temp.csv");
-
-// We log the table.
-await temp.logTable();
-
-// We log line charts.
-await temp.logLineChart("decade", "meanTemp", {
-  smallMultiples: "city",
-  fixedScales: true,
-  formatY: (d) => \`\${d}°C\`,
-});
-
-// We compute a linear regression for each city.
-const tempRegressions = await temp.linearRegressions({
-  x: "decade",
-  y: "meanTemp",
-  categories: "city",
-  decimals: 4,
-  outputTable: "tempRegressions",
-});
-await tempRegressions.logTable();
-
-// We write the results to src/data.
-await tempRegressions.writeData("src/data/temp-regressions.json");
+await computeRegressions(sdb);
 
 await sdb.done();
 
-prettyDuration(start, { log: true, prefix: "\\nDone in " });
+prettyDuration(start, { log: true, prefix: "Done in " });
+
+`;
+
+  let computeRegressionsTs = `import { SimpleDB } from "simple-data-analysis";
+
+export default async function computeRegressions(sdb: SimpleDB) {
+  
+  // The mean temperature per decade.
+  const temp = sdb.newTable("temp");
+  await temp.loadData("src/data-raw/temp.csv");
+
+  // We log the table.
+  await temp.logTable();
+
+  // We log line charts.
+  await temp.logLineChart("decade", "meanTemp", {
+    smallMultiples: "city",
+    fixedScales: true,
+    formatY: (d) => \`\${d}°C\`,
+  });
+
+  // We compute a linear regression for each city.
+  const tempRegressions = await temp.linearRegressions({
+    x: "decade",
+    y: "meanTemp",
+    categories: "city",
+    decimals: 4,
+    outputTable: "tempRegressions",
+  });
+  await tempRegressions.logTable();
+
+  // We write the results to src/data.
+  await tempRegressions.writeData("src/data/temp-regressions.json");
+}
 `;
 
   const data = `city,decade,meanTemp
@@ -635,7 +645,7 @@ Toronto,2010.0,9.9
   console.log("    => .gitignore has been created.");
 
   if (runtime === "deno") {
-    mainContent = mainContent
+    mainTs = mainTs
       .replace(
         `import { SimpleDB } from "simple-data-analysis";`,
         `import { SimpleDB } from "@nshiab/simple-data-analysis";`
@@ -644,11 +654,19 @@ Toronto,2010.0,9.9
         `import { prettyDuration } from "journalism";`,
         `import { prettyDuration } from "@nshiab/journalism";`
       );
+    computeRegressionsTs = computeRegressionsTs.replace(
+      `import { SimpleDB } from "simple-data-analysis";`,
+      `import { SimpleDB } from "@nshiab/simple-data-analysis";`
+    );
   }
 
   mkdirSync("src");
-  writeFileSync("src/main.ts", mainContent);
+  writeFileSync("src/main.ts", mainTs);
   console.log("    => src/main.ts has been created.");
+
+  mkdirSync("src/sda");
+  writeFileSync("src/sda/computeRegressions.ts", computeRegressionsTs);
+  console.log("    => src/sda/computeRegressions.ts has been created.");
 
   mkdirSync("src/data-raw");
   writeFileSync("src/data-raw/temp.csv", data);
