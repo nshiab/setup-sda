@@ -77,7 +77,7 @@ By opening two terminals each running one of the above commands, you'll be able 
       dev: "observable preview",
       deploy: "observable deploy",
       observable: "observable",
-      sda: "node --experimental-strip-types --no-warnings --watch src/main.ts",
+      sda: "deno run --node-modules-dir=auto -A --watch main.ts",
     },
     nodeModulesDir: "auto",
   };
