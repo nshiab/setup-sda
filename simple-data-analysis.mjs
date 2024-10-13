@@ -37,7 +37,7 @@ if (args.includes("--git")) {
 if (args.includes("--framework")) {
   console.log(`    => You passed the option --framework`);
 
-  let readme =
+  const readme =
     `This repository has been created with [setup-sda](https://github.com/nshiab/setup-sda/).
 
 It's using [simple-data-analysis](https://github.com/nshiab/simple-data-analysis), [journalism](https://github.com/nshiab/journalism) and [Framework](https://github.com/observablehq/framework) with [Plot](https://github.com/observablehq/plot).
@@ -156,7 +156,7 @@ Montreal,2010.0,8.0
 Toronto,2010.0,9.9
 `;
 
-  const mainTs = `import { SimpleDB } from "@nshiab/simple-data-analysis";
+  const mainTs = `import { SimpleDB } from "jsr:@nshiab/simple-data-analysis";
 import { prettyDuration } from "@nshiab/journalism";
 import computeRegressions from "./sda/computeRegressions.ts";
 
@@ -172,7 +172,7 @@ prettyDuration(start, { log: true, prefix: "Done in " });
 `;
 
   const computeRegressionsTs =
-    `import type { SimpleDB } from "@nshiab/simple-data-analysis";
+    `import type { SimpleDB } from "jsr:@nshiab/simple-data-analysis";
 
 export default async function computeRegressions(sdb: SimpleDB) {
   // The mean temperature per decade.
@@ -250,7 +250,7 @@ display(
 `;
 
   const createChartTs = `
-import { dot, line, plot } from "@observablehq/plot";
+import { dot, line, plot } from "npm:@observablehq/plot";
 
 export default function createChart(
   city: string,
@@ -330,7 +330,8 @@ export default async function getHighlightedCode(file: FileAttachment) {
 
 `;
 
-  const getTempChangeTs = `import { formatNumber } from "@nshiab/journalism";
+  const getTempChangeTs =
+    `import { formatNumber } from "jsr:@nshiab/journalism";
 
 export default function getTempChange(
   city: string,
@@ -517,7 +518,7 @@ export default function getTempChange(
 
   console.log("\nHave fun. ^_^\n");
 } else {
-  let readme =
+  const readme =
     `This repository has been created with [setup-sda](https://github.com/nshiab/setup-sda/).
 
 It's using [simple-data-analysis](https://github.com/nshiab/simple-data-analysis) and [journalism](https://github.com/nshiab/journalism).
@@ -560,8 +561,8 @@ When working on your project, use the following command:
     nodeModulesDir: "auto",
   };
 
-  let mainTs = `import { SimpleDB } from "@nshiab/simple-data-analysis";
-import { prettyDuration } from "@nshiab/journalism";
+  const mainTs = `import { SimpleDB } from "jsr:@nshiab/simple-data-analysis";
+import { prettyDuration } from "jsr:@nshiab/journalism";
 import computeRegressions from "./sda/computeRegressions.ts";
 
 const start = Date.now();
@@ -575,8 +576,8 @@ prettyDuration(start, { log: true, prefix: "Done in " });
 
 `;
 
-  let computeRegressionsTs =
-    `import type { SimpleDB } from "@nshiab/simple-data-analysis";
+  const computeRegressionsTs =
+    `import type { SimpleDB } from "jsr:@nshiab/simple-data-analysis";
 
 export default async function computeRegressions(sdb: SimpleDB) {
   
