@@ -398,23 +398,23 @@ export default function getTempChange(
 
   if (runtime === "nodejs") {
     console.log("\n3 - Installing libraries with NPM...");
-    execSync("npm i rimraf  --save-dev --silent", {
+    execSync("npm i rimraf  --save-dev", {
       stdio: "ignore",
     });
     console.log("    => rimraf has been installed from NPM.");
-    execSync("npm i @observablehq/framework --silent", {
+    execSync("npm i @observablehq/framework", {
       stdio: "ignore",
     });
     console.log("    => @observablehq/framework has been installed from NPM.");
-    execSync("npm i @observablehq/plot --silent", {
+    execSync("npm i @observablehq/plot", {
       stdio: "ignore",
     });
     console.log("    => @observablehq/plot has been installed from NPM.");
-    execSync("npx jsr add @nshiab/simple-data-analysis --silent", {
+    execSync("npx jsr add @nshiab/simple-data-analysis", {
       stdio: "ignore",
     });
     console.log("    => simple-data-analysis has been installed from JSR.");
-    execSync("npx jsr add @nshiab/journalism --silent", {
+    execSync("npx jsr add @nshiab/journalism", {
       stdio: "ignore",
     });
     console.log("    => journalism has been installed from JSR.");
@@ -666,11 +666,11 @@ Toronto,2010.0,9.9
 
   if (runtime === "nodejs") {
     console.log("\n3 - Installing libraries...");
-    execSync("npx jsr add @nshiab/simple-data-analysis --silent", {
+    execSync("npx jsr add @nshiab/simple-data-analysis", {
       stdio: "ignore",
     });
     console.log("    => simple-data-analysis has been installed from JSR.");
-    execSync("npx jsr add @nshiab/journalism --silent", {
+    execSync("npx jsr add @nshiab/journalism", {
       stdio: "ignore",
     });
     console.log("    => journalism has been installed from JSR.");
