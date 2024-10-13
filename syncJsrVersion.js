@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 
 const packageJsonVersion = JSON.parse(
-  readFileSync("package.json", "utf-8")
+  readFileSync("package.json", "utf-8"),
 ).version;
 
 const denoJSON = JSON.parse(readFileSync("deno.json", "utf-8"));

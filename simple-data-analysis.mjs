@@ -9,7 +9,7 @@ console.log("\nStarting sda setup...");
 const files = readdirSync(".");
 if (files.length > 0) {
   throw new Error(
-    "The folder is not empty. Please start over in an empty folder."
+    "The folder is not empty. Please start over in an empty folder.",
   );
 }
 
@@ -37,7 +37,8 @@ if (args.includes("--git")) {
 if (args.includes("--framework")) {
   console.log(`    => You passed the option --framework`);
 
-  let readme = `This repository has been created with [setup-sda](https://github.com/nshiab/setup-sda/).
+  let readme =
+    `This repository has been created with [setup-sda](https://github.com/nshiab/setup-sda/).
 
 It's using [simple-data-analysis](https://github.com/nshiab/simple-data-analysis), [journalism](https://github.com/nshiab/journalism) and [Framework](https://github.com/observablehq/framework) with [Plot](https://github.com/observablehq/plot).
 
@@ -65,7 +66,20 @@ By opening two terminals each running one of the above commands, you'll be able 
       deploy: "observable deploy",
       observable: "observable",
       sda: "node --experimental-strip-types --no-warnings --watch src/main.ts",
-    }
+    },
+  };
+
+  const denoJson = {
+    tasks: {
+      clean:
+        "rimraf src/.observablehq/cache && rimraf .sda-cache && rimraf .temp",
+      build: "observable build",
+      dev: "observable preview",
+      deploy: "observable deploy",
+      observable: "observable",
+      sda: "node --experimental-strip-types --no-warnings --watch src/main.ts",
+    },
+    nodeModulesDir: "auto",
   };
 
   const observableConfigJS = `
@@ -157,7 +171,8 @@ prettyDuration(start, { log: true, prefix: "Done in " });
 
 `;
 
-  const computeRegressionsTs = `import type { SimpleDB } from "@nshiab/simple-data-analysis";
+  const computeRegressionsTs =
+    `import type { SimpleDB } from "@nshiab/simple-data-analysis";
 
 export default async function computeRegressions(sdb: SimpleDB) {
   // The mean temperature per decade.
@@ -286,7 +301,8 @@ export default function createChart(
 }
 `;
 
-  const getHighlightedCodeTs = `import { FileAttachment } from "npm:@observablehq/stdlib";
+  const getHighlightedCodeTs =
+    `import { FileAttachment } from "npm:@observablehq/stdlib";
 import { html } from "npm:htl";
 import hljs from "npm:highlight.js/lib/core";
 import typescript from "npm:highlight.js/lib/languages/typescript";
@@ -343,15 +359,21 @@ export default function getTempChange(
     packageJson.scripts.sda =
       "deno run --node-modules-dir=auto -A --watch src/main.ts";
   }
-  writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
-  console.log("    => package.json has been created.");
+
+  if (runtime === "deno") {
+    writeFileSync("deno.json", JSON.stringify(denoJson, null, 2));
+    console.log("    => deno.json has been created.");
+  } else {
+    writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
+    console.log("    => package.json has been created.");
+  }
 
   writeFileSync("observablehq.config.js", observableConfigJS);
   console.log("    => observablehq.config.js has been created.");
 
   writeFileSync(
     ".gitignore",
-    ".DS_Store\n/dist/\nnode_modules/\nyarn-error.log\n.temp\n.sda-cache"
+    ".DS_Store\n/dist/\nnode_modules/\nyarn-error.log\n.temp\n.sda-cache",
   );
   console.log("    => .gitignore has been created.");
 
@@ -442,7 +464,7 @@ export default function getTempChange(
       "deno install --node-modules-dir=auto --allow-scripts=npm:duckdb jsr:@nshiab/simple-data-analysis",
       {
         stdio: "ignore",
-      }
+      },
     );
     console.log("    => simple-data-analysis has been installed from JSR.");
     execSync("deno install --node-modules-dir=auto jsr:@nshiab/journalism", {
@@ -457,7 +479,7 @@ export default function getTempChange(
       "deno install --node-modules-dir=auto npm:@observablehq/framework",
       {
         stdio: "ignore",
-      }
+      },
     );
     console.log("    => @observablehq/framework has been installed from NPM.");
     execSync("deno install --node-modules-dir=auto npm:@observablehq/plot", {
@@ -479,23 +501,24 @@ export default function getTempChange(
   if (runtime === "nodejs") {
     console.log("    => Run 'npm run sda' to watch main.ts.");
     console.log(
-      "    => Run 'npm run dev' to start a local server and watch index.md."
+      "    => Run 'npm run dev' to start a local server and watch index.md.",
     );
   } else if (runtime === "bun") {
     console.log("    => Run 'bun run sda' to watch main.ts.");
     console.log(
-      "    => Run 'bun run dev' to start a local server and watch index.md."
+      "    => Run 'bun run dev' to start a local server and watch index.md.",
     );
   } else if (runtime === "deno") {
     console.log("    => Run 'deno task sda' to watch main.ts.");
     console.log(
-      "    => Run 'deno task dev' to start a local server and watch index.md."
+      "    => Run 'deno task dev' to start a local server and watch index.md.",
     );
   }
 
   console.log("\nHave fun. ^_^\n");
 } else {
-  let readme = `This repository has been created with [setup-sda](https://github.com/nshiab/setup-sda/).
+  let readme =
+    `This repository has been created with [setup-sda](https://github.com/nshiab/setup-sda/).
 
 It's using [simple-data-analysis](https://github.com/nshiab/simple-data-analysis) and [journalism](https://github.com/nshiab/journalism).
 
@@ -552,7 +575,8 @@ prettyDuration(start, { log: true, prefix: "Done in " });
 
 `;
 
-  let computeRegressionsTs = `import type { SimpleDB } from "@nshiab/simple-data-analysis";
+  let computeRegressionsTs =
+    `import type { SimpleDB } from "@nshiab/simple-data-analysis";
 
 export default async function computeRegressions(sdb: SimpleDB) {
   
@@ -686,7 +710,7 @@ Toronto,2010.0,9.9
       "deno install --node-modules-dir=auto --allow-scripts=npm:duckdb jsr:@nshiab/simple-data-analysis",
       {
         stdio: "ignore",
-      }
+      },
     );
     console.log("    => simple-data-analysis has been installed from JSR.");
     execSync("deno install --node-modules-dir=auto jsr:@nshiab/journalism", {

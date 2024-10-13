@@ -13,7 +13,9 @@ bunx --bun setup-sda
 deno -A jsr:@nshiab/setup-sda
 ```
 
-If you want to use SDA with [Framework](https://github.com/observablehq/framework), pass the `--framework` flag:
+If you want to use SDA with
+[Framework](https://github.com/observablehq/framework), pass the `--framework`
+flag:
 
 ```
 # Node.js >= 22.6.x
