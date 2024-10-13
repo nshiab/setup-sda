@@ -57,7 +57,6 @@ By opening two terminals each running one of the above commands, you'll be able 
 
   const packageJson = {
     type: "module",
-    private: true,
     scripts: {
       clean:
         "rimraf src/.observablehq/cache && rimraf .sda-cache && rimraf .temp",
@@ -66,10 +65,7 @@ By opening two terminals each running one of the above commands, you'll be able 
       deploy: "observable deploy",
       observable: "observable",
       sda: "node --experimental-strip-types --no-warnings --watch src/main.ts",
-    },
-    engines: {
-      node: ">=18",
-    },
+    }
   };
 
   const observableConfigJS = `
@@ -442,7 +438,6 @@ export default function getTempChange(
     console.log("    => journalism has been installed from JSR.");
   } else if (runtime === "deno") {
     console.log("\n3 - Installing libraries with Deno...");
-    console.log("    => @observablehq/plot has been installed from NPM.");
     execSync(
       "deno install --node-modules-dir=auto --allow-scripts=npm:duckdb jsr:@nshiab/simple-data-analysis",
       {
@@ -468,6 +463,7 @@ export default function getTempChange(
     execSync("deno install --node-modules-dir=auto npm:@observablehq/plot", {
       stdio: "ignore",
     });
+    console.log("    => @observablehq/plot has been installed from NPM.");
   }
 
   if (args.includes("--git")) {
