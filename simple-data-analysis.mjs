@@ -146,8 +146,8 @@ Montreal,2010.0,8.0
 Toronto,2010.0,9.9
 `;
 
-  const mainTs = `import { SimpleDB } from "simple-data-analysis";
-import { prettyDuration } from "journalism";
+  const mainTs = `import { SimpleDB } from "@nshiab/simple-data-analysis";
+import { prettyDuration } from "@nshiab/journalism";
 import computeRegressions from "./sda/computeRegressions.ts";
 
 const start = Date.now();
@@ -161,7 +161,7 @@ prettyDuration(start, { log: true, prefix: "Done in " });
 
 `;
 
-  const computeRegressionsTs = `import { SimpleDB } from "simple-data-analysis";
+  const computeRegressionsTs = `import type { SimpleDB } from "@nshiab/simple-data-analysis";
 
 export default async function computeRegressions(sdb: SimpleDB) {
   // The mean temperature per decade.
@@ -318,7 +318,7 @@ export default async function getHighlightedCode(file: FileAttachment) {
 
 `;
 
-  const getTempChangeTs = `import { formatNumber } from "journalism";
+  const getTempChangeTs = `import { formatNumber } from "@nshiab/journalism";
 
 export default function getTempChange(
   city: string,
@@ -401,74 +401,73 @@ export default function getTempChange(
     execSync("npm i rimraf  --save-dev --silent", {
       stdio: "ignore",
     });
-    console.log("    => rimraf has been installed.");
+    console.log("    => rimraf has been installed from NPM.");
     execSync("npm i @observablehq/framework --silent", {
       stdio: "ignore",
     });
-    console.log("    => @observablehq/framework has been installed.");
+    console.log("    => @observablehq/framework has been installed from NPM.");
     execSync("npm i @observablehq/plot --silent", {
       stdio: "ignore",
     });
-    console.log("    => @observablehq/plot has been installed.");
-    execSync("npm i simple-data-analysis --silent", {
+    console.log("    => @observablehq/plot has been installed from NPM.");
+    execSync("npx jsr add @nshiab/simple-data-analysis --silent", {
       stdio: "ignore",
     });
-    console.log("    => simple-data-analysis has been installed.");
-    execSync("npm i journalism --silent", {
+    console.log("    => simple-data-analysis has been installed from JSR.");
+    execSync("npx jsr add @nshiab/journalism --silent", {
       stdio: "ignore",
     });
-    console.log("    => journalism has been installed.");
+    console.log("    => journalism has been installed from JSR.");
   } else if (runtime === "bun") {
     console.log("\n3 - Installing libraries with Bun...");
     execSync("bun add rimraf --dev", {
       stdio: "ignore",
     });
-    console.log("    => rimraf has been installed.");
+    console.log("    => rimraf has been installed from NPM.");
     execSync("bun add @observablehq/framework", {
       stdio: "ignore",
     });
-    console.log("    => @observablehq/framework has been installed.");
+    console.log("    => @observablehq/framework has been installed from NPM.");
     execSync("bun add @observablehq/plot", {
       stdio: "ignore",
     });
-    console.log("    => @observablehq/plot has been installed.");
-    execSync("bun add simple-data-analysis", {
+    console.log("    => @observablehq/plot has been installed from NPM.");
+    execSync("bunx jsr add @nshiab/simple-data-analysis", {
       stdio: "ignore",
     });
-    console.log("    => simple-data-analysis has been installed.");
-    execSync("bun add journalism", {
+    console.log("    => simple-data-analysis has been installed from JSR.");
+    execSync("bunx jsr add @nshiab/journalism", {
       stdio: "ignore",
     });
-    console.log("    => journalism has been installed.");
+    console.log("    => journalism has been installed from JSR.");
   } else if (runtime === "deno") {
     console.log("\n3 - Installing libraries with Deno...");
+    console.log("    => @observablehq/plot has been installed from NPM.");
+    execSync(
+      "deno install --node-modules-dir=auto --allow-scripts=npm:duckdb jsr:@nshiab/simple-data-analysis",
+      {
+        stdio: "ignore",
+      }
+    );
+    console.log("    => simple-data-analysis has been installed from JSR.");
+    execSync("deno install --node-modules-dir=auto jsr:@nshiab/journalism", {
+      stdio: "ignore",
+    });
+    console.log("    => journalism has been installed from JSR.");
     execSync("deno install --node-modules-dir=auto --dev npm:rimraf", {
       stdio: "ignore",
     });
-    console.log("    => rimraf has been installed.");
+    console.log("    => rimraf has been installed from NPM.");
     execSync(
       "deno install --node-modules-dir=auto npm:@observablehq/framework",
       {
         stdio: "ignore",
       }
     );
-    console.log("    => @observablehq/framework has been installed.");
+    console.log("    => @observablehq/framework has been installed from NPM.");
     execSync("deno install --node-modules-dir=auto npm:@observablehq/plot", {
       stdio: "ignore",
     });
-    console.log("    => @observablehq/plot has been installed.");
-    execSync(
-      // Can't use JSR here. Don't know why.
-      "deno install --node-modules-dir=auto --allow-scripts=npm:duckdb npm:simple-data-analysis",
-      {
-        stdio: "ignore",
-      }
-    );
-    console.log("    => simple-data-analysis has been installed.");
-    execSync("deno install --node-modules-dir=auto npm:journalism", {
-      stdio: "ignore",
-    });
-    console.log("    => journalism has been installed.");
   }
 
   if (args.includes("--git")) {
@@ -542,8 +541,8 @@ When working on your project, use the following command:
     nodeModulesDir: "auto",
   };
 
-  let mainTs = `import { SimpleDB } from "simple-data-analysis";
-import { prettyDuration } from "journalism";
+  let mainTs = `import { SimpleDB } from "@nshiab/simple-data-analysis";
+import { prettyDuration } from "@nshiab/journalism";
 import computeRegressions from "./sda/computeRegressions.ts";
 
 const start = Date.now();
@@ -557,7 +556,7 @@ prettyDuration(start, { log: true, prefix: "Done in " });
 
 `;
 
-  let computeRegressionsTs = `import { SimpleDB } from "simple-data-analysis";
+  let computeRegressionsTs = `import type { SimpleDB } from "@nshiab/simple-data-analysis";
 
 export default async function computeRegressions(sdb: SimpleDB) {
   
@@ -648,22 +647,6 @@ Toronto,2010.0,9.9
   writeFileSync(".gitignore", "node_modules\n.temp\n.sda-cache");
   console.log("    => .gitignore has been created.");
 
-  if (runtime === "deno") {
-    mainTs = mainTs
-      .replace(
-        `import { SimpleDB } from "simple-data-analysis";`,
-        `import { SimpleDB } from "@nshiab/simple-data-analysis";`
-      )
-      .replace(
-        `import { prettyDuration } from "journalism";`,
-        `import { prettyDuration } from "@nshiab/journalism";`
-      );
-    computeRegressionsTs = computeRegressionsTs.replace(
-      `import { SimpleDB } from "simple-data-analysis";`,
-      `import { SimpleDB } from "@nshiab/simple-data-analysis";`
-    );
-  }
-
   mkdirSync("src");
   writeFileSync("src/main.ts", mainTs);
   console.log("    => src/main.ts has been created.");
@@ -682,25 +665,25 @@ Toronto,2010.0,9.9
   console.log("    => README.md has been created.");
 
   if (runtime === "nodejs") {
-    console.log("\n3 - Installing libraries with NPM...");
-    execSync("npm i simple-data-analysis --silent", {
+    console.log("\n3 - Installing libraries...");
+    execSync("npx jsr add @nshiab/simple-data-analysis --silent", {
       stdio: "ignore",
     });
-    console.log("    => simple-data-analysis has been installed.");
-    execSync("npm i journalism --silent", {
+    console.log("    => simple-data-analysis has been installed from JSR.");
+    execSync("npx jsr add @nshiab/journalism --silent", {
       stdio: "ignore",
     });
-    console.log("    => journalism has been installed.");
+    console.log("    => journalism has been installed from JSR.");
   } else if (runtime === "bun") {
     console.log("\n3 - Installing libraries with Bun...");
-    execSync("bun add simple-data-analysis", {
+    execSync("bunx jsr add @nshiab/simple-data-analysis", {
       stdio: "ignore",
     });
-    console.log("    => simple-data-analysis has been installed.");
-    execSync("bun add journalism", {
+    console.log("    => simple-data-analysis has been installed from JSR.");
+    execSync("bunx jsr add @nshiab/journalism", {
       stdio: "ignore",
     });
-    console.log("    => journalism has been installed.");
+    console.log("    => journalism has been installed from JSR.");
   } else if (runtime === "deno") {
     console.log("\n3 - Installing libraries with Deno...");
     execSync(
@@ -709,11 +692,11 @@ Toronto,2010.0,9.9
         stdio: "ignore",
       }
     );
-    console.log("    => simple-data-analysis has been installed.");
+    console.log("    => simple-data-analysis has been installed from JSR.");
     execSync("deno install --node-modules-dir=auto jsr:@nshiab/journalism", {
       stdio: "ignore",
     });
-    console.log("    => journalism has been installed.");
+    console.log("    => journalism has been installed JSR.");
   }
 
   if (args.includes("--git")) {
