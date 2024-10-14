@@ -1,6 +1,6 @@
 {
   "name": "@nshiab/setup-sda",
-  "version": "1.4.23",
+  "version": "1.4.24",
   "exports": "./simple-data-analysis.mjs",
   "nodeModulesDir": "auto"
 }
