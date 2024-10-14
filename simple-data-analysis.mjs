@@ -156,7 +156,7 @@ Montreal,2010.0,8.0
 Toronto,2010.0,9.9
 `;
 
-  const mainTs = `import { SimpleDB } from "jsr:@nshiab/simple-data-analysis";
+  const mainTs = `import { SimpleDB } from "@nshiab/simple-data-analysis";
 import { prettyDuration } from "@nshiab/journalism";
 import computeRegressions from "./sda/computeRegressions.ts";
 
@@ -172,7 +172,7 @@ prettyDuration(start, { log: true, prefix: "Done in " });
 `;
 
   const computeRegressionsTs =
-    `import type { SimpleDB } from "jsr:@nshiab/simple-data-analysis";
+    `import type { SimpleDB } from "@nshiab/simple-data-analysis";
 
 export default async function computeRegressions(sdb: SimpleDB) {
   // The mean temperature per decade.
@@ -332,7 +332,7 @@ export default async function getHighlightedCode(file: FileAttachment) {
 
   const getTempChangeTs =
     `// It's important to use the 'web' entrypoint since this is running in the browser.
-import { formatNumber } from "jsr:@nshiab/journalism/web";
+import { formatNumber } from "@nshiab/journalism/web";
 
 export default function getTempChange(
   city: string,
