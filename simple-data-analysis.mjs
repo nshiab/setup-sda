@@ -331,7 +331,8 @@ export default async function getHighlightedCode(file: FileAttachment) {
 `;
 
   const getTempChangeTs =
-    `import { formatNumber } from "jsr:@nshiab/journalism/web";
+    `// It's important to use the 'web' entrypoint since this is running in the browser.
+import { formatNumber } from "jsr:@nshiab/journalism/web";
 
 export default function getTempChange(
   city: string,
