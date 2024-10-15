@@ -4,9 +4,9 @@
   "description": "Minimalist setup scripts for the JavaScript library simple-data-analysis.",
   "main": "setup-sda.mjs",
   "scripts": {
-    "patch": "git branch --show-current | grep -q '^main$' && deno publish --dry-run && npm version patch && npm publish && deno run -A syncJsrVersion.js && git pull && git add -A && git commit -m 'Syncing NPM/JSR versions' && deno publish",
-    "minor": "git branch --show-current | grep -q '^main$' && deno publish --dry-run && npm version minor && npm publish && deno run -A syncJsrVersion.js && git pull && git add -A && git commit -m 'Syncing NPM/JSR versions' && deno publish",
-    "major": "git branch --show-current | grep -q '^main$' && deno publish --dry-run && npm version minor && npm publish && deno run -A syncJsrVersion.js && git pull && git add -A && git commit -m 'Syncing NPM/JSR versions' && deno publish"
+    "patch": "node run incrementVersion.ts patch && npm publish",
+    "minor": "node run incrementVersion.ts patch && npm publish",
+    "major": "node run incrementVersion.ts patch && npm publish"
   },
   "bin": {
     "setup-sda": "setup-sda.mjs"
