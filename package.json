@@ -9,7 +9,7 @@
     "major": "git branch --show-current | grep -q '^main$' && deno publish --dry-run && npm version minor && npm publish && deno run -A syncJsrVersion.js && git pull && git add -A && git commit -m 'Syncing NPM/JSR versions' && deno publish"
   },
   "bin": {
-    "simple-data-analysis": "simple-data-analysis.mjs"
+    "setup-sda": "setup-sda.mjs"
   },
   "repository": {
     "type": "git",

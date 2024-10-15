@@ -330,7 +330,7 @@ export default async function getHighlightedCode(file: FileAttachment) {
 
 `;
 
-  const getTempChangeTs =
+  let getTempChangeTs =
     `// It's important to use the 'web' entrypoint since this is running in the browser.
 import { formatNumber } from "@nshiab/journalism/web";
 
@@ -408,6 +408,12 @@ export default function getTempChange(
   writeFileSync("src/helpers/getHighlightedCode.ts", getHighlightedCodeTs);
   console.log("    => src/helpers/getHighlightedCode.ts has been created.");
 
+  if (runtime === "deno") {
+    getTempChangeTs = getTempChangeTs.replace(
+      `import { formatNumber } from "@nshiab/journalism/web";`,
+      `import { formatNumber } from "jsr:@nshiab/journalism/web";`,
+    );
+  }
   writeFileSync("src/helpers/getTempChange.ts", getTempChangeTs);
   console.log("    => src/helpers/getTempChange.ts has been created.");
 
