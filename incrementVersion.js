@@ -40,7 +40,7 @@ writeFileSync(denoJsonPath, JSON.stringify(denoData, null, 2));
 
 const packageJsonPath = "package.json";
 const packageJsonData = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
-packageJsonData.version = data.version;
+packageJsonData.version = denoData.version;
 writeFileSync(packageJsonPath, JSON.stringify(packageJsonData, null, 2));
 
 execSync("git add -A");

@@ -1,12 +1,12 @@
 {
   "name": "setup-sda",
-  "version": "1.4.27",
+  "version": "1.4.29",
   "description": "Minimalist setup scripts for the JavaScript library simple-data-analysis.",
   "main": "setup-sda.mjs",
   "scripts": {
-    "patch": "node run incrementVersion.ts patch && npm publish",
-    "minor": "node run incrementVersion.ts patch && npm publish",
-    "major": "node run incrementVersion.ts patch && npm publish"
+    "patch": "node run incrementVersion.js patch && npm publish",
+    "minor": "node run incrementVersion.js patch && npm publish",
+    "major": "node run incrementVersion.js patch && npm publish"
   },
   "bin": {
     "setup-sda": "setup-sda.mjs"

@@ -1,11 +1,11 @@
 {
   "name": "@nshiab/setup-sda",
-  "version": "1.4.27",
+  "version": "1.4.29",
   "exports": "./setup-sda.mjs",
   "tasks": {
-    "patch": "deno run -A incrementVersion.ts patch && npm publish",
-    "minor": "deno run -A incrementVersion.ts minor && npm publish",
-    "major": "deno run -A incrementVersion.ts major && npm publish"
+    "patch": "deno run -A incrementVersion.js patch && npm publish",
+    "minor": "deno run -A incrementVersion.js minor && npm publish",
+    "major": "deno run -A incrementVersion.js major && npm publish"
   },
   "nodeModulesDir": "auto"
 }
