@@ -676,11 +676,19 @@ Toronto,2010.0,9.9
   console.log("    => .gitignore has been created.");
 
   mkdirSync("src");
-  writeFileSync("src/main.ts", mainTs);
+  writeFileSync(
+    "src/main.ts",
+    runtime !== "deno" ? mainTs.replaceAll("jsr:", "") : mainTs,
+  );
   console.log("    => src/main.ts has been created.");
 
   mkdirSync("src/sda");
-  writeFileSync("src/sda/computeRegressions.ts", computeRegressionsTs);
+  writeFileSync(
+    "src/sda/computeRegressions.ts",
+    runtime !== "deno"
+      ? computeRegressionsTs.replaceAll("jsr:", "")
+      : computeRegressionsTs,
+  );
   console.log("    => src/sda/computeRegressions.ts has been created.");
 
   mkdirSync("src/data-raw");
