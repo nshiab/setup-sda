@@ -532,12 +532,12 @@ It's using [simple-data-analysis](https://github.com/nshiab/simple-data-analysis
 
 Here's the recommended workflow:
 
-- Put your raw data in the \`src/data-raw\` folder.
-- Use the \`src/main.ts\` file to clean and process your raw data. Write the results to the \`src/data\` folder.
+- Put your raw data in the \`sda/data-raw\` folder.
+- Use the \`sda/main.ts\` file to clean and process your raw data. Write the results to the \`sda/data\` folder.
 
 When working on your project, use the following command:
 
-- \`npm run sda\` will watch your \`src/main.ts\` and its dependencies. Everytime you'll save some changes, the data will be reprocessed.
+- \`npm run sda\` will watch your \`sda/main.ts\` and its dependencies. Everytime you'll save some changes, the data will be reprocessed.
 `;
 
   const tsconfigContent = `{
@@ -555,42 +555,38 @@ When working on your project, use the following command:
   const packageJson = {
     type: "module",
     scripts: {
-      sda: "node --experimental-strip-types --no-warnings --watch src/main.ts",
+      sda: "node --experimental-strip-types --no-warnings --watch sda/main.ts",
       clean: "rm -rf .sda-cache && rm -rf .temp",
     },
   };
 
   const denoJson = {
     tasks: {
-      sda: "deno run --node-modules-dir=auto -A --watch src/main.ts",
+      sda: "deno run --node-modules-dir=auto -A --watch sda/main.ts",
       clean: "rm -rf .sda-cache && rm -rf .temp",
     },
     nodeModulesDir: "auto",
   };
 
-  const mainTs = `import { SimpleDB } from "jsr:@nshiab/simple-data-analysis";
-import { prettyDuration } from "jsr:@nshiab/journalism";
-import computeRegressions from "./sda/computeRegressions.ts";
+  const mainTs = `import { SimpleDB } from "@nshiab/simple-data-analysis";
+import crunchData from "./functions/crunchData.ts";
 
-const start = Date.now();
-const sdb = new SimpleDB();
+const sdb = new SimpleDB({ logDuration: true});
 
-await computeRegressions(sdb);
+await crunchData(sdb);
 
 await sdb.done();
 
-prettyDuration(start, { log: true, prefix: "Done in " });
-
 `;
 
-  const computeRegressionsTs =
-    `import type { SimpleDB } from "jsr:@nshiab/simple-data-analysis";
+  const crunchData =
+    `import type { SimpleDB } from "@nshiab/simple-data-analysis";
 
-export default async function computeRegressions(sdb: SimpleDB) {
+export default async function crunchData(sdb: SimpleDB) {
   
   // The mean temperature per decade.
   const temp = sdb.newTable("temp");
-  await temp.loadData("src/data-raw/temp.csv");
+  await temp.loadData("sda/data-raw/temp.csv");
 
   // We log the table.
   await temp.logTable();
@@ -613,7 +609,7 @@ export default async function computeRegressions(sdb: SimpleDB) {
   await tempRegressions.logTable();
 
   // We write the results to src/data.
-  await tempRegressions.writeData("src/data/temp-regressions.json");
+  await tempRegressions.writeData("sda/data/temp-regressions.json");
 }
 `;
 
@@ -660,7 +656,7 @@ Toronto,2010.0,9.9
     console.log("    => tsconfig.json has been created.");
   } else if (runtime === "bun") {
     packageJson.scripts = {
-      sda: "bun --watch src/main.ts",
+      sda: "bun --watch sda/main.ts",
     };
     writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
     console.log("    => package.json has been created.");
@@ -675,21 +671,19 @@ Toronto,2010.0,9.9
   writeFileSync(".gitignore", "node_modules\n.temp\n.sda-cache");
   console.log("    => .gitignore has been created.");
 
-  mkdirSync("src");
+  mkdirSync("sda");
   writeFileSync(
-    "src/main.ts",
-    runtime !== "deno" ? mainTs.replaceAll("jsr:", "") : mainTs,
+    "sda/main.ts",
+    mainTs,
   );
-  console.log("    => src/main.ts has been created.");
+  console.log("    => sda/main.ts has been created.");
 
-  mkdirSync("src/sda");
+  mkdirSync("sda/functions");
   writeFileSync(
-    "src/sda/computeRegressions.ts",
-    runtime !== "deno"
-      ? computeRegressionsTs.replaceAll("jsr:", "")
-      : computeRegressionsTs,
+    "sda/functions/crunchData.ts",
+    crunchData,
   );
-  console.log("    => src/sda/computeRegressions.ts has been created.");
+  console.log("    => sda/functions/crunchData.ts has been created.");
 
   mkdirSync("src/data-raw");
   writeFileSync("src/data-raw/temp.csv", data);
