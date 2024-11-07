@@ -685,11 +685,11 @@ Toronto,2010.0,9.9
   );
   console.log("    => sda/functions/crunchData.ts has been created.");
 
-  mkdirSync("src/data-raw");
-  writeFileSync("src/data-raw/temp.csv", data);
-  console.log("    => src/data-raw/temp.csv has been created.");
-  mkdirSync("src/data");
-  console.log("    => src/data/ has been created.");
+  mkdirSync("sda/data-raw");
+  writeFileSync("sda/data-raw/temp.csv", data);
+  console.log("    => sda/data-raw/temp.csv has been created.");
+  mkdirSync("sda/data");
+  console.log("    => sda/data/ has been created.");
 
   writeFileSync("README.md", readme);
   console.log("    => README.md has been created.");
