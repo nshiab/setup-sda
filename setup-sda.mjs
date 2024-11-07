@@ -44,13 +44,13 @@ It's using [simple-data-analysis](https://github.com/nshiab/simple-data-analysis
 
 Here's the recommended workflow:
 
-- Put your raw data in the \`src/data-raw\` folder.
-- Use the \`src/main.ts\` file to clean and process your raw data. Write the results to the \`src/data\` folder.
+- Put your raw data in the \`sda/data-raw\` folder.
+- Use the \`sda/main.ts\` file to clean and process your raw data. Write the results to the \`src/data\` folder.
 - Import your processed data from the \`src/data\` folder into the \`src/index.md\` and use it for your content.
 
 When working on your project, you can use the following commands:
 
-- \`npm run sda\` will watch your \`src/main.ts\` and its dependencies. Everytime you'll save some changes, the data will be reprocessed.
+- \`npm run sda\` will watch your \`sda/main.ts\` and its dependencies. Everytime you'll save some changes, the data will be reprocessed.
 - \`npm run dev\` will start a local server and watch all \`src/*.md\` files and their dependencies. Everytime you'll save some changes or the data is reprocessed, the content will be updated.
 
 By opening two terminals each running one of the above commands, you'll be able to work on your project with a live preview of your content and data.
@@ -65,7 +65,7 @@ By opening two terminals each running one of the above commands, you'll be able 
       dev: "observable preview",
       deploy: "observable deploy",
       observable: "observable",
-      sda: "node --experimental-strip-types --no-warnings --watch src/main.ts",
+      sda: "node --experimental-strip-types --no-warnings --watch sda/main.ts",
     },
   };
 
@@ -77,7 +77,7 @@ By opening two terminals each running one of the above commands, you'll be able 
       dev: "observable preview",
       deploy: "observable deploy",
       observable: "observable",
-      sda: "deno run --node-modules-dir=auto -A --watch src/main.ts",
+      sda: "deno run --node-modules-dir=auto -A --watch sda/main.ts",
     },
     nodeModulesDir: "auto",
   };
@@ -157,27 +157,24 @@ Toronto,2010.0,9.9
 `;
 
   const mainTs = `import { SimpleDB } from "@nshiab/simple-data-analysis";
-import { prettyDuration } from "@nshiab/journalism";
-import computeRegressions from "./sda/computeRegressions.ts";
+import crunchData from "sda/functions/crunchData.ts";
 
-const start = Date.now();
-const sdb = new SimpleDB();
+const sdb = new SimpleDB({ logDuration: true });
 
-await computeRegressions(sdb);
+await crunchData(sdb);
 
 await sdb.done();
 
-prettyDuration(start, { log: true, prefix: "Done in " });
-
 `;
 
-  const computeRegressionsTs =
+  const crunchDataTs =
     `import type { SimpleDB } from "@nshiab/simple-data-analysis";
 
-export default async function computeRegressions(sdb: SimpleDB) {
+export default async function crunchData(sdb: SimpleDB) {
+
   // The mean temperature per decade.
   const temp = sdb.newTable("temp");
-  await temp.loadData("src/data-raw/temp.csv");
+  await temp.loadData("sda/data-raw/temp.csv");
   await temp.logTable();
 
   // We compute a linear regression for each city.
@@ -244,7 +241,7 @@ To compute the regressions, we used the [simple-data-analysis](https://github.co
 
 \`\`\`ts
 display(
-  await getHighlightedCode(FileAttachment("./sda/computeRegressions.ts"))
+  await getHighlightedCode(FileAttachment("../sda/crunchData.ts"))
 );
 \`\`\`
 `;
@@ -356,10 +353,10 @@ export default function getTempChange(
   console.log("    => README.md has been created.");
 
   if (runtime === "bun") {
-    packageJson.scripts.sda = "bun --watch src/main.ts";
+    packageJson.scripts.sda = "bun --watch sda/main.ts";
   } else if (runtime === "deno") {
     packageJson.scripts.sda =
-      "deno run --node-modules-dir=auto -A --watch src/main.ts";
+      "deno run --node-modules-dir=auto -A --watch sda/main.ts";
   }
 
   if (runtime === "deno") {
@@ -379,21 +376,26 @@ export default function getTempChange(
   );
   console.log("    => .gitignore has been created.");
 
-  mkdirSync("src");
+  mkdirSync("sda");
 
-  writeFileSync("src/main.ts", mainTs);
-  console.log("    => src/main.ts has been created.");
+  writeFileSync("sda/main.ts", mainTs);
+  console.log("    => sda/main.ts has been created.");
+
+  mkdirSync("sda/functions");
+
+  writeFileSync("sda/functions/crunchData.ts", crunchDataTs);
+  console.log("    => sda/functions/crunchData.ts has been created.");
+
+  mkdirSync("sda/data-raw");
+
+  writeFileSync("sda/data-raw/temp.csv", data);
+  console.log("    => sda/data-raw/temp.csv has been created.");
 
   writeFileSync("src/index.md", indexMd);
   console.log("    => src/index.md has been created.");
 
   writeFileSync("src/.gitignore", "/.observablehq/cache/");
   console.log("    => src/.gitignore has been created.");
-
-  mkdirSync("src/data-raw");
-
-  writeFileSync("src/data-raw/temp.csv", data);
-  console.log("    => src/data-raw/temp.csv has been created.");
 
   mkdirSync("src/data");
   console.log("    => src/data/ has been created.");
@@ -416,11 +418,6 @@ export default function getTempChange(
   }
   writeFileSync("src/helpers/getTempChange.ts", getTempChangeTs);
   console.log("    => src/helpers/getTempChange.ts has been created.");
-
-  mkdirSync("src/sda");
-
-  writeFileSync("src/sda/computeRegressions.ts", computeRegressionsTs);
-  console.log("    => src/sda/computeRegressions.ts has been created.");
 
   if (runtime === "nodejs") {
     console.log("\n3 - Installing libraries with NPM...");
