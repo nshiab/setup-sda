@@ -157,7 +157,7 @@ Toronto,2010.0,9.9
 `;
 
   const mainTs = `import { SimpleDB } from "@nshiab/simple-data-analysis";
-import crunchData from "sda/functions/crunchData.ts";
+import crunchData from "./functions/crunchData.ts";
 
 const sdb = new SimpleDB({ logDuration: true });
 
