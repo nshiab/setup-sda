@@ -197,7 +197,6 @@ export default async function crunchData(sdb: SimpleDB) {
 // To import .ts files, you need to use the .js extension
 import getTempChange from "./helpers/getTempChange.js";
 import createChart from "./components/createChart.js";
-import getHighlightedCode from "./helpers/getHighlightedCode.js";
 
 const temp = FileAttachment("data/temp.json").json();
 const tempRegressions = FileAttachment("data/temp-regressions.json").json();
@@ -239,11 +238,31 @@ This project uses a simple linear regression to estimate the temperature change 
 
 To compute the regressions, we used the [simple-data-analysis](https://github.com/nshiab/simple-data-analysis) library.
 
-\`\`\`ts
-display(
-  await getHighlightedCode(FileAttachment("../sda/crunchData.ts"))
-);
+\`\`\`ts run=false
+import type { SimpleDB } from "@nshiab/simple-data-analysis";
+
+export default async function crunchData(sdb: SimpleDB) {
+  // The mean temperature per decade.
+  const temp = sdb.newTable("temp");
+  await temp.loadData("sda/data-raw/temp.csv");
+  await temp.logTable();
+
+  // We compute a linear regression for each city.
+  const tempRegressions = await temp.linearRegressions({
+    x: "decade",
+    y: "meanTemp",
+    categories: "city",
+    decimals: 4,
+    outputTable: "tempRegressions",
+  });
+  await tempRegressions.logTable();
+
+  // We write the results to src/data.
+  await temp.writeData("src/data/temp.json");
+  await tempRegressions.writeData("src/data/temp-regressions.json");
+}
 \`\`\`
+
 `;
 
   const createChartTs = `
@@ -296,35 +315,6 @@ export default function createChart(
     caption,
   });
 }
-`;
-
-  const getHighlightedCodeTs =
-    `import { FileAttachment } from "npm:@observablehq/stdlib";
-import { html } from "npm:htl";
-import hljs from "npm:highlight.js/lib/core";
-import typescript from "npm:highlight.js/lib/languages/typescript";
-
-hljs.registerLanguage("typescript", typescript);
-
-export default async function getHighlightedCode(file: FileAttachment) {
-  const code = await file.text();
-
-  const highlightedCode = hljs.highlight(code, {
-    language: "typescript",
-  }).value;
-
-  const wrappedCode = html\`<div
-    class="observablehq-pre-container"
-    data-language="ts"
-  >
-    <pre data-language="ts"><code class="language-ts"></code></pre>
-  </div>\`;
-
-  wrappedCode.querySelector("code").innerHTML = highlightedCode;
-
-  return wrappedCode;
-}
-
 `;
 
   let getTempChangeTs =
@@ -408,9 +398,6 @@ export default function getTempChange(
   console.log("    => src/components/createChart.ts has been created.");
 
   mkdirSync("src/helpers");
-
-  writeFileSync("src/helpers/getHighlightedCode.ts", getHighlightedCodeTs);
-  console.log("    => src/helpers/getHighlightedCode.ts has been created.");
 
   if (runtime === "deno") {
     getTempChangeTs = getTempChangeTs.replace(
