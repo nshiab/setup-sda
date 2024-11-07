@@ -391,6 +391,8 @@ export default function getTempChange(
   writeFileSync("sda/data-raw/temp.csv", data);
   console.log("    => sda/data-raw/temp.csv has been created.");
 
+  mkdirSync("src");
+
   writeFileSync("src/index.md", indexMd);
   console.log("    => src/index.md has been created.");
 
