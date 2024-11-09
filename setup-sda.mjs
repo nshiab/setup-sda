@@ -2142,6 +2142,70 @@ export default function getTempChange(
       stdio: "ignore",
     });
     console.log("    => journalism has been installed from JSR.");
+  } else if (runtime === "bun") {
+    console.log("\n3 - Installing libraries with Bun...");
+
+    execSync("bun add @sveltejs/adapter-auto --dev", {
+      stdio: "ignore",
+    });
+    console.log("    => @sveltejs/adapter-auto has been installed from NPM.");
+
+    execSync("bun add @sveltejs/adapter-static --dev", {
+      stdio: "ignore",
+    });
+    console.log("    => @sveltejs/adapter-static has been installed from NPM.");
+
+    execSync("bun add @sveltejs/kit --dev", {
+      stdio: "ignore",
+    });
+    console.log("    => @sveltejs/kit has been installed from NPM.");
+
+    execSync("bun add @sveltejs/vite-plugin-svelte --dev", {
+      stdio: "ignore",
+    });
+    console.log(
+      "    => @sveltejs/vite-plugin-svelte has been installed from NPM.",
+    );
+
+    execSync("bun add svelte --dev", {
+      stdio: "ignore",
+    });
+    console.log("    => svelte has been installed from NPM.");
+
+    execSync("bun add svelte-check --dev", {
+      stdio: "ignore",
+    });
+    console.log("    => svelte-check has been installed from NPM.");
+
+    execSync("bun add typescript --dev", {
+      stdio: "ignore",
+    });
+    console.log("    => typescript has been installed from NPM.");
+
+    execSync("bun add vite --dev", {
+      stdio: "ignore",
+    });
+    console.log("    => vite has been installed from NPM.");
+
+    execSync("bun add highlight.js", {
+      stdio: "ignore",
+    });
+    console.log("    => highlight.js has been installed from NPM.");
+
+    execSync("bun add @observablehq/plot", {
+      stdio: "ignore",
+    });
+    console.log("    => @observablehq/plot has been installed from NPM.");
+
+    execSync("bunx jsr add @nshiab/simple-data-analysis", {
+      stdio: "ignore",
+    });
+    console.log("    => simple-data-analysis has been installed from JSR.");
+
+    execSync("bunx jsr add @nshiab/journalism", {
+      stdio: "ignore",
+    });
+    console.log("    => journalism has been installed from JSR.");
   }
   // else if (runtime === "deno") {
   //     console.log("\n3 - Installing libraries with Deno...");
