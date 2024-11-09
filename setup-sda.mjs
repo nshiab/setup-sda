@@ -555,10 +555,13 @@ By opening two terminals each running one of the above commands, you'll be able 
       "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
       "check:watch":
         "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-      sda: "node --experimental-strip-types --no-warnings --watch sda/main.ts",
+      sda: "deno run --node-modules-dir=auto -A --watch sda/main.ts",
       clean: "rm -rf .sda-cache && rm -rf .temp",
     },
     nodeModulesDir: "auto",
+    unstable: [
+      "fmt-component",
+    ],
   };
 
   const tempCsv = `city,decade,meanTemp
@@ -2206,36 +2209,92 @@ export default function getTempChange(
       stdio: "ignore",
     });
     console.log("    => journalism has been installed from JSR.");
+  } else if (runtime === "deno") {
+    console.log("\n3 - Installing libraries with Deno...");
+
+    execSync(
+      "deno install --node-modules-dir=auto --dev --allow-scripts=npm:@sveltejs/kit npm:@sveltejs/adapter-auto",
+      {
+        stdio: "ignore",
+      },
+    );
+    console.log("    => @sveltejs/adapter-auto has been installed from NPM.");
+
+    execSync(
+      "deno install --node-modules-dir=auto --dev npm:@sveltejs/adapter-static",
+      {
+        stdio: "ignore",
+      },
+    );
+    console.log("    => @sveltejs/adapter-static has been installed from NPM.");
+
+    execSync("deno install --node-modules-dir=auto --dev npm:@sveltejs/kit", {
+      stdio: "ignore",
+    });
+    console.log("    => @sveltejs/kit has been installed from NPM.");
+
+    execSync(
+      "deno install --node-modules-dir=auto --dev npm:@sveltejs/vite-plugin-svelte",
+      {
+        stdio: "ignore",
+      },
+    );
+    console.log(
+      "    => @sveltejs/vite-plugin-svelte has been installed from NPM.",
+    );
+
+    execSync("deno install --node-modules-dir=auto --dev npm:svelte", {
+      stdio: "ignore",
+    });
+    console.log("    => svelte has been installed from NPM.");
+
+    execSync("deno install --node-modules-dir=auto --dev npm:svelte-check", {
+      stdio: "ignore",
+    });
+    console.log("    => svelte-check has been installed from NPM.");
+
+    execSync("deno install --node-modules-dir=auto --dev npm:typescript", {
+      stdio: "ignore",
+    });
+    console.log("    => typescript has been installed from NPM.");
+
+    execSync("deno install --node-modules-dir=auto --dev npm:vite", {
+      stdio: "ignore",
+    });
+    console.log("    => vite has been installed from NPM.");
+
+    execSync("deno install --node-modules-dir=auto npm:highlight.js", {
+      stdio: "ignore",
+    });
+    console.log("    => highlight.js has been installed from NPM.");
+
+    execSync("deno install --node-modules-dir=auto npm:@observablehq/plot", {
+      stdio: "ignore",
+    });
+    console.log("    => @observablehq/plot has been installed from NPM.");
+
+    writeFileSync(".npmrc", "@jsr:registry=https://npm.jsr.io");
+    const packageJson = {
+      "dependencies": {
+        "@nshiab/journalism": "npm:@jsr/nshiab__journalism@^1.19.1",
+        "@nshiab/simple-data-analysis":
+          "npm:@jsr/nshiab__simple-data-analysis@^3.15.3",
+      },
+    };
+    writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
+    execSync(
+      "deno install --node-modules-dir=auto --allow-scripts=npm:duckdb",
+      {
+        stdio: "ignore",
+      },
+    );
+    console.log(
+      "    => simple-data-analysis has been installed from JSR (with a package.json).",
+    );
+    console.log(
+      "    => journalism has been installed from JSR (with a package.json).",
+    );
   }
-  // else if (runtime === "deno") {
-  //     console.log("\n3 - Installing libraries with Deno...");
-  //     execSync(
-  //       "deno install --node-modules-dir=auto --allow-scripts=npm:duckdb jsr:@nshiab/simple-data-analysis",
-  //       {
-  //         stdio: "ignore",
-  //       },
-  //     );
-  //     console.log("    => simple-data-analysis has been installed from JSR.");
-  //     execSync("deno install --node-modules-dir=auto jsr:@nshiab/journalism", {
-  //       stdio: "ignore",
-  //     });
-  //     console.log("    => journalism has been installed from JSR.");
-  //     execSync("deno install --node-modules-dir=auto --dev npm:rimraf", {
-  //       stdio: "ignore",
-  //     });
-  //     console.log("    => rimraf has been installed from NPM.");
-  //     execSync(
-  //       "deno install --node-modules-dir=auto npm:@observablehq/framework",
-  //       {
-  //         stdio: "ignore",
-  //       },
-  //     );
-  //     console.log("    => @observablehq/framework has been installed from NPM.");
-  //     execSync("deno install --node-modules-dir=auto npm:@observablehq/plot", {
-  //       stdio: "ignore",
-  //     });
-  //     console.log("    => @observablehq/plot has been installed from NPM.");
-  //   }
 
   if (args.includes("--git")) {
     console.log("\n4 - Initializing Git repository...");
