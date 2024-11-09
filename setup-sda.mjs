@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { execSync } from "node:child_process";
-import { mkdirSync, readdirSync, write, writeFileSync } from "node:fs";
+import { mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import process from "node:process";
 
 console.log("\nStarting sda setup...");
@@ -516,21 +516,21 @@ export default function getTempChange(
   const readme =
     `This repository has been created with [setup-sda](https://github.com/nshiab/setup-sda/).
 
-  It's using [simple-data-analysis](https://github.com/nshiab/simple-data-analysis), [journalism](https://github.com/nshiab/journalism), and others great open-source librairies with [SvelteKit](https://svelte.dev/docs/kit/introduction).
+It's using [simple-data-analysis](https://github.com/nshiab/simple-data-analysis), [journalism](https://github.com/nshiab/journalism), and others great open-source librairies with [SvelteKit](https://svelte.dev/docs/kit/introduction).
 
-  Here's the recommended workflow:
+Here's the recommended workflow:
 
-  - Put your raw data in the \`sda/data-raw\` folder.
-  - Use the \`sda/main.ts\` file to clean and process your raw data. Write the results to the \`src/data\` or \`static/\` folders.
-  - Import your processed data from the \`src/data\` folder into the \`src/routes/+page.svelte\` or fetch it with \`src/routes/+page.js\`.
-  - Use the data for your content.
+- Put your raw data in the \`sda/data-raw\` folder.
+- Use the \`sda/main.ts\` file to clean and process your raw data. Write the results to the \`src/data\` or \`static/\` folders.
+- Import your processed data from the \`src/data\` folder into the \`src/routes/+page.svelte\` or fetch it with \`src/routes/+page.js\`.
+- Use the data for your content.
 
-  When working on your project, you can use the following commands:
+When working on your project, you can use the following commands:
 
-  - \`npm run sda\` will watch your \`sda/main.ts\` and its dependencies. Everytime you'll save some changes, the data will be reprocessed.
-  - \`npm run dev\` will start a local server and watch all \`src/*\` files and their dependencies. Everytime you'll save some changes or the data is reprocessed, the content will be updated.
+- \`npm run sda\` will watch your \`sda/main.ts\` and its dependencies. Everytime you'll save some changes, the data will be reprocessed.
+- \`npm run dev\` will start a local server and watch all \`src/*\` files and their dependencies. Everytime you'll save some changes or the data is reprocessed, the content will be updated.
 
-  By opening two terminals each running one of the above commands, you'll be able to work on your project with a live preview of your content and data.
+By opening two terminals each running one of the above commands, you'll be able to work on your project with a live preview of your content and data.
   `;
 
   const packageJson = {
@@ -561,39 +561,38 @@ export default function getTempChange(
     nodeModulesDir: "auto",
   };
 
-  const data = `city,decade,meanTemp
-  Toronto,1840.0,7.1
-  Toronto,1850.0,6.4
-  Toronto,1860.0,6.9
-  Toronto,1870.0,6.8
-  Montreal,1880.0,5.3
-  Toronto,1880.0,6.6
-  Montreal,1890.0,6.0
-  Toronto,1890.0,7.6
-  Montreal,1900.0,5.8
-  Toronto,1900.0,7.7
-  Montreal,1910.0,6.1
-  Toronto,1910.0,8.1
-  Montreal,1920.0,6.2
-  Toronto,1920.0,8.0
-  Montreal,1930.0,6.8
-  Toronto,1930.0,8.6
-  Montreal,1940.0,6.9
-  Toronto,1940.0,8.7
-  Montreal,1950.0,7.4
-  Toronto,1950.0,9.2
-  Montreal,1960.0,7.4
-  Toronto,1960.0,8.8
-  Montreal,1970.0,7.3
-  Toronto,1970.0,9.0
-  Montreal,1980.0,7.7
-  Toronto,1980.0,9.0
-  Toronto,1990.0,9.6
-  Montreal,2000.0,7.6
-  Toronto,2000.0,9.7
-  Montreal,2010.0,8.0
-  Toronto,2010.0,9.9
-  `;
+  const tempCsv = `city,decade,meanTemp
+Toronto,1840.0,7.1
+Toronto,1850.0,6.4
+Toronto,1860.0,6.9
+Toronto,1870.0,6.8
+Montreal,1880.0,5.3
+Toronto,1880.0,6.6
+Montreal,1890.0,6.0
+Toronto,1890.0,7.6
+Montreal,1900.0,5.8
+Toronto,1900.0,7.7
+Montreal,1910.0,6.1
+Toronto,1910.0,8.1
+Montreal,1920.0,6.2
+Toronto,1920.0,8.0
+Montreal,1930.0,6.8
+Toronto,1930.0,8.6
+Montreal,1940.0,6.9
+Toronto,1940.0,8.7
+Montreal,1950.0,7.4
+Toronto,1950.0,9.2
+Montreal,1960.0,7.4
+Toronto,1960.0,8.8
+Montreal,1970.0,7.3
+Toronto,1970.0,9.0
+Montreal,1980.0,7.7
+Toronto,1980.0,9.0
+Toronto,1990.0,9.6
+Montreal,2000.0,7.6
+Toronto,2000.0,9.7
+Montreal,2010.0,8.0
+Toronto,2010.0,9.9`;
 
   const mainTs = `import { SimpleDB } from "@nshiab/simple-data-analysis";
 import crunchData from "./functions/crunchData.ts";
@@ -711,7 +710,9 @@ vite.config.ts.timestamp-*
 .temp
 .sda-cache`;
 
-  const styleCss = `/* Global variables. */
+  const styleCss = `/* Adapted from https://github.com/kevquirk/simple.css */
+
+/* Global variables. */
 :root {
   /* Set sans-serif & mono fonts */
   --sans-font:
@@ -1436,8 +1437,7 @@ sub {
 }
 `;
 
-  const highlightThemeCss = `
-/*!
+  const highlightThemeCss = `/*
   Theme: GitHub
   Description: Light theme as seen on github.com
   Author: github.com
@@ -1655,13 +1655,23 @@ export {};
   </p>
 
   <CodeHighlight
+    filename="crunchData.ts"
     code={\`import type { SimpleDB } from "@nshiab/simple-data-analysis";
 
 export default async function crunchData(sdb: SimpleDB) {
   // The mean temperature per decade.
   const temp = sdb.newTable("temp");
-  await temp.loadData("src/data-raw/temp.csv");
+  await temp.loadData("sda/data-raw/temp.csv");
+
+  // We log the table.
   await temp.logTable();
+
+  // We log line charts.
+  await temp.logLineChart("decade", "meanTemp", {
+    smallMultiples: "city",
+    fixedScales: true,
+    formatY: (d) => \\\`\\\${d}°C\\\`,
+  });
 
   // We compute a linear regression for each city.
   const tempRegressions = await temp.linearRegressions({
@@ -1673,10 +1683,12 @@ export default async function crunchData(sdb: SimpleDB) {
   });
   await tempRegressions.logTable();
 
-  // We write the results to src/data.
-  await temp.writeData("src/data/temp.json");
+  // We write the results to src/data
   await tempRegressions.writeData("src/data/temp-regressions.json");
-}\`}
+  // Or to static
+  await temp.writeData("static/temp.json");
+}
+\`}
   />
 </main>
 
@@ -1686,7 +1698,8 @@ export default async function crunchData(sdb: SimpleDB) {
       href="https://github.com/nshiab/setup-sda">setup-sda</a
     >.
   </p>
-</footer>`;
+</footer>
+`;
 
   const pageJs = `export async function load({ fetch }) {
   const res = await fetch("/temp.json");
@@ -1728,7 +1741,7 @@ export type { cityT, tempRegrT, tempT };`;
   const getTempChangeTs =
     `// It's important to use the 'web' entrypoint since this is running in the browser.
 import { formatNumber } from "@nshiab/journalism/web";
-import { tempRegrT } from "../lib/index.ts";
+import type { tempRegrT } from "../lib/index.ts";
 
 export default function getTempChange(
   city: string,
@@ -1737,7 +1750,7 @@ export default function getTempChange(
   const cityRegression = tempRegr.find((r) => r.city === city);
 
   if (cityRegression === undefined) {
-    throw new Error(\`City ${city} not found in tempRegr.\`);
+    throw new Error(\`City \${city} not found in tempRegr.\`);
   }
 
   const slopPerDecade = cityRegression.slope * 10;
@@ -1834,13 +1847,13 @@ export default function getTempChange(
     import hljs from "highlight.js/lib/core";
     import typescript from "highlight.js/lib/languages/typescript";
 
-    let { code }: { code: string } = $props();
+    let { code, filename }: { code: string; filename: string } = $props();
 
     hljs.registerLanguage("typescript", typescript);
 
     function addCode(node: Element, code: string) {
         node.innerHTML =
-            "\n" +
+            "\\n" +
             hljs
                 .highlight(code, {
                     language: "typescript",
@@ -1853,7 +1866,7 @@ export default function getTempChange(
     <p
         style="position:absolute; top: 0px; margin:0; border-radius: 5px 5px 0 0; padding: 0.25rem 1.5rem; background-color: #e6e6e6; width: 100%; font-family: var(--mono-font); display: flex; justify-content: space-between; align-items: center;"
     >
-        crunchData.ts
+        {filename}
         <button
             onclick={() => navigator.clipboard.writeText(code)}
             style="background: none; border: none; cursor: pointer; font-size: 1rem; margin: 0;"
@@ -1912,7 +1925,7 @@ export default function getTempChange(
         // We create x and y coordinates to draw a line based on the linear regression.
         const regressionCity = tempRegr.find((r) => r.city === city);
         if (regressionCity === undefined) {
-            throw new Error(\`City ${city} not found in tempRegr.\`);
+            throw new Error(\`City \${city} not found in tempRegr.\`);
         }
         const x1 = tempCity[0].decade;
         const x2 = tempCity[tempCity.length - 1].decade;
@@ -1923,14 +1936,14 @@ export default function getTempChange(
             { decade: x2, meanTemp: y2 },
         ];
 
-        const caption = \`Mean temperature per decade in ${city}. Linear regression: y = ${regressionCity.slope}x + ${regressionCity.yIntercept}, R² = ${regressionCity.r2}\`;
+        const caption = \`Mean temperature per decade in \${city}. Linear regression: y = \${regressionCity.slope}x + \${regressionCity.yIntercept}, R² = \${regressionCity.r2}\`;
 
         const chart = plot({
             width,
             x: { label: "Time", tickFormat: (d) => String(d) },
             y: {
                 label: "Temperature",
-                tickFormat: (d) => \`${d}°C\`,
+                tickFormat: (d) => \`\${d}°C\`,
                 ticks: 5,
             },
             inset: 20,
@@ -2065,51 +2078,72 @@ export default function getTempChange(
   writeFileSync("sda/data-raw/temp.csv", tempCsv);
   console.log("    => sda/data-raw/temp.csv has been created.");
 
-  //   if (runtime === "nodejs") {
-  //     console.log("\n3 - Installing libraries with NPM...");
-  //     execSync("npm i rimraf  --save-dev", {
-  //       stdio: "ignore",
-  //     });
-  //     console.log("    => rimraf has been installed from NPM.");
-  //     execSync("npm i @observablehq/framework", {
-  //       stdio: "ignore",
-  //     });
-  //     console.log("    => @observablehq/framework has been installed from NPM.");
-  //     execSync("npm i @observablehq/plot", {
-  //       stdio: "ignore",
-  //     });
-  //     console.log("    => @observablehq/plot has been installed from NPM.");
-  //     execSync("npx jsr add @nshiab/simple-data-analysis", {
-  //       stdio: "ignore",
-  //     });
-  //     console.log("    => simple-data-analysis has been installed from JSR.");
-  //     execSync("npx jsr add @nshiab/journalism", {
-  //       stdio: "ignore",
-  //     });
-  //     console.log("    => journalism has been installed from JSR.");
-  //   } else if (runtime === "bun") {
-  //     console.log("\n3 - Installing libraries with Bun...");
-  //     execSync("bun add rimraf --dev", {
-  //       stdio: "ignore",
-  //     });
-  //     console.log("    => rimraf has been installed from NPM.");
-  //     execSync("bun add @observablehq/framework", {
-  //       stdio: "ignore",
-  //     });
-  //     console.log("    => @observablehq/framework has been installed from NPM.");
-  //     execSync("bun add @observablehq/plot", {
-  //       stdio: "ignore",
-  //     });
-  //     console.log("    => @observablehq/plot has been installed from NPM.");
-  //     execSync("bunx jsr add @nshiab/simple-data-analysis", {
-  //       stdio: "ignore",
-  //     });
-  //     console.log("    => simple-data-analysis has been installed from JSR.");
-  //     execSync("bunx jsr add @nshiab/journalism", {
-  //       stdio: "ignore",
-  //     });
-  //     console.log("    => journalism has been installed from JSR.");
-  //   } else if (runtime === "deno") {
+  if (runtime === "nodejs") {
+    console.log("\n3 - Installing libraries with NPM...");
+
+    execSync("npm i @sveltejs/adapter-auto  --save-dev", {
+      stdio: "ignore",
+    });
+    console.log("    => @sveltejs/adapter-auto has been installed from NPM.");
+
+    execSync("npm i @sveltejs/adapter-static  --save-dev", {
+      stdio: "ignore",
+    });
+    console.log("    => @sveltejs/adapter-static has been installed from NPM.");
+
+    execSync("npm i @sveltejs/kit  --save-dev", {
+      stdio: "ignore",
+    });
+    console.log("    => @sveltejs/kit has been installed from NPM.");
+
+    execSync("npm i @sveltejs/vite-plugin-svelte  --save-dev", {
+      stdio: "ignore",
+    });
+    console.log(
+      "    => @sveltejs/vite-plugin-svelte has been installed from NPM.",
+    );
+
+    execSync("npm i svelte  --save-dev", {
+      stdio: "ignore",
+    });
+    console.log("    => svelte has been installed from NPM.");
+
+    execSync("npm i svelte-check  --save-dev", {
+      stdio: "ignore",
+    });
+    console.log("    => svelte-check has been installed from NPM.");
+
+    execSync("npm i typescript  --save-dev", {
+      stdio: "ignore",
+    });
+    console.log("    => typescript has been installed from NPM.");
+
+    execSync("npm i vite  --save-dev", {
+      stdio: "ignore",
+    });
+    console.log("    => vite has been installed from NPM.");
+
+    execSync("npm i highlight.js", {
+      stdio: "ignore",
+    });
+    console.log("    => highlight.js has been installed from NPM.");
+
+    execSync("npm i @observablehq/plot", {
+      stdio: "ignore",
+    });
+    console.log("    => @observablehq/plot has been installed from NPM.");
+
+    execSync("npx jsr add @nshiab/simple-data-analysis", {
+      stdio: "ignore",
+    });
+    console.log("    => simple-data-analysis has been installed from JSR.");
+
+    execSync("npx jsr add @nshiab/journalism", {
+      stdio: "ignore",
+    });
+    console.log("    => journalism has been installed from JSR.");
+  }
+  // else if (runtime === "deno") {
   //     console.log("\n3 - Installing libraries with Deno...");
   //     execSync(
   //       "deno install --node-modules-dir=auto --allow-scripts=npm:duckdb jsr:@nshiab/simple-data-analysis",
@@ -2139,34 +2173,34 @@ export default function getTempChange(
   //     console.log("    => @observablehq/plot has been installed from NPM.");
   //   }
 
-  //   if (args.includes("--git")) {
-  //     console.log("\n4 - Initializing Git repository...");
-  //     execSync("git init && git add -A && git commit -m 'Setup done'", {
-  //       stdio: "ignore",
-  //     });
-  //     console.log("    => First commit done");
-  //   }
+  if (args.includes("--git")) {
+    console.log("\n4 - Initializing Git repository...");
+    execSync("git init && git add -A && git commit -m 'Setup done'", {
+      stdio: "ignore",
+    });
+    console.log("    => First commit done");
+  }
 
-  //   console.log("\nSetup is done!\n");
+  console.log("\nSetup is done!\n");
 
-  //   if (runtime === "nodejs") {
-  //     console.log("    => Run 'npm run sda' to watch main.ts.");
-  //     console.log(
-  //       "    => Run 'npm run dev' to start a local server and watch index.md.",
-  //     );
-  //   } else if (runtime === "bun") {
-  //     console.log("    => Run 'bun run sda' to watch main.ts.");
-  //     console.log(
-  //       "    => Run 'bun run dev' to start a local server and watch index.md.",
-  //     );
-  //   } else if (runtime === "deno") {
-  //     console.log("    => Run 'deno task sda' to watch main.ts.");
-  //     console.log(
-  //       "    => Run 'deno task dev' to start a local server and watch index.md.",
-  //     );
-  //   }
+  if (runtime === "nodejs") {
+    console.log("    => Run 'npm run sda' to watch sda/main.ts.");
+    console.log(
+      "    => Run 'npm run dev' to start a local server.",
+    );
+  } else if (runtime === "bun") {
+    console.log("    => Run 'bun run sda' to watch sda/main.ts.");
+    console.log(
+      "    => Run 'bun run dev' to start a local server.",
+    );
+  } else if (runtime === "deno") {
+    console.log("    => Run 'deno task sda' to watch sda/main.ts.");
+    console.log(
+      "    => Run 'deno task dev' to start a local server.",
+    );
+  }
 
-  //   console.log("\nHave fun. ^_^\n");
+  console.log("\nHave fun. ^_^\n");
 } else {
   const readme =
     `This repository has been created with [setup-sda](https://github.com/nshiab/setup-sda/).
