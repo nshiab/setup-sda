@@ -1640,7 +1640,7 @@ export {};
 
   <p>Here's all the data.</p>
 
-  <Table data={temp} />
+  <Table data={temp.filter((d) => d.city === city)} />
 
   <h2>Methodology</h2>
 
