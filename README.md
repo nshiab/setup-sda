@@ -21,7 +21,7 @@ npx setup-sda
 bunx --bun setup-sda
 ```
 
-if you want to use SDA with [Svelte](https://svelte.dev/), pass the `--svelte`
+If you want to use SDA with [Svelte](https://svelte.dev/), pass the `--svelte`
 flag:
 
 ```
