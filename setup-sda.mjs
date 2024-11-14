@@ -44,7 +44,7 @@ It's using [simple-data-analysis](https://github.com/nshiab/simple-data-analysis
 
 Here's the recommended workflow:
 
-- Put your raw data in the \`sda/data-raw\` folder.
+- Put your raw data in the \`sda/data-raw\` folder. Note that this folder is gitignored.
 - Use the \`sda/main.ts\` file to clean and process your raw data. Write the results to the \`src/data\` folder.
 - Import your processed data from the \`src/data\` folder into the \`src/index.md\` and use it for your content.
 
@@ -362,7 +362,7 @@ export default function getTempChange(
 
   writeFileSync(
     ".gitignore",
-    ".DS_Store\n/dist/\nnode_modules/\nyarn-error.log\n.temp\n.sda-cache",
+    ".DS_Store\n/dist/\nnode_modules/\nyarn-error.log\n.temp\n.sda-cache\ndata-raw",
   );
   console.log("    => .gitignore has been created.");
 
@@ -520,7 +520,7 @@ It's using [simple-data-analysis](https://github.com/nshiab/simple-data-analysis
 
 Here's the recommended workflow:
 
-- Put your raw data in the \`sda/data-raw\` folder.
+- Put your raw data in the \`sda/data-raw\` folder. Note that this folder is gitignored.
 - Use the \`sda/main.ts\` file to clean and process your raw data. Write the results to the \`src/data\` or \`static/\` folders.
 - Import your processed data from the \`src/data\` folder into the \`src/routes/+page.svelte\` or fetch it with \`src/routes/+page.js\`.
 - Use the data for your content.
@@ -711,7 +711,8 @@ vite.config.ts.timestamp-*
 
 # SDA
 .temp
-.sda-cache`;
+.sda-cache
+data-raw`;
 
   const styleCss = `/* Adapted from https://github.com/kevquirk/simple.css */
 
@@ -1572,7 +1573,7 @@ sub {
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%sveltekit.assets%/favicon.png" />
+    <!-- <link rel="icon" href="%sveltekit.assets%/favicon.png" /> -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     %sveltekit.head%
   </head>
@@ -1599,7 +1600,7 @@ export {};
 
   const pageSvelte = `<script lang="ts">
   import Chart from "../components/Chart.svelte";
-  import SelectCity from "../components/SelectCity.svelte";
+  import Select from "../components/Select.svelte";
   import getTempChange from "../helpers/getTempChange.ts";
   import Table from "../components/Table.svelte";
   import CodeHighlight from "../components/CodeHighlight.svelte";
@@ -1613,53 +1614,44 @@ export {};
   const { temp } = data;
 
   let city = $state("Montreal");
+  const cities = tempRegr.map((d) => d.city);
 </script>
 
-<header>
-  <nav>
-    <a href="https://github.com/nshiab/simple-data-analysis">Home</a>
-    <a href="https://www.naelshiab.com/">Contact</a>
-  </nav>
-  <h1>My new project</h1>
-  <p>The content below is just an example.</p>
-</header>
+<h2>Climate change</h2>
 
-<main>
-  <h2>Climate change</h2>
+<Select bind:value={city} options={cities} label="Pick a city:" />
 
-  <SelectCity bind:city {tempRegr} />
+<p>
+  On average, the temperature in <b>{city}</b> has increased by {getTempChange(
+    city,
+    tempRegr,
+  )} per decade.
+</p>
 
-  <p>
-    On average, the temperature in <b>{city}</b> has increased by {getTempChange(
-      city,
-      tempRegr,
-    )} per decade.
-  </p>
+<Chart {city} {temp} {tempRegr} />
 
-  <Chart {city} {temp} {tempRegr} />
+<p>Here's all the data.</p>
 
-  <p>Here's all the data.</p>
+<Table data={temp.filter((d) => d.city === city)} />
 
-  <Table data={temp.filter((d) => d.city === city)} />
+<h2>Methodology</h2>
 
-  <h2>Methodology</h2>
+<p>
+  This project uses a simple linear regression to estimate the temperature
+  change in each city. The data comes from the Adjusted and Homogenized
+  Canadian Climate Data (AHCCD) dataset.
+</p>
 
-  <p>
-    This project uses a simple linear regression to estimate the temperature
-    change in each city. The data comes from the Adjusted and Homogenized
-    Canadian Climate Data (AHCCD) dataset.
-  </p>
+<p>
+  To compute the regressions, we used the <a
+    href="https://github.com/nshiab/simple-data-analysis"
+    >simple-data-analysis</a
+  > library.
+</p>
 
-  <p>
-    To compute the regressions, we used the <a
-      href="https://github.com/nshiab/simple-data-analysis"
-      >simple-data-analysis</a
-    > library.
-  </p>
-
-  <CodeHighlight
-    filename="crunchData.ts"
-    code={\`import type { SimpleDB } from "@nshiab/simple-data-analysis";
+<CodeHighlight
+  filename="crunchData.ts"
+  code={\`import type { SimpleDB } from "@nshiab/simple-data-analysis";
 
 export default async function crunchData(sdb: SimpleDB) {
   // The mean temperature per decade.
@@ -1692,17 +1684,7 @@ export default async function crunchData(sdb: SimpleDB) {
   await temp.writeData("static/temp.json");
 }
 \`}
-  />
-</main>
-
-<footer>
-  <p>
-    This page has been created with <a
-      href="https://github.com/nshiab/setup-sda">setup-sda</a
-    >.
-  </p>
-</footer>
-`;
+  />`;
 
   const pageJs = `export async function load({ fetch }) {
   const res = await fetch("/temp.json");
@@ -1713,17 +1695,36 @@ export default async function crunchData(sdb: SimpleDB) {
 
   const layoutTs = `export const prerender = true;`;
 
-  const layoutSvelte = `<svelte:head>
+  const layoutSvelte = `<script>
+  let { children } = $props();
+</script>
+
+<svelte:head>
   <link rel="stylesheet" href="./style.css" />
   <link rel="stylesheet" href="./highlight-theme.css" />
 </svelte:head>
 
-<script>
-	let { children } = $props();
-</script>
+<header>
+  <nav>
+    <a href="https://github.com/nshiab/simple-data-analysis">Home</a>
+    <a href="https://www.naelshiab.com/">Contact</a>
+  </nav>
+  <h1>My new project</h1>
+  <p>The content below is just an example.</p>
+</header>
 
+<main>
+  {@render children()}
+</main>
 
-{@render children()}`;
+<footer>
+  <p>
+    This page has been created with <a
+      href="https://github.com/nshiab/setup-sda">setup-sda</a
+    >.
+  </p>
+</footer>
+`;
 
   const libIndexTs =
     `// place files you want to import through the \`$lib\` alias in this folder.
@@ -1831,17 +1832,24 @@ export default function getTempChange(
     </p>
 {/if}`;
 
-  const selectCitySvelte = `<script lang="ts">
-    import type { cityT, tempRegrT } from "$lib";
-
-    let { city = $bindable(), tempRegr }: { city: cityT; tempRegr: tempRegrT } =
-        $props();
+  const selectSvelte = `<script lang="ts">
+    let {
+        value = $bindable(),
+        options,
+        label,
+        id,
+    }: {
+        value: string;
+        options: string[];
+        label: string;
+        id?: string;
+    } = $props();
 </script>
 
-<label for="city">Pick a city:</label>
-<select id="city" bind:value={city}>
-    {#each tempRegr as { city }}
-        <option value={city}>{city}</option>
+<label for={id}>{label}</label>
+<select {id} bind:value>
+    {#each options as opt}
+        <option value={opt}>{opt}</option>
     {/each}
 </select>
 `;
@@ -1989,7 +1997,7 @@ export default function getTempChange(
     packageJson.scripts.sda = "bun --watch sda/main.ts";
   } else if (runtime === "deno") {
     packageJson.scripts.sda =
-      "deno run --node-modules-dir=auto -A --watch sda/main.ts";
+      "deno run --node-modules-dir=auto -A --watch --check sda/main.ts";
   }
 
   if (runtime === "deno") {
@@ -2057,8 +2065,8 @@ export default function getTempChange(
   writeFileSync("src/components/Table.svelte", tableSvelte);
   console.log("    => src/components/Table.svelte has been created.");
 
-  writeFileSync("src/components/SelectCity.svelte", selectCitySvelte);
-  console.log("    => src/components/SelectCity.svelte has been created.");
+  writeFileSync("src/components/Select.svelte", selectSvelte);
+  console.log("    => src/components/Select.svelte has been created.");
 
   writeFileSync("src/components/CodeHighlight.svelte", CodeHighlightSvelte);
   console.log("    => src/components/CodeHighlight.svelte has been created.");
@@ -2332,7 +2340,7 @@ It's using [simple-data-analysis](https://github.com/nshiab/simple-data-analysis
 
 Here's the recommended workflow:
 
-- Put your raw data in the \`sda/data-raw\` folder.
+- Put your raw data in the \`sda/data-raw\` folder. Note that this folder is gitignored.
 - Use the \`sda/main.ts\` file to clean and process your raw data. Write the results to the \`sda/data\` folder.
 
 When working on your project, use the following command:
@@ -2362,7 +2370,7 @@ When working on your project, use the following command:
 
   const denoJson = {
     tasks: {
-      sda: "deno run --node-modules-dir=auto -A --watch sda/main.ts",
+      sda: "deno run --node-modules-dir=auto -A --watch --check sda/main.ts",
       clean: "rm -rf .sda-cache && rm -rf .temp",
     },
     nodeModulesDir: "auto",
@@ -2468,7 +2476,7 @@ Toronto,2010.0,9.9
     console.log("    => deno.json has been created.");
   }
 
-  writeFileSync(".gitignore", "node_modules\n.temp\n.sda-cache");
+  writeFileSync(".gitignore", "node_modules\n.temp\n.sda-cache\ndata-raw");
   console.log("    => .gitignore has been created.");
 
   mkdirSync("sda");
