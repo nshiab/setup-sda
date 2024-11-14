@@ -1995,9 +1995,6 @@ export default function getTempChange(
 
   if (runtime === "bun") {
     packageJson.scripts.sda = "bun --watch sda/main.ts";
-  } else if (runtime === "deno") {
-    packageJson.scripts.sda =
-      "deno run --node-modules-dir=auto -A --watch --check sda/main.ts";
   }
 
   if (runtime === "deno") {
@@ -2283,6 +2280,7 @@ export default function getTempChange(
 
     writeFileSync(".npmrc", "@jsr:registry=https://npm.jsr.io");
     const packageJson = {
+      "type": "module",
       "dependencies": {
         "@nshiab/journalism": "npm:@jsr/nshiab__journalism@^1.19.1",
         "@nshiab/simple-data-analysis":
