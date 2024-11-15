@@ -362,7 +362,7 @@ export default function getTempChange(
 
   writeFileSync(
     ".gitignore",
-    ".DS_Store\n/dist/\nnode_modules/\nyarn-error.log\n.temp\n.sda-cache\ndata-raw",
+    ".DS_Store\n/dist/\nnode_modules/\nyarn-error.log\n.temp\n.sda-cache\ndata-raw\n.DS_Store",
   );
   console.log("    => .gitignore has been created.");
 
@@ -712,7 +712,9 @@ vite.config.ts.timestamp-*
 # SDA
 .temp
 .sda-cache
-data-raw`;
+data-raw
+
+.DS_Store`;
 
   const styleCss = `/* Adapted from https://github.com/kevquirk/simple.css */
 
@@ -2474,7 +2476,10 @@ Toronto,2010.0,9.9
     console.log("    => deno.json has been created.");
   }
 
-  writeFileSync(".gitignore", "node_modules\n.temp\n.sda-cache\ndata-raw");
+  writeFileSync(
+    ".gitignore",
+    "node_modules\n.temp\n.sda-cache\ndata-raw\n.DS_Store",
+  );
   console.log("    => .gitignore has been created.");
 
   mkdirSync("sda");
