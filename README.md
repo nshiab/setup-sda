@@ -22,7 +22,8 @@ bunx --bun setup-sda
 ```
 
 If you want to use SDA with [Svelte](https://svelte.dev/), pass the `--svelte`
-flag:
+flag. If SDA is already set up in your repository, this command will add Svelte
+without overwriting your existing files.
 
 ```
 # Deno >= 2.x.x
@@ -37,7 +38,8 @@ bunx --bun setup-sda --svelte
 
 If you want to use SDA with
 [Framework](https://github.com/observablehq/framework), pass the `--framework`
-flag:
+flag. If SDA is already set up in your repository, this command will add
+Framework without overwriting your existing files.
 
 ```
 # Deno >= 2.x.x

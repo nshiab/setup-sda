@@ -1,17 +1,10 @@
 #!/usr/bin/env node
 
 import { execSync } from "node:child_process";
-import { mkdirSync, readdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import process from "node:process";
 
 console.log("\nStarting sda setup...");
-
-const files = readdirSync(".");
-if (files.length > 0) {
-  throw new Error(
-    "The folder is not empty. Please start over in an empty folder.",
-  );
-}
 
 console.log("\n1 - Checking runtime and options...");
 
@@ -155,6 +148,45 @@ Toronto,2000.0,9.7
 Montreal,2010.0,8.0
 Toronto,2010.0,9.9
 `;
+
+  const tempJSON = `[
+	{"city":"Toronto","decade":1840.0,"meanTemp":7.1},
+	{"city":"Toronto","decade":1850.0,"meanTemp":6.4},
+	{"city":"Toronto","decade":1860.0,"meanTemp":6.9},
+	{"city":"Toronto","decade":1870.0,"meanTemp":6.8},
+	{"city":"Montreal","decade":1880.0,"meanTemp":5.3},
+	{"city":"Toronto","decade":1880.0,"meanTemp":6.6},
+	{"city":"Montreal","decade":1890.0,"meanTemp":6.0},
+	{"city":"Toronto","decade":1890.0,"meanTemp":7.6},
+	{"city":"Montreal","decade":1900.0,"meanTemp":5.8},
+	{"city":"Toronto","decade":1900.0,"meanTemp":7.7},
+	{"city":"Montreal","decade":1910.0,"meanTemp":6.1},
+	{"city":"Toronto","decade":1910.0,"meanTemp":8.1},
+	{"city":"Montreal","decade":1920.0,"meanTemp":6.2},
+	{"city":"Toronto","decade":1920.0,"meanTemp":8.0},
+	{"city":"Montreal","decade":1930.0,"meanTemp":6.8},
+	{"city":"Toronto","decade":1930.0,"meanTemp":8.6},
+	{"city":"Montreal","decade":1940.0,"meanTemp":6.9},
+	{"city":"Toronto","decade":1940.0,"meanTemp":8.7},
+	{"city":"Montreal","decade":1950.0,"meanTemp":7.4},
+	{"city":"Toronto","decade":1950.0,"meanTemp":9.2},
+	{"city":"Montreal","decade":1960.0,"meanTemp":7.4},
+	{"city":"Toronto","decade":1960.0,"meanTemp":8.8},
+	{"city":"Montreal","decade":1970.0,"meanTemp":7.3},
+	{"city":"Toronto","decade":1970.0,"meanTemp":9.0},
+	{"city":"Montreal","decade":1980.0,"meanTemp":7.7},
+	{"city":"Toronto","decade":1980.0,"meanTemp":9.0},
+	{"city":"Toronto","decade":1990.0,"meanTemp":9.6},
+	{"city":"Montreal","decade":2000.0,"meanTemp":7.6},
+	{"city":"Toronto","decade":2000.0,"meanTemp":9.7},
+	{"city":"Montreal","decade":2010.0,"meanTemp":8.0},
+	{"city":"Toronto","decade":2010.0,"meanTemp":9.9}
+]`;
+
+  const tempRegressionsJSON = `[
+	{"city":"Montreal","x":"decade","y":"meanTemp","slope":0.0196,"yIntercept":-31.3115,"r2":0.921},
+	{"city":"Toronto","x":"decade","y":"meanTemp","slope":0.0203,"yIntercept":-30.7911,"r2":0.9261}
+]`;
 
   const mainTs = `import { SimpleDB } from "@nshiab/simple-data-analysis";
 import crunchData from "./functions/crunchData.ts";
@@ -339,8 +371,12 @@ export default function getTempChange(
 
   console.log("\n2 - Creating relevant files...");
 
-  writeFileSync("README.md", readme);
-  console.log("    => README.md has been created.");
+  if (existsSync("README.md")) {
+    console.log("    => README.md already exists.");
+  } else {
+    writeFileSync("README.md", readme);
+    console.log("    => README.md has been created.");
+  }
 
   if (runtime === "bun") {
     packageJson.scripts.sda = "bun --watch sda/main.ts";
@@ -350,63 +386,115 @@ export default function getTempChange(
   }
 
   if (runtime === "deno") {
-    writeFileSync("deno.json", JSON.stringify(denoJson, null, 2));
-    console.log("    => deno.json has been created.");
+    if (existsSync("deno.json")) {
+      console.log("    => deno.json already exists.");
+      const currentDenoJson = JSON.parse(
+        readFileSync("./deno.json", "utf-8"),
+      );
+      currentDenoJson.tasks = {
+        ...currentDenoJson.tasks,
+        ...denoJson.tasks,
+      };
+      currentDenoJson.nodeModulesDir = "auto";
+      writeFileSync("deno.json", JSON.stringify(currentDenoJson, null, 2));
+      console.log("    => deno.json has been updated.");
+    } else {
+      writeFileSync("deno.json", JSON.stringify(denoJson, null, 2));
+      console.log("    => deno.json has been created.");
+    }
   } else {
-    writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
-    console.log("    => package.json has been created.");
+    if (existsSync("package.json")) {
+      console.log("    => package.json already exists.");
+      const currentPackageJson = JSON.parse(
+        readFileSync("./package.json", "utf-8"),
+      );
+      currentPackageJson.scripts = {
+        ...currentPackageJson.scripts,
+        ...packageJson.scripts,
+      };
+      writeFileSync(
+        "package.json",
+        JSON.stringify(currentPackageJson, null, 2),
+      );
+      console.log("    => package.json has been updated.");
+    } else {
+      writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
+      console.log("    => package.json has been created.");
+    }
   }
 
-  writeFileSync("observablehq.config.js", observableConfigJS);
-  console.log("    => observablehq.config.js has been created.");
+  if (existsSync("observablehq.config.js")) {
+    console.log("    => observablehq.config.js already exists.");
+  } else {
+    writeFileSync("observablehq.config.js", observableConfigJS);
+    console.log("    => observablehq.config.js has been created.");
+  }
 
-  writeFileSync(
-    ".gitignore",
-    ".DS_Store\n/dist/\nnode_modules/\nyarn-error.log\n.temp\n.sda-cache\ndata-raw\n.DS_Store",
-  );
-  console.log("    => .gitignore has been created.");
-
-  mkdirSync("sda");
-
-  writeFileSync("sda/main.ts", mainTs);
-  console.log("    => sda/main.ts has been created.");
-
-  mkdirSync("sda/functions");
-
-  writeFileSync("sda/functions/crunchData.ts", crunchDataTs);
-  console.log("    => sda/functions/crunchData.ts has been created.");
-
-  mkdirSync("sda/data-raw");
-
-  writeFileSync("sda/data-raw/temp.csv", data);
-  console.log("    => sda/data-raw/temp.csv has been created.");
-
-  mkdirSync("src");
-
-  writeFileSync("src/index.md", indexMd);
-  console.log("    => src/index.md has been created.");
-
-  writeFileSync("src/.gitignore", "/.observablehq/cache/");
-  console.log("    => src/.gitignore has been created.");
-
-  mkdirSync("src/data");
-  console.log("    => src/data/ has been created.");
-
-  mkdirSync("src/components");
-
-  writeFileSync("src/components/createChart.ts", createChartTs);
-  console.log("    => src/components/createChart.ts has been created.");
-
-  mkdirSync("src/helpers");
-
-  if (runtime === "deno") {
-    getTempChangeTs = getTempChangeTs.replace(
-      `import { formatNumber } from "@nshiab/journalism/web";`,
-      `import { formatNumber } from "jsr:@nshiab/journalism/web";`,
+  if (existsSync(".gitignore")) {
+    console.log("    => .gitignore already exists.");
+  } else {
+    writeFileSync(
+      ".gitignore",
+      "dist/\nnode_modules/\nyarn-error.log\n.temp\n.sda-cache\ndata-raw\n.DS_Store",
     );
+    console.log("    => .gitignore has been created.");
   }
-  writeFileSync("src/helpers/getTempChange.ts", getTempChangeTs);
-  console.log("    => src/helpers/getTempChange.ts has been created.");
+
+  if (existsSync("sda")) {
+    console.log("    => sda/ already exists.");
+  } else {
+    mkdirSync("sda");
+
+    writeFileSync("sda/main.ts", mainTs);
+    console.log("    => sda/main.ts has been created.");
+
+    mkdirSync("sda/functions");
+
+    writeFileSync("sda/functions/crunchData.ts", crunchDataTs);
+    console.log("    => sda/functions/crunchData.ts has been created.");
+
+    mkdirSync("sda/data-raw");
+
+    writeFileSync("sda/data-raw/temp.csv", data);
+    console.log("    => sda/data-raw/temp.csv has been created.");
+  }
+
+  if (existsSync("src")) {
+    console.log("    => src/ already exists.");
+  } else {
+    mkdirSync("src");
+
+    writeFileSync("src/index.md", indexMd);
+    console.log("    => src/index.md has been created.");
+
+    writeFileSync("src/.gitignore", "/.observablehq/cache/");
+    console.log("    => src/.gitignore has been created.");
+
+    mkdirSync("src/data");
+    console.log("    => src/data/ has been created.");
+
+    writeFileSync("src/data/temp.json", tempJSON);
+    console.log("    => src/data/temp.json has been created.");
+
+    writeFileSync("src/data/temp-regressions.json", tempRegressionsJSON);
+    console.log("    => src/data/temp-regressions.json has been created.");
+
+    mkdirSync("src/components");
+
+    writeFileSync("src/components/createChart.ts", createChartTs);
+    console.log("    => src/components/createChart.ts has been created.");
+
+    mkdirSync("src/helpers");
+
+    if (runtime === "deno") {
+      getTempChangeTs = getTempChangeTs.replace(
+        `import { formatNumber } from "@nshiab/journalism/web";`,
+        `import { formatNumber } from "jsr:@nshiab/journalism/web";`,
+      );
+    }
+    writeFileSync("src/helpers/getTempChange.ts", getTempChangeTs);
+    console.log("    => src/helpers/getTempChange.ts has been created.");
+  }
 
   if (runtime === "nodejs") {
     console.log("\n3 - Installing libraries with NPM...");
@@ -559,6 +647,9 @@ By opening two terminals each running one of the above commands, you'll be able 
       clean: "rm -rf .sda-cache && rm -rf .temp",
     },
     nodeModulesDir: "auto",
+    compilerOptions: {
+      "lib": ["dom", "deno.ns"],
+    },
     unstable: [
       "fmt-component",
     ],
@@ -596,6 +687,45 @@ Montreal,2000.0,7.6
 Toronto,2000.0,9.7
 Montreal,2010.0,8.0
 Toronto,2010.0,9.9`;
+
+  const tempJSON = `[
+	{"city":"Toronto","decade":1840,"meanTemp":7.1},
+	{"city":"Toronto","decade":1850,"meanTemp":6.4},
+	{"city":"Toronto","decade":1860,"meanTemp":6.9},
+	{"city":"Toronto","decade":1870,"meanTemp":6.8},
+	{"city":"Montreal","decade":1880,"meanTemp":5.3},
+	{"city":"Toronto","decade":1880,"meanTemp":6.6},
+	{"city":"Montreal","decade":1890,"meanTemp":6.0},
+	{"city":"Toronto","decade":1890,"meanTemp":7.6},
+	{"city":"Montreal","decade":1900,"meanTemp":5.8},
+	{"city":"Toronto","decade":1900,"meanTemp":7.7},
+	{"city":"Montreal","decade":1910,"meanTemp":6.1},
+	{"city":"Toronto","decade":1910,"meanTemp":8.1},
+	{"city":"Montreal","decade":1920,"meanTemp":6.2},
+	{"city":"Toronto","decade":1920,"meanTemp":8.0},
+	{"city":"Montreal","decade":1930,"meanTemp":6.8},
+	{"city":"Toronto","decade":1930,"meanTemp":8.6},
+	{"city":"Montreal","decade":1940,"meanTemp":6.9},
+	{"city":"Toronto","decade":1940,"meanTemp":8.7},
+	{"city":"Montreal","decade":1950,"meanTemp":7.4},
+	{"city":"Toronto","decade":1950,"meanTemp":9.2},
+	{"city":"Montreal","decade":1960,"meanTemp":7.4},
+	{"city":"Toronto","decade":1960,"meanTemp":8.8},
+	{"city":"Montreal","decade":1970,"meanTemp":7.3},
+	{"city":"Toronto","decade":1970,"meanTemp":9.0},
+	{"city":"Montreal","decade":1980,"meanTemp":7.7},
+	{"city":"Toronto","decade":1980,"meanTemp":9.0},
+	{"city":"Toronto","decade":1990,"meanTemp":9.6},
+	{"city":"Montreal","decade":2000,"meanTemp":7.6},
+	{"city":"Toronto","decade":2000,"meanTemp":9.7},
+	{"city":"Montreal","decade":2010,"meanTemp":8.0},
+	{"city":"Toronto","decade":2010,"meanTemp":9.9}
+]`;
+
+  const tempRegressionsJSON = `[
+	{"city":"Toronto","x":"decade","y":"meanTemp","slope":0.0203,"yIntercept":-30.7911,"r2":0.9261},
+	{"city":"Montreal","x":"decade","y":"meanTemp","slope":0.0196,"yIntercept":-31.3115,"r2":0.921}
+]`;
 
   const mainTs = `import { SimpleDB } from "@nshiab/simple-data-analysis";
 import crunchData from "./functions/crunchData.ts";
@@ -712,9 +842,7 @@ vite.config.ts.timestamp-*
 # SDA
 .temp
 .sda-cache
-data-raw
-
-.DS_Store`;
+data-raw`;
 
   const styleCss = `/* Adapted from https://github.com/kevquirk/simple.css */
 
@@ -1603,9 +1731,11 @@ export {};
   const pageSvelte = `<script lang="ts">
   import Chart from "../components/Chart.svelte";
   import Select from "../components/Select.svelte";
+  import Radio from "../components/Radio.svelte";
   import getTempChange from "../helpers/getTempChange.ts";
   import Table from "../components/Table.svelte";
   import CodeHighlight from "../components/CodeHighlight.svelte";
+  import Highlight from "../components/Highlight.svelte";
 
   // Data included in the build.
   import tempRegr from "../data/temp-regressions.json";
@@ -1617,6 +1747,8 @@ export {};
 
   let city = $state("Montreal");
   const cities = tempRegr.map((d) => d.city);
+
+  let testRadioInput = $state("option1");
 </script>
 
 <h2>Climate change</h2>
@@ -1686,7 +1818,29 @@ export default async function crunchData(sdb: SimpleDB) {
   await temp.writeData("static/temp.json");
 }
 \`}
-  />`;
+  />
+
+<h2>Other components</h2>
+
+<p>
+  There is a component to easily <Highlight
+    text="highlight text"
+    background="orange"
+    color="white"
+  />.
+</p>
+
+<p>
+  And there is also a component for radio buttons (<b>{testRadioInput}</b> is selected)
+</p>
+
+<Radio
+  bind:value={testRadioInput}
+  values={["option1", "option2", "option3"]}
+  label="Pick an option:"
+  name="radioButtonsOptions"
+/>
+`;
 
   const pageJs = `export async function load({ fetch }) {
   const res = await fetch("/temp.json");
@@ -1849,11 +2003,42 @@ export default function getTempChange(
 </script>
 
 <label for={id}>{label}</label>
-<select {id} bind:value>
+<select {id} name={id} bind:value>
     {#each options as opt}
         <option value={opt}>{opt}</option>
     {/each}
 </select>
+`;
+
+  const radioSvelte = `<script lang="ts">
+    let {
+        value = $bindable(),
+        values,
+        label,
+        name,
+    }: {
+        value: string;
+        values: string[];
+        label: string;
+        name?: string;
+    } = $props();
+</script>
+
+<div style="display: flex; align-items: center; gap: 20px;">
+    <p style="margin: 0;">{label}</p>
+    {#each values as val, i}
+        <label for={\`\${name}-\${i}\`} style="transform: translateY(2px);">
+            <input
+                type="radio"
+                {name}
+                id={\`\${name}-\${i}\`}
+                value={val}
+                bind:group={value}
+            />
+            {val}</label
+        >
+    {/each}
+</div>
 `;
 
   const CodeHighlightSvelte = `<script lang="ts">
@@ -1905,6 +2090,16 @@ export default function getTempChange(
             use:addCode={code}></code></pre>
 </div>
 `;
+
+  const highlightSvelte = `<script lang="ts">
+    let { text, background, color } = $props();
+</script>
+
+<span
+    style={\`background-color: \${background}; color: \${color}; padding: 1px 5px; border-radius: 4px; font-weight: 600;\`}
+>
+    {text}
+</span>`;
 
   const chartSvelte = `<script lang="ts">
     import type { cityT, tempRegrT, tempT } from "$lib";
@@ -1991,102 +2186,183 @@ export default function getTempChange(
 {/key}`;
 
   console.log("\n2 - Creating relevant files...");
-
-  writeFileSync("README.md", readme);
-  console.log("    => README.md has been created.");
+  if (existsSync("README.md")) {
+    console.log("    => README.md already exists.");
+  } else {
+    writeFileSync("README.md", readme);
+    console.log("    => README.md has been created.");
+  }
 
   if (runtime === "bun") {
     packageJson.scripts.sda = "bun --watch sda/main.ts";
   }
 
   if (runtime === "deno") {
-    writeFileSync("deno.json", JSON.stringify(denoJson, null, 2));
-    console.log("    => deno.json has been created.");
+    if (existsSync("deno.json")) {
+      console.log("    => deno.json already exists.");
+      const currentDenoJson = JSON.parse(
+        readFileSync("deno.json", "utf-8"),
+      );
+      currentDenoJson.tasks = {
+        ...currentDenoJson.tasks,
+        ...denoJson.tasks,
+      };
+      currentDenoJson.nodeModulesDir = "auto";
+      currentDenoJson.compilerOptions = {
+        "lib": ["dom", "deno.ns"],
+      };
+      currentDenoJson.unstable = [
+        "fmt-component",
+      ];
+      writeFileSync("deno.json", JSON.stringify(currentDenoJson, null, 2));
+      console.log("    => deno.json has been updated.");
+    } else {
+      writeFileSync("deno.json", JSON.stringify(denoJson, null, 2));
+      console.log("    => deno.json has been created.");
+    }
   } else {
-    writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
-    console.log("    => package.json has been created.");
+    if (existsSync("package.json")) {
+      console.log("    => package.json already exists.");
+      const currentPackageJson = JSON.parse(
+        readFileSync("package.json", "utf-8"),
+      );
+      currentPackageJson.scripts = {
+        ...currentPackageJson.scripts,
+        ...packageJson.scripts,
+      };
+      writeFileSync(
+        "package.json",
+        JSON.stringify(currentPackageJson, null, 2),
+      );
+      console.log("    => package.json has been updated.");
+    } else {
+      writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
+      console.log("    => package.json has been created.");
+    }
   }
 
-  writeFileSync("vite.config.ts", viteConfigTs);
-  console.log("    => vite.config.ts has been created.");
+  if (existsSync("vite.config.ts")) {
+    console.log("    => vite.config.ts already exists.");
+  } else {
+    writeFileSync("vite.config.ts", viteConfigTs);
+    console.log("    => vite.config.ts has been created.");
+  }
 
-  writeFileSync("tsconfig.json", tsconfigJson);
-  console.log("    => tsconfig.json has been created.");
+  if (existsSync("tsconfig.json")) {
+    console.log("    => tsconfig.json already exists.");
+  } else {
+    writeFileSync("tsconfig.json", tsconfigJson);
+    console.log("    => tsconfig.json has been created.");
+  }
 
-  writeFileSync("svelte.config.js", svelteConfigJs);
-  console.log("    => svelte.config.js has been created.");
+  if (existsSync("svelte.config.js")) {
+    console.log("    => svelte.config.js already exists.");
+  } else {
+    writeFileSync("svelte.config.js", svelteConfigJs);
+    console.log("    => svelte.config.js has been created.");
+  }
 
-  writeFileSync(".gitignore", gitignore);
-  console.log("    => .gitignore has been created.");
+  if (existsSync(".gitignore")) {
+    console.log("    => .gitignore already exists.");
+  } else {
+    writeFileSync(".gitignore", gitignore);
+    console.log("    => .gitignore has been created.");
+  }
 
-  mkdirSync("static");
+  if (existsSync("static")) {
+    console.log("    => static/ already exists.");
+  } else {
+    mkdirSync("static");
 
-  writeFileSync("static/style.css", styleCss);
-  console.log("    => static/style.css has been created.");
+    writeFileSync("static/style.css", styleCss);
+    console.log("    => static/style.css has been created.");
 
-  writeFileSync("static/highlight-theme.css", highlightThemeCss);
-  console.log("    => static/highlight-theme.css has been created.");
+    writeFileSync("static/highlight-theme.css", highlightThemeCss);
+    console.log("    => static/highlight-theme.css has been created.");
 
-  mkdirSync("src");
+    writeFileSync("static/temp.json", tempJSON);
+    console.log("    => static/temp.json has been created.");
+  }
 
-  writeFileSync("src/app.html", appHtml);
-  console.log("    => src/app.html has been created.");
+  if (existsSync("src")) {
+    console.log("    => src/ already exists.");
+  } else {
+    mkdirSync("src");
 
-  writeFileSync("src/app.d.ts", appDTs);
-  console.log("    => src/app.d.ts has been created.");
+    writeFileSync("src/app.html", appHtml);
+    console.log("    => src/app.html has been created.");
 
-  mkdirSync("src/routes");
+    writeFileSync("src/app.d.ts", appDTs);
+    console.log("    => src/app.d.ts has been created.");
 
-  writeFileSync("src/routes/+page.svelte", pageSvelte);
-  console.log("    => src/routes/+page.svelte has been created.");
+    mkdirSync("src/routes");
 
-  writeFileSync("src/routes/+page.js", pageJs);
-  console.log("    => src/routes/+page.js has been created.");
+    writeFileSync("src/routes/+page.svelte", pageSvelte);
+    console.log("    => src/routes/+page.svelte has been created.");
 
-  writeFileSync("src/routes/+layout.ts", layoutTs);
-  console.log("    => src/routes/+layout.ts has been created.");
+    writeFileSync("src/routes/+page.js", pageJs);
+    console.log("    => src/routes/+page.js has been created.");
 
-  writeFileSync("src/routes/+layout.svelte", layoutSvelte);
-  console.log("    => src/routes/+layout.svelte has been created.");
+    writeFileSync("src/routes/+layout.ts", layoutTs);
+    console.log("    => src/routes/+layout.ts has been created.");
 
-  mkdirSync("src/lib");
+    writeFileSync("src/routes/+layout.svelte", layoutSvelte);
+    console.log("    => src/routes/+layout.svelte has been created.");
 
-  writeFileSync("src/lib/index.ts", libIndexTs);
-  console.log("    => src/lib/index.ts has been created.");
+    mkdirSync("src/lib");
 
-  mkdirSync("src/helpers");
+    writeFileSync("src/lib/index.ts", libIndexTs);
+    console.log("    => src/lib/index.ts has been created.");
 
-  writeFileSync("src/helpers/getTempChange.ts", getTempChangeTs);
-  console.log("    => src/helpers/getTempChange.ts has been created.");
+    mkdirSync("src/helpers");
 
-  mkdirSync("src/components");
+    writeFileSync("src/helpers/getTempChange.ts", getTempChangeTs);
+    console.log("    => src/helpers/getTempChange.ts has been created.");
 
-  writeFileSync("src/components/Table.svelte", tableSvelte);
-  console.log("    => src/components/Table.svelte has been created.");
+    mkdirSync("src/components");
 
-  writeFileSync("src/components/Select.svelte", selectSvelte);
-  console.log("    => src/components/Select.svelte has been created.");
+    writeFileSync("src/components/Table.svelte", tableSvelte);
+    console.log("    => src/components/Table.svelte has been created.");
 
-  writeFileSync("src/components/CodeHighlight.svelte", CodeHighlightSvelte);
-  console.log("    => src/components/CodeHighlight.svelte has been created.");
+    writeFileSync("src/components/Select.svelte", selectSvelte);
+    console.log("    => src/components/Select.svelte has been created.");
 
-  writeFileSync("src/components/Chart.svelte", chartSvelte);
-  console.log("    => src/components/Chart.svelte has been created.");
+    writeFileSync("src/components/Radio.svelte", radioSvelte);
+    console.log("    => src/components/Radio.svelte has been created.");
 
-  mkdirSync("sda");
+    writeFileSync("src/components/CodeHighlight.svelte", CodeHighlightSvelte);
+    console.log("    => src/components/CodeHighlight.svelte has been created.");
 
-  writeFileSync("sda/main.ts", mainTs);
-  console.log("    => sda/main.ts has been created.");
+    writeFileSync("src/components/Highlight.svelte", highlightSvelte);
+    console.log("    => src/components/Highlight.svelte has been created.");
 
-  mkdirSync("sda/functions");
+    writeFileSync("src/components/Chart.svelte", chartSvelte);
+    console.log("    => src/components/Chart.svelte has been created.");
 
-  writeFileSync("sda/functions/crunchData.ts", crunchDataTs);
-  console.log("    => sda/functions/crunchData.ts has been created.");
+    mkdirSync("src/data");
 
-  mkdirSync("sda/data-raw");
+    writeFileSync("src/data/temp-regressions.json", tempRegressionsJSON);
+    console.log("    => src/data/temp-regressions.json has been created.");
+  }
 
-  writeFileSync("sda/data-raw/temp.csv", tempCsv);
-  console.log("    => sda/data-raw/temp.csv has been created.");
+  if (existsSync("sda")) {
+    console.log("    => sda/ already exists.");
+  } else {
+    mkdirSync("sda");
+
+    writeFileSync("sda/main.ts", mainTs);
+    console.log("    => sda/main.ts has been created.");
+
+    mkdirSync("sda/functions");
+
+    writeFileSync("sda/functions/crunchData.ts", crunchDataTs);
+    console.log("    => sda/functions/crunchData.ts has been created.");
+
+    mkdirSync("sda/data-raw");
+
+    writeFileSync("sda/data-raw/temp.csv", tempCsv);
+    console.log("    => sda/data-raw/temp.csv has been created.");
+  }
 
   if (runtime === "nodejs") {
     console.log("\n3 - Installing libraries with NPM...");
@@ -2458,52 +2734,86 @@ Toronto,2010.0,9.9
   console.log("\n2 - Creating relevant files...");
 
   if (runtime === "nodejs") {
-    writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
-    console.log("    => package.json has been created.");
-    writeFileSync("tsconfig.json", tsconfigContent);
-    console.log("    => tsconfig.json has been created.");
+    if (existsSync("package.json")) {
+      console.log("    => package.json already exists.");
+    } else {
+      writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
+      console.log("    => package.json has been created.");
+    }
+
+    if (existsSync("tsconfig.json")) {
+      console.log("    => tsconfig.json already exists.");
+    } else {
+      writeFileSync("tsconfig.json", tsconfigContent);
+      console.log("    => tsconfig.json has been created.");
+    }
   } else if (runtime === "bun") {
     packageJson.scripts = {
       sda: "bun --watch sda/main.ts",
     };
-    writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
-    console.log("    => package.json has been created.");
 
-    writeFileSync("tsconfig.json", tsconfigContent);
-    console.log("    => tsconfig.json has been created.");
+    if (existsSync("package.json")) {
+      console.log("    => package.json already exists.");
+    } else {
+      writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
+      console.log("    => package.json has been created.");
+    }
+
+    if (existsSync("tsconfig.json")) {
+      console.log("    => tsconfig.json already exists.");
+    } else {
+      writeFileSync("tsconfig.json", tsconfigContent);
+      console.log("    => tsconfig.json has been created.");
+    }
   } else if (runtime === "deno") {
-    writeFileSync("deno.json", JSON.stringify(denoJson, null, 2));
-    console.log("    => deno.json has been created.");
+    if (existsSync("deno.json")) {
+      console.log("    => deno.json already exists.");
+    } else {
+      writeFileSync("deno.json", JSON.stringify(denoJson, null, 2));
+      console.log("    => deno.json has been created.");
+    }
   }
 
-  writeFileSync(
-    ".gitignore",
-    "node_modules\n.temp\n.sda-cache\ndata-raw\n.DS_Store",
-  );
-  console.log("    => .gitignore has been created.");
+  if (existsSync(".gitignore")) {
+    console.log("    => .gitignore already exists.");
+  } else {
+    writeFileSync(
+      ".gitignore",
+      "node_modules\n.temp\n.sda-cache\ndata-raw\n.DS_Store",
+    );
+    console.log("    => .gitignore has been created.");
+  }
 
-  mkdirSync("sda");
-  writeFileSync(
-    "sda/main.ts",
-    mainTs,
-  );
-  console.log("    => sda/main.ts has been created.");
+  if (existsSync("sda")) {
+    console.log("    => sda/ already exists.");
+  } else {
+    mkdirSync("sda");
+    writeFileSync(
+      "sda/main.ts",
+      mainTs,
+    );
+    console.log("    => sda/main.ts has been created.");
 
-  mkdirSync("sda/functions");
-  writeFileSync(
-    "sda/functions/crunchData.ts",
-    crunchData,
-  );
-  console.log("    => sda/functions/crunchData.ts has been created.");
+    mkdirSync("sda/functions");
+    writeFileSync(
+      "sda/functions/crunchData.ts",
+      crunchData,
+    );
+    console.log("    => sda/functions/crunchData.ts has been created.");
 
-  mkdirSync("sda/data-raw");
-  writeFileSync("sda/data-raw/temp.csv", data);
-  console.log("    => sda/data-raw/temp.csv has been created.");
-  mkdirSync("sda/data");
-  console.log("    => sda/data/ has been created.");
+    mkdirSync("sda/data-raw");
+    writeFileSync("sda/data-raw/temp.csv", data);
+    console.log("    => sda/data-raw/temp.csv has been created.");
+    mkdirSync("sda/data");
+    console.log("    => sda/data/ has been created.");
+  }
 
-  writeFileSync("README.md", readme);
-  console.log("    => README.md has been created.");
+  if (existsSync("README.md")) {
+    console.log("    => README.md already exists.");
+  } else {
+    writeFileSync("README.md", readme);
+    console.log("    => README.md has been created.");
+  }
 
   if (runtime === "nodejs") {
     console.log("\n3 - Installing libraries...");
