@@ -543,15 +543,18 @@ export default function getTempChange(
   } else if (runtime === "deno") {
     console.log("\n3 - Installing libraries with Deno...");
     execSync(
-      "deno install --node-modules-dir=auto --allow-scripts=npm:duckdb jsr:@nshiab/simple-data-analysis",
+      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium,npm:duckdb jsr:@nshiab/simple-data-analysis",
       {
         stdio: "ignore",
       },
     );
     console.log("    => simple-data-analysis has been installed from JSR.");
-    execSync("deno install --node-modules-dir=auto jsr:@nshiab/journalism", {
-      stdio: "ignore",
-    });
+    execSync(
+      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium jsr:@nshiab/journalism",
+      {
+        stdio: "ignore",
+      },
+    );
     console.log("    => journalism has been installed from JSR.");
     execSync("deno install --node-modules-dir=auto --dev npm:rimraf", {
       stdio: "ignore",
@@ -2567,7 +2570,7 @@ export default function getTempChange(
     };
     writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
     execSync(
-      "deno install --node-modules-dir=auto --allow-scripts=npm:duckdb",
+      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium,npm:duckdb",
       {
         stdio: "ignore",
       },
@@ -2838,15 +2841,18 @@ Toronto,2010.0,9.9
   } else if (runtime === "deno") {
     console.log("\n3 - Installing libraries with Deno...");
     execSync(
-      "deno install --node-modules-dir=auto --allow-scripts=npm:duckdb jsr:@nshiab/simple-data-analysis",
+      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium,npm:duckdb jsr:@nshiab/simple-data-analysis",
       {
         stdio: "ignore",
       },
     );
     console.log("    => simple-data-analysis has been installed from JSR.");
-    execSync("deno install --node-modules-dir=auto jsr:@nshiab/journalism", {
-      stdio: "ignore",
-    });
+    execSync(
+      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium jsr:@nshiab/journalism",
+      {
+        stdio: "ignore",
+      },
+    );
     console.log("    => journalism has been installed JSR.");
   }
 
