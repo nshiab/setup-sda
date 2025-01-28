@@ -2563,9 +2563,9 @@ export default function getTempChange(
     const packageJson = {
       "type": "module",
       "dependencies": {
-        "@nshiab/journalism": "npm:@jsr/nshiab__journalism@^1.21.9",
+        "@nshiab/journalism": "npm:@jsr/nshiab__journalism@^1.21.10",
         "@nshiab/simple-data-analysis":
-          "npm:@jsr/nshiab__simple-data-analysis@^4.0.0",
+          "npm:@jsr/nshiab__simple-data-analysis@^4.0.1",
       },
     };
     writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
