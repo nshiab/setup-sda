@@ -543,14 +543,14 @@ export default function getTempChange(
   } else if (runtime === "deno") {
     console.log("\n3 - Installing libraries with Deno...");
     execSync(
-      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium,npm:duckdb jsr:@nshiab/simple-data-analysis",
+      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium@1.50.0 jsr:@nshiab/simple-data-analysis",
       {
         stdio: "ignore",
       },
     );
     console.log("    => simple-data-analysis has been installed from JSR.");
     execSync(
-      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium jsr:@nshiab/journalism",
+      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium@1.50.0 jsr:@nshiab/journalism",
       {
         stdio: "ignore",
       },
@@ -2563,14 +2563,14 @@ export default function getTempChange(
     const packageJson = {
       "type": "module",
       "dependencies": {
-        "@nshiab/journalism": "npm:@jsr/nshiab__journalism@^1.19.1",
+        "@nshiab/journalism": "npm:@jsr/nshiab__journalism@^1.21.9",
         "@nshiab/simple-data-analysis":
-          "npm:@jsr/nshiab__simple-data-analysis@^3.15.3",
+          "npm:@jsr/nshiab__simple-data-analysis@^4.0.0",
       },
     };
     writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
     execSync(
-      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium,npm:duckdb",
+      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium@1.50.0",
       {
         stdio: "ignore",
       },
@@ -2841,14 +2841,14 @@ Toronto,2010.0,9.9
   } else if (runtime === "deno") {
     console.log("\n3 - Installing libraries with Deno...");
     execSync(
-      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium,npm:duckdb jsr:@nshiab/simple-data-analysis",
+      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium@1.50.0 jsr:@nshiab/simple-data-analysis",
       {
         stdio: "ignore",
       },
     );
     console.log("    => simple-data-analysis has been installed from JSR.");
     execSync(
-      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium jsr:@nshiab/journalism",
+      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium@1.50.0 jsr:@nshiab/journalism",
       {
         stdio: "ignore",
       },
