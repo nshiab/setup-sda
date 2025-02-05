@@ -600,7 +600,7 @@ export default function getTempChange(
     );
   }
 
-  console.log("\nHave fun. ^_^\n");
+  console.log("\nCheck the README.md and have fun. ^_^\n");
 } else if (args.includes("--svelte")) {
   console.log(`    => You passed the option --svelte`);
 
@@ -2610,7 +2610,7 @@ export default function getTempChange(
     );
   }
 
-  console.log("\nHave fun. ^_^\n");
+  console.log("\nCheck the README.md and have fun. ^_^\n");
 } else if (args.includes("--example")) {
   console.log(`    => You passed the option --example.`);
   const readme =
@@ -2887,7 +2887,7 @@ Toronto,2010.0,9.9
     console.log("    => Run 'deno task sda' to watch main.ts.");
   }
 
-  console.log("\nHave fun. ^_^\n");
+  console.log("\nCheck the README.md and have fun. ^_^\n");
 } else {
   const readme =
     `This repository has been created with [setup-sda](https://github.com/nshiab/setup-sda/).
@@ -3081,5 +3081,5 @@ When working on your project, use the following command:
     console.log("    => Run 'deno task sda' to watch main.ts.");
   }
 
-  console.log("\nHave fun. ^_^\n");
+  console.log("\nCheck the README.md and have fun. ^_^\n");
 }
