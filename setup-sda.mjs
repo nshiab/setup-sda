@@ -37,7 +37,7 @@ It's using [simple-data-analysis](https://github.com/nshiab/simple-data-analysis
 
 Here's the recommended workflow:
 
-- Put your raw data in the \`sda/data-raw\` folder. Note that this folder is gitignored.
+- Put your raw data in the \`sda/data\` folder. Note that this folder is gitignored.
 - Use the \`sda/main.ts\` file to clean and process your raw data. Write the results to the \`src/data\` folder.
 - Import your processed data from the \`src/data\` folder into the \`src/index.md\` and use it for your content.
 
@@ -70,7 +70,7 @@ By opening two terminals each running one of the above commands, you'll be able 
       dev: "observable preview",
       deploy: "observable deploy",
       observable: "observable",
-      sda: "deno run --node-modules-dir=auto -A --watch sda/main.ts",
+      sda: "deno run --node-modules-dir=auto -A --watch --check sda/main.ts",
     },
     nodeModulesDir: "auto",
   };
@@ -189,7 +189,7 @@ Toronto,2010.0,9.9
 ]`;
 
   const mainTs = `import { SimpleDB } from "@nshiab/simple-data-analysis";
-import crunchData from "./functions/crunchData.ts";
+import crunchData from "./helpers/crunchData.ts";
 
 const sdb = new SimpleDB({ logDuration: true });
 
@@ -206,7 +206,7 @@ export default async function crunchData(sdb: SimpleDB) {
 
   // The mean temperature per decade.
   const temp = sdb.newTable("temp");
-  await temp.loadData("sda/data-raw/temp.csv");
+  await temp.loadData("sda/data/temp.csv");
   await temp.logTable();
 
   // We compute a linear regression for each city.
@@ -219,7 +219,7 @@ export default async function crunchData(sdb: SimpleDB) {
   });
   await tempRegressions.logTable();
 
-  // We write the results to src/data.
+  // We write the results to src/output.
   await temp.writeData("src/data/temp.json");
   await tempRegressions.writeData("src/data/temp-regressions.json");
 }
@@ -276,7 +276,7 @@ import type { SimpleDB } from "@nshiab/simple-data-analysis";
 export default async function crunchData(sdb: SimpleDB) {
   // The mean temperature per decade.
   const temp = sdb.newTable("temp");
-  await temp.loadData("sda/data-raw/temp.csv");
+  await temp.loadData("sda/data/temp.csv");
   await temp.logTable();
 
   // We compute a linear regression for each city.
@@ -382,7 +382,7 @@ export default function getTempChange(
     packageJson.scripts.sda = "bun --watch sda/main.ts";
   } else if (runtime === "deno") {
     packageJson.scripts.sda =
-      "deno run --node-modules-dir=auto -A --watch sda/main.ts";
+      "deno run --node-modules-dir=auto -A --watch --check sda/main.ts";
   }
 
   if (runtime === "deno") {
@@ -435,7 +435,7 @@ export default function getTempChange(
   } else {
     writeFileSync(
       ".gitignore",
-      "dist/\nnode_modules/\nyarn-error.log\n.temp\n.sda-cache\ndata-raw\n.DS_Store",
+      "dist/\nnode_modules/\nyarn-error.log\n.temp\n.sda-cache\ndata\n.DS_Store",
     );
     console.log("    => .gitignore has been created.");
   }
@@ -448,15 +448,15 @@ export default function getTempChange(
     writeFileSync("sda/main.ts", mainTs);
     console.log("    => sda/main.ts has been created.");
 
-    mkdirSync("sda/functions");
+    mkdirSync("sda/helpers");
 
-    writeFileSync("sda/functions/crunchData.ts", crunchDataTs);
-    console.log("    => sda/functions/crunchData.ts has been created.");
+    writeFileSync("sda/helpers/crunchData.ts", crunchDataTs);
+    console.log("    => sda/helpers/crunchData.ts has been created.");
 
-    mkdirSync("sda/data-raw");
+    mkdirSync("sda/data");
 
-    writeFileSync("sda/data-raw/temp.csv", data);
-    console.log("    => sda/data-raw/temp.csv has been created.");
+    writeFileSync("sda/data/temp.csv", data);
+    console.log("    => sda/data/temp.csv has been created.");
   }
 
   if (existsSync("src")) {
@@ -611,7 +611,7 @@ It's using [simple-data-analysis](https://github.com/nshiab/simple-data-analysis
 
 Here's the recommended workflow:
 
-- Put your raw data in the \`sda/data-raw\` folder. Note that this folder is gitignored.
+- Put your raw data in the \`sda/data\` folder. Note that this folder is gitignored.
 - Use the \`sda/main.ts\` file to clean and process your raw data. Write the results to the \`src/data\` or \`static/\` folders.
 - Import your processed data from the \`src/data\` folder into the \`src/routes/+page.svelte\` or fetch it with \`src/routes/+page.js\`.
 - Use the data for your content.
@@ -646,7 +646,7 @@ By opening two terminals each running one of the above commands, you'll be able 
       "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
       "check:watch":
         "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-      sda: "deno run --node-modules-dir=auto -A --watch sda/main.ts",
+      sda: "deno run --node-modules-dir=auto -A --watch --check sda/main.ts",
       clean: "rm -rf .sda-cache && rm -rf .temp",
     },
     nodeModulesDir: "auto",
@@ -731,7 +731,7 @@ Toronto,2010.0,9.9`;
 ]`;
 
   const mainTs = `import { SimpleDB } from "@nshiab/simple-data-analysis";
-import crunchData from "./functions/crunchData.ts";
+import crunchData from "./helpers/crunchData.ts";
 
 const sdb = new SimpleDB({ logDuration: true });
 
@@ -746,7 +746,7 @@ export default async function crunchData(sdb: SimpleDB) {
 
   // The mean temperature per decade.
   const temp = sdb.newTable("temp");
-  await temp.loadData("sda/data-raw/temp.csv");
+  await temp.loadData("sda/data/temp.csv");
   await temp.logTable();
 
   // We compute a linear regression for each city.
@@ -845,7 +845,7 @@ vite.config.ts.timestamp-*
 # SDA
 .temp
 .sda-cache
-data-raw`;
+data`;
 
   const styleCss = `/* Adapted from https://github.com/kevquirk/simple.css */
 
@@ -1793,7 +1793,7 @@ export {};
 export default async function crunchData(sdb: SimpleDB) {
   // The mean temperature per decade.
   const temp = sdb.newTable("temp");
-  await temp.loadData("sda/data-raw/temp.csv");
+  await temp.loadData("sda/data/temp.csv");
 
   // We log the table.
   await temp.logTable();
@@ -2356,15 +2356,15 @@ export default function getTempChange(
     writeFileSync("sda/main.ts", mainTs);
     console.log("    => sda/main.ts has been created.");
 
-    mkdirSync("sda/functions");
+    mkdirSync("sda/helpers");
 
-    writeFileSync("sda/functions/crunchData.ts", crunchDataTs);
-    console.log("    => sda/functions/crunchData.ts has been created.");
+    writeFileSync("sda/helpers/crunchData.ts", crunchDataTs);
+    console.log("    => sda/helpers/crunchData.ts has been created.");
 
-    mkdirSync("sda/data-raw");
+    mkdirSync("sda/data");
 
-    writeFileSync("sda/data-raw/temp.csv", tempCsv);
-    console.log("    => sda/data-raw/temp.csv has been created.");
+    writeFileSync("sda/data/temp.csv", tempCsv);
+    console.log("    => sda/data/temp.csv has been created.");
   }
 
   if (runtime === "nodejs") {
@@ -2611,7 +2611,8 @@ export default function getTempChange(
   }
 
   console.log("\nHave fun. ^_^\n");
-} else {
+} else if (args.includes("--example")) {
+  console.log(`    => You passed the option --example.`);
   const readme =
     `This repository has been created with [setup-sda](https://github.com/nshiab/setup-sda/).
 
@@ -2619,8 +2620,8 @@ It's using [simple-data-analysis](https://github.com/nshiab/simple-data-analysis
 
 Here's the recommended workflow:
 
-- Put your raw data in the \`sda/data-raw\` folder. Note that this folder is gitignored.
-- Use the \`sda/main.ts\` file to clean and process your raw data. Write the results to the \`sda/data\` folder.
+- Put your raw data in the \`sda/data\` folder. Note that this folder is gitignored.
+- Use the \`sda/main.ts\` file to clean and process your raw data. Write the results to the \`sda/output\` folder.
 
 When working on your project, use the following command:
 
@@ -2656,7 +2657,7 @@ When working on your project, use the following command:
   };
 
   const mainTs = `import { SimpleDB } from "@nshiab/simple-data-analysis";
-import crunchData from "./functions/crunchData.ts";
+import crunchData from "./helpers/crunchData.ts";
 
 const sdb = new SimpleDB({ logDuration: true});
 
@@ -2673,7 +2674,7 @@ export default async function crunchData(sdb: SimpleDB) {
   
   // The mean temperature per decade.
   const temp = sdb.newTable("temp");
-  await temp.loadData("sda/data-raw/temp.csv");
+  await temp.loadData("sda/data/temp.csv");
 
   // We log the table.
   await temp.logTable();
@@ -2695,8 +2696,8 @@ export default async function crunchData(sdb: SimpleDB) {
   });
   await tempRegressions.logTable();
 
-  // We write the results to src/data.
-  await tempRegressions.writeData("sda/data/temp-regressions.json");
+  // We write the results to src/output.
+  await tempRegressions.writeData("sda/output/temp-regressions.json");
 }
 `;
 
@@ -2782,7 +2783,7 @@ Toronto,2010.0,9.9
   } else {
     writeFileSync(
       ".gitignore",
-      "node_modules\n.temp\n.sda-cache\ndata-raw\n.DS_Store",
+      "node_modules\n.temp\n.sda-cache\ndata\n.DS_Store",
     );
     console.log("    => .gitignore has been created.");
   }
@@ -2797,16 +2798,16 @@ Toronto,2010.0,9.9
     );
     console.log("    => sda/main.ts has been created.");
 
-    mkdirSync("sda/functions");
+    mkdirSync("sda/helpers");
     writeFileSync(
-      "sda/functions/crunchData.ts",
+      "sda/helpers/crunchData.ts",
       crunchData,
     );
-    console.log("    => sda/functions/crunchData.ts has been created.");
+    console.log("    => sda/helpers/crunchData.ts has been created.");
 
-    mkdirSync("sda/data-raw");
-    writeFileSync("sda/data-raw/temp.csv", data);
-    console.log("    => sda/data-raw/temp.csv has been created.");
+    mkdirSync("sda/data");
+    writeFileSync("sda/data/temp.csv", data);
+    console.log("    => sda/data/temp.csv has been created.");
     mkdirSync("sda/data");
     console.log("    => sda/data/ has been created.");
   }
@@ -2828,6 +2829,10 @@ Toronto,2010.0,9.9
       stdio: "ignore",
     });
     console.log("    => journalism has been installed from JSR.");
+    execSync("npm i @observablehq/plot", {
+      stdio: "ignore",
+    });
+    console.log("    => @observablehq/plot has been installed from NPM.");
   } else if (runtime === "bun") {
     console.log("\n3 - Installing libraries with Bun...");
     execSync("bunx jsr add @nshiab/simple-data-analysis", {
@@ -2838,6 +2843,10 @@ Toronto,2010.0,9.9
       stdio: "ignore",
     });
     console.log("    => journalism has been installed from JSR.");
+    execSync("bun add @observablehq/plot", {
+      stdio: "ignore",
+    });
+    console.log("    => @observablehq/plot has been installed from NPM.");
   } else if (runtime === "deno") {
     console.log("\n3 - Installing libraries with Deno...");
     execSync(
@@ -2854,6 +2863,204 @@ Toronto,2010.0,9.9
       },
     );
     console.log("    => journalism has been installed JSR.");
+    execSync("deno install --node-modules-dir=auto npm:@observablehq/plot", {
+      stdio: "ignore",
+    });
+    console.log("    => @observablehq/plot has been installed from NPM.");
+  }
+
+  if (args.includes("--git")) {
+    console.log("\n4 - Initializing Git repository...");
+    execSync("git init && git add -A && git commit -m 'Setup done'", {
+      stdio: "ignore",
+    });
+    console.log("    => First commit done");
+  }
+
+  console.log("\nSetup is done!\n");
+
+  if (runtime === "nodejs") {
+    console.log("    => Run 'npm run sda' to watch main.ts.");
+  } else if (runtime === "bun") {
+    console.log("    => Run 'bun run sda' to watch main.ts.");
+  } else if (runtime === "deno") {
+    console.log("    => Run 'deno task sda' to watch main.ts.");
+  }
+
+  console.log("\nHave fun. ^_^\n");
+} else {
+  const readme =
+    `This repository has been created with [setup-sda](https://github.com/nshiab/setup-sda/).
+
+It's using [simple-data-analysis](https://github.com/nshiab/simple-data-analysis) and [journalism](https://github.com/nshiab/journalism).
+
+Here's the recommended workflow:
+
+- Put your raw data in the \`sda/data\` folder. Note that this folder is gitignored.
+- Use the \`sda/main.ts\` file to clean and process your raw data. Write the results to the \`sda/output\` folder.
+
+When working on your project, use the following command:
+
+- \`npm run sda\` will watch your \`sda/main.ts\` and its dependencies. Everytime you'll save some changes, the data will be reprocessed.
+`;
+
+  const tsconfigContent = `{
+  "compilerOptions": {
+    "module": "NodeNext",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "verbatimModuleSyntax": null
+  },
+  "include": ["**/*"],
+  "exclude": ["node_modules"]
+}
+`;
+
+  const packageJson = {
+    type: "module",
+    scripts: {
+      sda: "node --experimental-strip-types --no-warnings --watch sda/main.ts",
+      clean: "rm -rf .sda-cache && rm -rf .temp",
+    },
+  };
+
+  const denoJson = {
+    tasks: {
+      sda: "deno run --node-modules-dir=auto -A --watch --check sda/main.ts",
+      clean: "rm -rf .sda-cache && rm -rf .temp",
+    },
+    nodeModulesDir: "auto",
+  };
+
+  const mainTs = `console.log("Hello! How are you doing?");`;
+
+  console.log("\n2 - Creating relevant files...");
+
+  if (runtime === "nodejs") {
+    if (existsSync("package.json")) {
+      console.log("    => package.json already exists.");
+    } else {
+      writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
+      console.log("    => package.json has been created.");
+    }
+
+    if (existsSync("tsconfig.json")) {
+      console.log("    => tsconfig.json already exists.");
+    } else {
+      writeFileSync("tsconfig.json", tsconfigContent);
+      console.log("    => tsconfig.json has been created.");
+    }
+  } else if (runtime === "bun") {
+    packageJson.scripts = {
+      sda: "bun --watch sda/main.ts",
+    };
+
+    if (existsSync("package.json")) {
+      console.log("    => package.json already exists.");
+    } else {
+      writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
+      console.log("    => package.json has been created.");
+    }
+
+    if (existsSync("tsconfig.json")) {
+      console.log("    => tsconfig.json already exists.");
+    } else {
+      writeFileSync("tsconfig.json", tsconfigContent);
+      console.log("    => tsconfig.json has been created.");
+    }
+  } else if (runtime === "deno") {
+    if (existsSync("deno.json")) {
+      console.log("    => deno.json already exists.");
+    } else {
+      writeFileSync("deno.json", JSON.stringify(denoJson, null, 2));
+      console.log("    => deno.json has been created.");
+    }
+  }
+
+  if (existsSync(".gitignore")) {
+    console.log("    => .gitignore already exists.");
+  } else {
+    writeFileSync(
+      ".gitignore",
+      "node_modules\n.temp\n.sda-cache\ndata\n.DS_Store",
+    );
+    console.log("    => .gitignore has been created.");
+  }
+
+  if (existsSync("sda")) {
+    console.log("    => sda/ already exists.");
+  } else {
+    mkdirSync("sda");
+    writeFileSync(
+      "sda/main.ts",
+      mainTs,
+    );
+    console.log("    => sda/main.ts has been created.");
+
+    mkdirSync("sda/helpers");
+    console.log("    => sda/helpers/ has been created.");
+
+    mkdirSync("sda/data");
+    console.log("    => sda/data/temp.csv has been created.");
+    mkdirSync("sda/output");
+    console.log("    => sda/output/ has been created.");
+  }
+
+  if (existsSync("README.md")) {
+    console.log("    => README.md already exists.");
+  } else {
+    writeFileSync("README.md", readme);
+    console.log("    => README.md has been created.");
+  }
+
+  if (runtime === "nodejs") {
+    console.log("\n3 - Installing libraries...");
+    execSync("npx jsr add @nshiab/simple-data-analysis", {
+      stdio: "ignore",
+    });
+    console.log("    => simple-data-analysis has been installed from JSR.");
+    execSync("npx jsr add @nshiab/journalism", {
+      stdio: "ignore",
+    });
+    console.log("    => journalism has been installed from JSR.");
+    execSync("npm i @observablehq/plot", {
+      stdio: "ignore",
+    });
+    console.log("    => @observablehq/plot has been installed from NPM.");
+  } else if (runtime === "bun") {
+    console.log("\n3 - Installing libraries with Bun...");
+    execSync("bunx jsr add @nshiab/simple-data-analysis", {
+      stdio: "ignore",
+    });
+    console.log("    => simple-data-analysis has been installed from JSR.");
+    execSync("bunx jsr add @nshiab/journalism", {
+      stdio: "ignore",
+    });
+    console.log("    => journalism has been installed from JSR.");
+    execSync("bun add @observablehq/plot", {
+      stdio: "ignore",
+    });
+    console.log("    => @observablehq/plot has been installed from NPM.");
+  } else if (runtime === "deno") {
+    console.log("\n3 - Installing libraries with Deno...");
+    execSync(
+      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium@1.50.0 jsr:@nshiab/simple-data-analysis",
+      {
+        stdio: "ignore",
+      },
+    );
+    console.log("    => simple-data-analysis has been installed from JSR.");
+    execSync(
+      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium@1.50.0 jsr:@nshiab/journalism",
+      {
+        stdio: "ignore",
+      },
+    );
+    console.log("    => journalism has been installed from JSR.");
+    execSync("deno install --node-modules-dir=auto npm:@observablehq/plot", {
+      stdio: "ignore",
+    });
+    console.log("    => @observablehq/plot has been installed from NPM.");
   }
 
   if (args.includes("--git")) {
