@@ -2808,8 +2808,8 @@ Toronto,2010.0,9.9
     mkdirSync("sda/data");
     writeFileSync("sda/data/temp.csv", data);
     console.log("    => sda/data/temp.csv has been created.");
-    mkdirSync("sda/data");
-    console.log("    => sda/data/ has been created.");
+    mkdirSync("sda/output");
+    console.log("    => sda/output/ has been created.");
   }
 
   if (existsSync("README.md")) {
@@ -3001,7 +3001,7 @@ When working on your project, use the following command:
     console.log("    => sda/helpers/ has been created.");
 
     mkdirSync("sda/data");
-    console.log("    => sda/data/temp.csv has been created.");
+    console.log("    => sda/data/ has been created.");
     mkdirSync("sda/output");
     console.log("    => sda/output/ has been created.");
   }
