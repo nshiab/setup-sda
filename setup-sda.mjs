@@ -2932,7 +2932,14 @@ When working on your project, use the following command:
     nodeModulesDir: "auto",
   };
 
-  const mainTs = `console.log("Hello! How are you doing?");`;
+  const mainTs = `import { SimpleDB } from "@nshiab/simple-data-analysis";
+
+const sdb = new SimpleDB();
+
+// Do your magic here!
+
+await sdb.done();
+`;
 
   console.log("\n2 - Creating relevant files...");
 
