@@ -24,7 +24,7 @@ bunx --bun setup-sda
 If you want an example, pass the `--example` flag.
 
 ```
-# Deno >= 2.x.x
+# Deno >= 2.2.x
 deno -A jsr:@nshiab/setup-sda --example
 
 # Node.js >= 22.6.x
@@ -39,7 +39,7 @@ flag. If SDA is already set up in your repository, this command will add Svelte
 without overwriting your existing files.
 
 ```
-# Deno >= 2.x.x
+# Deno >= 2.2.x
 deno -A jsr:@nshiab/setup-sda --svelte
 
 # Node.js >= 22.6.x
@@ -55,7 +55,7 @@ flag. If SDA is already set up in your repository, this command will add
 Framework without overwriting your existing files.
 
 ```
-# Deno >= 2.x.x
+# Deno >= 2.2.x
 deno -A jsr:@nshiab/setup-sda --framework
 
 # Node.js >= 22.6.x
