@@ -11,7 +11,7 @@ To quickly get started with
 folder and run:
 
 ```
-# Deno >= 2.x.x
+# Deno >= 2.2.x
 deno -A jsr:@nshiab/setup-sda
 
 # Node.js >= 22.6.x
