@@ -43,8 +43,16 @@ Here's the recommended workflow:
 
 When working on your project, you can use the following commands:
 
-- \`npm run sda\` will watch your \`sda/main.ts\` and its dependencies. Everytime you'll save some changes, the data will be reprocessed.
-- \`npm run dev\` will start a local server and watch all \`src/*.md\` files and their dependencies. Everytime you'll save some changes or the data is reprocessed, the content will be updated.
+- \`${
+      runtime === "deno"
+        ? "deno task"
+        : "npm run"
+    } sda\` will watch your \`sda/main.ts\` and its dependencies. Everytime you'll save some changes, the data will be reprocessed.
+- \`${
+      runtime === "deno"
+        ? "deno task"
+        : "npm run"
+    } dev\` will start a local server and watch all \`src/*.md\` files and their dependencies. Everytime you'll save some changes or the data is reprocessed, the content will be updated.
 
 By opening two terminals each running one of the above commands, you'll be able to work on your project with a live preview of your content and data.
 `;
@@ -618,8 +626,16 @@ Here's the recommended workflow:
 
 When working on your project, you can use the following commands:
 
-- \`npm run sda\` will watch your \`sda/main.ts\` and its dependencies. Everytime you'll save some changes, the data will be reprocessed.
-- \`npm run dev\` will start a local server and watch all \`src/*\` files and their dependencies. Everytime you'll save some changes or the data is reprocessed, the content will be updated.
+- \`${
+      runtime === "deno"
+        ? "deno task"
+        : "npm run"
+    } sda\` will watch your \`sda/main.ts\` and its dependencies. Everytime you'll save some changes, the data will be reprocessed.
+- \`${
+      runtime === "deno"
+        ? "deno task"
+        : "npm run"
+    } dev\` will start a local server and watch all \`src/*\` files and their dependencies. Everytime you'll save some changes or the data is reprocessed, the content will be updated.
 
 By opening two terminals each running one of the above commands, you'll be able to work on your project with a live preview of your content and data.
   `;
@@ -2634,7 +2650,11 @@ Here's the recommended workflow:
 
 When working on your project, use the following command:
 
-- \`npm run sda\` will watch your \`sda/main.ts\` and its dependencies. Everytime you'll save some changes, the data will be reprocessed.
+- \`${
+      runtime === "deno"
+        ? "deno task"
+        : "npm run"
+    } sda\` will watch your \`sda/main.ts\` and its dependencies. Everytime you'll save some changes, the data will be reprocessed.
 `;
 
   const tsconfigContent = `{
@@ -2910,7 +2930,11 @@ Here's the recommended workflow:
 
 When working on your project, use the following command:
 
-- \`npm run sda\` will watch your \`sda/main.ts\` and its dependencies. Everytime you'll save some changes, the data will be reprocessed.
+- \`${
+      runtime === "deno"
+        ? "deno task"
+        : "npm run"
+    } sda\` will watch your \`sda/main.ts\` and its dependencies. Everytime you'll save some changes, the data will be reprocessed.
 `;
 
   const tsconfigContent = `{
