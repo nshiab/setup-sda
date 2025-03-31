@@ -49,6 +49,19 @@ npx setup-sda --svelte
 bunx --bun setup-sda --svelte
 ```
 
+If you want an example with Svelte, pass the `--svelte` and `--example` flags.
+
+```
+# Deno >= 2.2.x
+deno -A jsr:@nshiab/setup-sda --svelte --example
+
+# Node.js >= 22.6.x
+npx setup-sda --svelte --example
+
+# Bun
+bunx --bun setup-sda --svelte --example
+```
+
 If you want to use SDA with
 [Framework](https://github.com/observablehq/framework), pass the `--framework`
 flag. If SDA is already set up in your repository, this command will add
