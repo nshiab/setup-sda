@@ -439,11 +439,17 @@ export default function getTempChange(
   }
 
   if (existsSync(".gitignore")) {
-    console.log("    => .gitignore already exists.");
+    console.log("    => .gitignore already exists. Appending to it.");
+    const currentGitignore = readFileSync(".gitignore", "utf-8");
+    writeFileSync(
+      ".gitignore",
+      currentGitignore +
+        "\ndist/\nnode_modules/\nyarn-error.log\n.tmp\n.sda-cache\ndata\n.env\n.DS_Store",
+    );
   } else {
     writeFileSync(
       ".gitignore",
-      "dist/\nnode_modules/\nyarn-error.log\n.tmp\n.sda-cache\ndata\n.DS_Store",
+      "dist/\nnode_modules/\nyarn-error.log\n.tmp\n.sda-cache\ndata\n.env\n.DS_Store",
     );
     console.log("    => .gitignore has been created.");
   }
@@ -2291,7 +2297,13 @@ export default function getTempChange(
   }
 
   if (existsSync(".gitignore")) {
-    console.log("    => .gitignore already exists.");
+    console.log("    => .gitignore already exists. Appending to it.");
+    const currentGitignore = readFileSync(".gitignore", "utf-8");
+    writeFileSync(
+      ".gitignore",
+      currentGitignore + "\n" +
+        gitignore,
+    );
   } else {
     writeFileSync(".gitignore", gitignore);
     console.log("    => .gitignore has been created.");
@@ -2808,11 +2820,17 @@ Toronto,2010.0,9.9
   }
 
   if (existsSync(".gitignore")) {
-    console.log("    => .gitignore already exists.");
+    console.log("    => .gitignore already exists. Appending to it.");
+    const currentGitignore = readFileSync(".gitignore", "utf-8");
+    writeFileSync(
+      ".gitignore",
+      currentGitignore + "\n" +
+        "node_modules\n.tmp\n.sda-cache\ndata\nenv.\n.DS_Store",
+    );
   } else {
     writeFileSync(
       ".gitignore",
-      "node_modules\n.tmp\n.sda-cache\ndata\n.DS_Store",
+      "node_modules\n.tmp\n.sda-cache\ndata\nenv.\n.DS_Store",
     );
     console.log("    => .gitignore has been created.");
   }
@@ -3018,11 +3036,17 @@ await sdb.done();
   }
 
   if (existsSync(".gitignore")) {
-    console.log("    => .gitignore already exists.");
+    console.log("    => .gitignore already exists. Appending to it.");
+    const currentGitignore = readFileSync(".gitignore", "utf-8");
+    writeFileSync(
+      ".gitignore",
+      currentGitignore + "\n" +
+        "node_modules\n.tmp\n.sda-cache\ndata\nenv.\n.DS_Store",
+    );
   } else {
     writeFileSync(
       ".gitignore",
-      "node_modules\n.tmp\n.sda-cache\ndata\n.DS_Store",
+      "node_modules\n.tmp\n.sda-cache\ndata\n.env\n.DS_Store",
     );
     console.log("    => .gitignore has been created.");
   }
