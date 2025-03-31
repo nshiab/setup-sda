@@ -672,17 +672,37 @@ By opening two terminals each running one of the above commands, you'll be able 
       clean: "rm -rf .sda-cache && rm -rf .tmp",
     },
     nodeModulesDir: "auto",
-    compilerOptions: {
-      "lib": ["dom", "deno.ns"],
+    "unstable": ["sloppy-imports", "fmt-component"],
+    "lint": {
+      "rules": {
+        "exclude": ["no-sloppy-imports"],
+      },
     },
-    unstable: [
-      "fmt-component",
-    ],
-    imports: {
-      "$types": "./.svelte-kit/types/src/routes/$types.d.ts",
+    "imports": {
       "$lib": "./src/lib/index.ts",
+      "$lib/": "./src/lib/",
+    },
+    "compilerOptions": {
+      "rootDirs": [
+        ".",
+        "./.svelte-kit/types",
+      ],
+      "verbatimModuleSyntax": true,
+      "lib": [
+        "esnext",
+        "DOM",
+        "DOM.Iterable",
+      ],
+      "types": [
+        "./.svelte-kit/ambient.d.ts",
+        "./.svelte-kit/non-ambient.d.ts",
+      ],
     },
   };
+
+  const ambientTypes = ``;
+
+  const nonAmbientTypes = ``;
 
   const tempCsv = `city,decade,meanTemp
 Toronto,1840.0,7.1
@@ -2294,6 +2314,16 @@ export default function getTempChange(
   } else {
     writeFileSync("svelte.config.js", svelteConfigJs);
     console.log("    => svelte.config.js has been created.");
+  }
+
+  if (existsSync(".svelte-kit")) {
+    console.log("    => .svelte-kit/ already exists.");
+  } else {
+    mkdirSync(".svelte-kit");
+    writeFileSync(".svelte-kit/ambient.d.ts", ambientTypes);
+    console.log("    => .svelte-kit/ambient.d.ts has been created.");
+    writeFileSync(".svelte-kit/non-ambient.d.ts", nonAmbientTypes);
+    console.log("    => .svelte-kit/non-ambient.d.ts has been created.");
   }
 
   if (existsSync(".gitignore")) {
