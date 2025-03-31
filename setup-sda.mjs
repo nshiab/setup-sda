@@ -1903,7 +1903,8 @@ export const load: PageLoad = async ({ fetch }) => {
 };
 `;
 
-  const layoutTs = `export const prerender = true;`;
+  const layoutTs =
+    `export const prerender = true;\nexport const trailingSlash = "always";`;
 
   const layoutSvelte = `<script>
   let { children } = $props();
