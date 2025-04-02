@@ -2687,14 +2687,14 @@ export default function getTempChange(
     const packageJson = {
       "type": "module",
       "dependencies": {
-        "@nshiab/journalism": "npm:@jsr/nshiab__journalism@^1.22.10",
+        "@nshiab/journalism": "npm:@jsr/nshiab__journalism@^1.23.0",
         "@nshiab/simple-data-analysis":
-          "npm:@jsr/nshiab__simple-data-analysis@^4.2.2",
+          "npm:@jsr/nshiab__simple-data-analysis@^5.0.0",
       },
     };
     writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
     execSync(
-      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium@1.50.0",
+      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium@1.51.1",
       {
         stdio: "ignore",
       },
