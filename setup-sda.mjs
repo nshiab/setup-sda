@@ -408,7 +408,9 @@ export default function getTempChange(
         ...denoJson.imports,
       };
       writeFileSync("deno.json", JSON.stringify(denoJson, null, 2));
-      console.log("    => deno.json has been overwritten, but old imports were kept.");
+      console.log(
+        "    => deno.json has been overwritten, but old imports were kept.",
+      );
     } else {
       writeFileSync("deno.json", JSON.stringify(denoJson, null, 2));
       console.log("    => deno.json has been created.");
@@ -428,11 +430,14 @@ export default function getTempChange(
           ...currentPackageJson.devDependencies,
           ...packageJson.devDependencies,
         };
+      }
       writeFileSync(
         "package.json",
         JSON.stringify(packageJson, null, 2),
       );
-      console.log("    => package.json has been overwritten, but old dependencies were kept.");
+      console.log(
+        "    => package.json has been overwritten, but old dependencies were kept.",
+      );
     } else {
       writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
       console.log("    => package.json has been created.");
