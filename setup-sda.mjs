@@ -403,13 +403,12 @@ export default function getTempChange(
       const currentDenoJson = JSON.parse(
         readFileSync("./deno.json", "utf-8"),
       );
-      currentDenoJson.tasks = {
-        ...currentDenoJson.tasks,
-        ...denoJson.tasks,
+      denoJson.imports = {
+        ...currentDenoJson.imports,
+        ...denoJson.imports,
       };
-      currentDenoJson.nodeModulesDir = "auto";
-      writeFileSync("deno.json", JSON.stringify(currentDenoJson, null, 2));
-      console.log("    => deno.json has been updated.");
+      writeFileSync("deno.json", JSON.stringify(denoJson, null, 2));
+      console.log("    => deno.json has been overwritten, but old imports were kept.");
     } else {
       writeFileSync("deno.json", JSON.stringify(denoJson, null, 2));
       console.log("    => deno.json has been created.");
@@ -420,15 +419,20 @@ export default function getTempChange(
       const currentPackageJson = JSON.parse(
         readFileSync("./package.json", "utf-8"),
       );
-      currentPackageJson.scripts = {
-        ...currentPackageJson.scripts,
-        ...packageJson.scripts,
+      packageJson.dependencies = {
+        ...currentPackageJson.dependencies,
+        ...packageJson.dependencies,
       };
+      if (currentPackageJson.devDependencies) {
+        packageJson.devDependencies = {
+          ...currentPackageJson.devDependencies,
+          ...packageJson.devDependencies,
+        };
       writeFileSync(
         "package.json",
-        JSON.stringify(currentPackageJson, null, 2),
+        JSON.stringify(packageJson, null, 2),
       );
-      console.log("    => package.json has been updated.");
+      console.log("    => package.json has been overwritten, but old dependencies were kept.");
     } else {
       writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
       console.log("    => package.json has been created.");
@@ -2289,8 +2293,17 @@ export default function getTempChange(
   if (runtime === "deno") {
     if (existsSync("deno.json")) {
       console.log("    => deno.json already exists.");
+      const currentDenoJson = JSON.parse(
+        readFileSync("deno.json", "utf-8"),
+      );
+      denoJson.imports = {
+        ...currentDenoJson.imports,
+        ...denoJson.imports,
+      };
       writeFileSync("deno.json", JSON.stringify(denoJson, null, 2));
-      console.log("    => deno.json has been overwritten.");
+      console.log(
+        "    => deno.json has been overwritten, but old imports were kept.",
+      );
     } else {
       writeFileSync("deno.json", JSON.stringify(denoJson, null, 2));
       console.log("    => deno.json has been created.");
@@ -2298,8 +2311,25 @@ export default function getTempChange(
   } else {
     if (existsSync("package.json")) {
       console.log("    => package.json already exists.");
-      writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
-      console.log("    => package.json has been overwritten.");
+      const currentPackageJson = JSON.parse(
+        readFileSync("package.json", "utf-8"),
+      );
+      packageJson.dependencies = {
+        ...currentPackageJson.dependencies,
+        ...packageJson.dependencies,
+      };
+      if (currentPackageJson.devDependencies) {
+        packageJson.devDependencies = {
+          ...currentPackageJson.devDependencies,
+        };
+      }
+      writeFileSync(
+        "package.json",
+        JSON.stringify(packageJson, null, 2),
+      );
+      console.log(
+        "    => package.json has been overwritten, but old dependencies were kept.",
+      );
     } else {
       writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
       console.log("    => package.json has been created.");
