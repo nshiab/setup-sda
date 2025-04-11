@@ -48,8 +48,11 @@ bunx --bun setup-sda --scrape
 ```
 
 If you want to use SDA with [Svelte](https://svelte.dev/), pass the `--svelte`
-flag. If SDA is already set up in your repository, this command will add Svelte
-without overwriting your existing files.
+flag.
+
+If a `sda` folder is already set up in your repository, this command won't touch
+it but will overwrite the `deno.json`/`package.json` to make sure everything
+works. Your `.gitignore` file will have new entries added to it.
 
 ```
 # Deno >= 2.2.x
