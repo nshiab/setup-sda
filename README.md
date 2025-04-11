@@ -34,6 +34,19 @@ npx setup-sda --example
 bunx --bun setup-sda --example
 ```
 
+If you want to install web scraping dependencies, pass the `--scrape` flag.
+
+```
+# Deno >= 2.2.x
+deno -A jsr:@nshiab/setup-sda --scrape
+
+# Node.js >= 22.6.x
+npx setup-sda --scrape
+
+# Bun
+bunx --bun setup-sda --scrape
+```
+
 If you want to use SDA with [Svelte](https://svelte.dev/), pass the `--svelte`
 flag. If SDA is already set up in your repository, this command will add Svelte
 without overwriting your existing files.
@@ -47,6 +60,20 @@ npx setup-sda --svelte
 
 # Bun
 bunx --bun setup-sda --svelte
+```
+
+If you want to use SDA with [Svelte](https://svelte.dev/) and install web
+scraping dependencies, pass the `--svelte` and `--scrape` flags.
+
+```
+# Deno >= 2.2.x
+deno -A jsr:@nshiab/setup-sda --svelte --scrape
+
+# Node.js >= 22.6.x
+npx setup-sda --svelte --scrape
+
+# Bun
+bunx --bun setup-sda --svelte --scrape
 ```
 
 If you want an example with Svelte, pass the `--svelte` and `--example` flags.
