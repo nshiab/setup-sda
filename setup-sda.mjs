@@ -30,6 +30,13 @@ if (args.includes("--git")) {
 if (args.includes("--scrape")) {
   console.log(`    => You passed the option --scrape`);
 }
+if (args.includes("--pages") && args.includes("--svelte")) {
+  console.log(`    => You passed the option --pages`);
+} else if (args.includes("--pages") && !args.includes("--svelte")) {
+  console.log(
+    `    => You passed the option --pages, but it only works with --svelte`,
+  );
+}
 
 if (args.includes("--framework")) {
   console.log(`    => You passed the option --framework`);
@@ -865,7 +872,35 @@ export default defineConfig({
 }
 `;
 
-  const svelteConfigJs = `import adapter from "@sveltejs/adapter-static";
+  const svelteConfigJs = args.includes("--pages")
+    ? `import adapter from "@sveltejs/adapter-static";
+import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
+import process from "node:process";
+
+/** @type {import('@sveltejs/kit').Config} */
+const config = {
+  // Consult https://svelte.dev/docs/kit/integrations
+  // for more information about preprocessors
+  preprocess: vitePreprocess(),
+
+  kit: {
+    adapter: adapter({
+      // default options are shown. On some platforms
+      // these options are set automatically — see below
+      pages: "build",
+      assets: "build",
+      fallback: undefined,
+      precompress: false,
+      strict: true,
+    }),
+    paths: {
+      base: process.argv.includes("dev") ? "" : process.env.BASE_PATH,
+    },
+  },
+};
+
+export default config;`
+    : `import adapter from "@sveltejs/adapter-static";
 import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -888,6 +923,55 @@ const config = {
 };
 
 export default config;`;
+
+  const deployYml = `name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: "main"
+
+jobs:
+  build_site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Install dependencies
+        run: deno install
+
+      - name: build
+        env:
+          BASE_PATH: "/\${{ github.event.repository.name }}"
+        run: deno task build
+
+      - name: Upload Artifacts
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "build/"
+
+  deploy:
+    needs: build_site
+    runs-on: ubuntu-latest
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: \${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
+`;
 
   const gitignore = `node_modules
 
@@ -2512,6 +2596,18 @@ export default function getTempChange(
     console.log("    => sda/output/ has been created.");
   }
 
+  if (args.includes("--pages")) {
+    mkdirSync(".github");
+    console.log("    => .github/ has been created.");
+    mkdirSync(".github/workflows");
+    console.log("    => .github/workflows/ has been created.");
+    writeFileSync(
+      ".github/workflows/deploy.yml",
+      deployYml,
+    );
+    console.log("    => .github/workflows/deploy.yml has been created.");
+  }
+
   if (runtime === "nodejs") {
     console.log("\n3 - Installing libraries with NPM...");
 
@@ -3021,6 +3117,18 @@ Toronto,2010.0,9.9
     console.log("    => README.md has been created.");
   }
 
+  if (args.includes("--pages")) {
+    mkdirSync(".github");
+    console.log("    => .github/ has been created.");
+    mkdirSync(".github/workflows");
+    console.log("    => .github/workflows/ has been created.");
+    writeFileSync(
+      ".github/workflows/deploy.yml",
+      deployYml,
+    );
+    console.log("    => .github/workflows/deploy.yml has been created.");
+  }
+
   if (runtime === "nodejs") {
     console.log("\n3 - Installing libraries...");
     execSync("npx jsr add @nshiab/simple-data-analysis", {
@@ -3348,4 +3456,10 @@ await sdb.done();
   }
 
   console.log("\nCheck the README.md and have fun. ^_^\n");
+}
+
+if (args.includes("--pages") && args.includes("--svelte")) {
+  console.log(
+    "PS: Don't forget to enable GitHub Pages in your repository settings.\n",
+  );
 }
