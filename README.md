@@ -21,91 +21,18 @@ npx setup-sda
 bunx --bun setup-sda
 ```
 
-If you want an example, pass the `--example` flag.
+Here are the different options:
+
+- `--example`: adds example files
+- `--scrape`: adds web scraping dependencies
+- `--svelte`: adds a Svelte project
+- `--pages`: adds a GitHub Pages Actions workflow (works just with `--svelte`)
+- `--git`: initializes a git repository and commits the initial files
+
+You can combine options, for example, this will install web scraping
+dependencies, set up a Svelte project with example files, initialize a git
+repository and make a first commit, and add a GitHub Pages Actions workflow:
 
 ```
-# Deno >= 2.2.x
-deno -A jsr:@nshiab/setup-sda --example
-
-# Node.js >= 22.6.x
-npx setup-sda --example
-
-# Bun
-bunx --bun setup-sda --example
+deno -A jsr:@nshiab/setup-sda --scrape --svelte --example --pages --git
 ```
-
-If you want to install web scraping dependencies, pass the `--scrape` flag.
-
-```
-# Deno >= 2.2.x
-deno -A jsr:@nshiab/setup-sda --scrape
-
-# Node.js >= 22.6.x
-npx setup-sda --scrape
-
-# Bun
-bunx --bun setup-sda --scrape
-```
-
-If you want to use SDA with [Svelte](https://svelte.dev/), pass the `--svelte`
-flag.
-
-If a `sda` folder is already set up in your repository, this command won't touch
-it but will overwrite the `deno.json`/`package.json` to make sure everything
-works. Your `.gitignore` file will have new entries added to it.
-
-```
-# Deno >= 2.2.x
-deno -A jsr:@nshiab/setup-sda --svelte
-
-# Node.js >= 22.6.x
-npx setup-sda --svelte
-
-# Bun
-bunx --bun setup-sda --svelte
-```
-
-If you want to use SDA with [Svelte](https://svelte.dev/) and install web
-scraping dependencies, pass the `--svelte` and `--scrape` flags.
-
-```
-# Deno >= 2.2.x
-deno -A jsr:@nshiab/setup-sda --svelte --scrape
-
-# Node.js >= 22.6.x
-npx setup-sda --svelte --scrape
-
-# Bun
-bunx --bun setup-sda --svelte --scrape
-```
-
-If you want an example with Svelte, pass the `--svelte` and `--example` flags.
-
-```
-# Deno >= 2.2.x
-deno -A jsr:@nshiab/setup-sda --svelte --example
-
-# Node.js >= 22.6.x
-npx setup-sda --svelte --example
-
-# Bun
-bunx --bun setup-sda --svelte --example
-```
-
-If you want to use SDA with
-[Framework](https://github.com/observablehq/framework), pass the `--framework`
-flag. If SDA is already set up in your repository, this command will add
-Framework without overwriting your existing files.
-
-```
-# Deno >= 2.2.x
-deno -A jsr:@nshiab/setup-sda --framework
-
-# Node.js >= 22.6.x
-npx setup-sda --framework
-
-# Bun
-bunx --bun setup-sda --framework
-```
-
-To initialize a git repository, pass the `--git` flag.
