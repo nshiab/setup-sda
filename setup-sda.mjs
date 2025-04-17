@@ -464,12 +464,12 @@ export default function getTempChange(
     writeFileSync(
       ".gitignore",
       currentGitignore +
-        "\ndist/\nnode_modules/\nyarn-error.log\n.tmp\n.sda-cache\ndata\n.env\n.DS_Store",
+        "\ndist/\nnode_modules/\nyarn-error.log\n.tmp\n.sda-cache\nsda/data\n.env\n.DS_Store",
     );
   } else {
     writeFileSync(
       ".gitignore",
-      "dist/\nnode_modules/\nyarn-error.log\n.tmp\n.sda-cache\ndata\n.env\n.DS_Store",
+      "dist/\nnode_modules/\nyarn-error.log\n.tmp\n.sda-cache\nsda/data\n.env\n.DS_Store",
     );
     console.log("    => .gitignore has been created.");
   }
@@ -998,7 +998,7 @@ vite.config.ts.timestamp-*
 # SDA
 .tmp
 .sda-cache
-data`;
+sda/data`;
 
   const styleCss = `/* Adapted from https://github.com/kevquirk/simple.css */
 
@@ -3076,12 +3076,12 @@ Toronto,2010.0,9.9
     writeFileSync(
       ".gitignore",
       currentGitignore + "\n" +
-        "node_modules\n.tmp\n.sda-cache\ndata\nenv.\n.DS_Store",
+        "node_modules\n.tmp\n.sda-cache\nsda/data\nenv.\n.DS_Store",
     );
   } else {
     writeFileSync(
       ".gitignore",
-      "node_modules\n.tmp\n.sda-cache\ndata\nenv.\n.DS_Store",
+      "node_modules\n.tmp\n.sda-cache\nsda/data\nenv.\n.DS_Store",
     );
     console.log("    => .gitignore has been created.");
   }
@@ -3304,12 +3304,12 @@ await sdb.done();
     writeFileSync(
       ".gitignore",
       currentGitignore + "\n" +
-        "node_modules\n.tmp\n.sda-cache\ndata\nenv.\n.DS_Store",
+        "node_modules\n.tmp\n.sda-cache\nsda/data\nenv.\n.DS_Store",
     );
   } else {
     writeFileSync(
       ".gitignore",
-      "node_modules\n.tmp\n.sda-cache\ndata\n.env\n.DS_Store",
+      "node_modules\n.tmp\n.sda-cache\nsda/data\n.env\n.DS_Store",
     );
     console.log("    => .gitignore has been created.");
   }
