@@ -879,20 +879,9 @@ import process from "node:process";
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-  // Consult https://svelte.dev/docs/kit/integrations
-  // for more information about preprocessors
   preprocess: vitePreprocess(),
-
   kit: {
-    adapter: adapter({
-      // default options are shown. On some platforms
-      // these options are set automatically — see below
-      pages: "build",
-      assets: "build",
-      precompress: false,
-      strict: true,
-      fallback: \`\${process.argv.includes("dev") ? "" : process.env.BASE_PATH}404.html\`
-    }),
+    adapter: adapter(),
     paths: {
       base: process.argv.includes("dev") ? "" : process.env.BASE_PATH,
     },
@@ -905,20 +894,9 @@ import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-  // Consult https://svelte.dev/docs/kit/integrations
-  // for more information about preprocessors
   preprocess: vitePreprocess(),
-
   kit: {
-    adapter: adapter({
-      // default options are shown. On some platforms
-      // these options are set automatically — see below
-      pages: "build",
-      assets: "build",
-      fallback: undefined,
-      precompress: false,
-      strict: true,
-    }),
+    adapter: adapter(),
   },
 };
 
@@ -2019,17 +1997,29 @@ export const load: PageLoad = async ({ fetch }) => {
 
   const layoutSvelte = example
     ? `<script>
-  let { children } = $props();
+  ${
+      args.includes("--pages")
+        ? 'import { base } from "$app/paths";\n'
+        : ""
+    }let { children } = $props();
 </script>
 
 <svelte:head>
-  <link rel="stylesheet" href="./style.css" />
-  <link rel="stylesheet" href="./highlight-theme.css" />
+  ${
+      args.includes("--pages")
+        ? '<link rel="stylesheet" href={`${base}/style.css`} />\n<link rel="stylesheet" href={`${base}/highlight-theme.css`} />'
+        : '<link rel="stylesheet" href="./style.css" />\n<link rel="stylesheet" href="./highlight-theme.css" />'
+    }
+  
 </svelte:head>
 
 <header>
   <nav>
-    <a href="/">Home</a>
+    ${
+      args.includes("--pages")
+        ? "<a href={`${base}/`}>Home</a>"
+        : '<a href="/">Home</a>'
+    }
     <a href="https://github.com/nshiab/simple-data-analysis" target="_blank">About</a>
   </nav>
   <h1>My new project</h1>
