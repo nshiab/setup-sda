@@ -42,6 +42,7 @@ const packageJsonPath = "package.json";
 const packageJsonData = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
 packageJsonData.version = denoData.version;
 writeFileSync(packageJsonPath, JSON.stringify(packageJsonData, null, 2));
+execSync("deno fmt");
 
 execSync("git add -A");
 execSync(`git commit -m "v${denoData.version}"`);
