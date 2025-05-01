@@ -2827,7 +2827,7 @@ export default function getTempChange(
       "dependencies": {
         "@nshiab/journalism": "npm:@jsr/nshiab__journalism@^1.27.7",
         "@nshiab/simple-data-analysis":
-          "npm:@jsr/nshiab__simple-data-analysis@^5.1.6",
+          "npm:@jsr/nshiab__simple-data-analysis@^5.1.7",
       },
     };
     writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
