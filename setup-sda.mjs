@@ -72,7 +72,7 @@ By opening two terminals each running one of the above commands, you'll be able 
     type: "module",
     scripts: {
       clean:
-        "rimraf src/.observablehq/cache && rimraf .sda-cache && rimraf .journalism && rimraf .tmp",
+        "rimraf src/.observablehq/cache && rimraf .sda-cache && rimraf .journalism-cache && rimraf .tmp",
       build: "observable build",
       dev: "observable preview",
       deploy: "observable deploy",
@@ -84,7 +84,7 @@ By opening two terminals each running one of the above commands, you'll be able 
   const denoJson = {
     tasks: {
       clean:
-        "rimraf src/.observablehq/cache && rimraf .sda-cache && rimraf .journalism && rimraf .tmp",
+        "rimraf src/.observablehq/cache && rimraf .sda-cache && rimraf .journalism-cache && rimraf .tmp",
       build: "observable build",
       dev: "observable preview",
       deploy: "observable deploy",
@@ -464,12 +464,12 @@ export default function getTempChange(
     writeFileSync(
       ".gitignore",
       currentGitignore +
-        "\ndist/\nnode_modules/\nyarn-error.log\n.tmp\n.sda-cache\n.journalism\nsda/data\n.env\n.DS_Store",
+        "\ndist/\nnode_modules/\nyarn-error.log\n.tmp\n.sda-cache\n.journalism-cache\nsda/data\n.env\n.DS_Store",
     );
   } else {
     writeFileSync(
       ".gitignore",
-      "dist/\nnode_modules/\nyarn-error.log\n.tmp\n.sda-cache\n.journalism\nsda/data\n.env\n.DS_Store",
+      "dist/\nnode_modules/\nyarn-error.log\n.tmp\n.sda-cache\n.journalism-cache\nsda/data\n.env\n.DS_Store",
     );
     console.log("    => .gitignore has been created.");
   }
@@ -678,7 +678,7 @@ By opening two terminals each running one of the above commands, you'll be able 
       "check:watch":
         "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
       sda: "node --experimental-strip-types --no-warnings --watch sda/main.ts",
-      clean: "rm -rf .sda-cache && rm -rf .journalism && rm -rf .tmp",
+      clean: "rm -rf .sda-cache && rm -rf .journalism-cache && rm -rf .tmp",
     },
   };
 
@@ -691,7 +691,7 @@ By opening two terminals each running one of the above commands, you'll be able 
       "check:watch":
         "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
       sda: "deno run --node-modules-dir=auto -A --watch --check sda/main.ts",
-      clean: "rm -rf .sda-cache && rm -rf .journalism && rm -rf .tmp",
+      clean: "rm -rf .sda-cache && rm -rf .journalism-cache && rm -rf .tmp",
     },
     nodeModulesDir: "auto",
     "unstable": ["sloppy-imports", "fmt-component"],
@@ -976,7 +976,7 @@ vite.config.ts.timestamp-*
 # SDA
 .tmp
 .sda-cache
-.journalism
+.journalism-cache
 sda/data`;
 
   const styleCss = `/* Adapted from https://github.com/kevquirk/simple.css */
@@ -2825,9 +2825,9 @@ export default function getTempChange(
     const packageJson = {
       "type": "module",
       "dependencies": {
-        "@nshiab/journalism": "npm:@jsr/nshiab__journalism@^1.27.2",
+        "@nshiab/journalism": "npm:@jsr/nshiab__journalism@^1.27.7",
         "@nshiab/simple-data-analysis":
-          "npm:@jsr/nshiab__simple-data-analysis@^5.1.1",
+          "npm:@jsr/nshiab__simple-data-analysis@^5.1.6",
       },
     };
     writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
@@ -2927,14 +2927,14 @@ When working on your project, use the following command:
     type: "module",
     scripts: {
       sda: "node --experimental-strip-types --no-warnings --watch sda/main.ts",
-      clean: "rm -rf .sda-cache && rm -rf .journalism && rm -rf .tmp",
+      clean: "rm -rf .sda-cache && rm -rf .journalism-cache && rm -rf .tmp",
     },
   };
 
   const denoJson = {
     tasks: {
       sda: "deno run --node-modules-dir=auto -A --watch --check sda/main.ts",
-      clean: "rm -rf .sda-cache && rm -rf .journalism && rm -rf .tmp",
+      clean: "rm -rf .sda-cache && rm -rf .journalism-cache && rm -rf .tmp",
     },
     nodeModulesDir: "auto",
   };
@@ -3067,12 +3067,12 @@ Toronto,2010.0,9.9
     writeFileSync(
       ".gitignore",
       currentGitignore + "\n" +
-        "node_modules\n.tmp\n.sda-cache\n.journalism\nsda/data\nenv.\n.DS_Store",
+        "node_modules\n.tmp\n.sda-cache\n.journalism-cache\nsda/data\nenv.\n.DS_Store",
     );
   } else {
     writeFileSync(
       ".gitignore",
-      "node_modules\n.tmp\n.sda-cache\n.journalism\nsda/data\nenv.\n.DS_Store",
+      "node_modules\n.tmp\n.sda-cache\n.journalism-cache\nsda/data\nenv.\n.DS_Store",
     );
     console.log("    => .gitignore has been created.");
   }
@@ -3225,14 +3225,14 @@ When working on your project, use the following command:
     type: "module",
     scripts: {
       sda: "node --experimental-strip-types --no-warnings --watch sda/main.ts",
-      clean: "rm -rf .sda-cache && rm -rf .journalism && rm -rf .tmp",
+      clean: "rm -rf .sda-cache && rm -rf .journalism-cache && rm -rf .tmp",
     },
   };
 
   const denoJson = {
     tasks: {
       sda: "deno run --node-modules-dir=auto -A --watch --check sda/main.ts",
-      clean: "rm -rf .sda-cache && rm -rf .journalism && rm -rf .tmp",
+      clean: "rm -rf .sda-cache && rm -rf .journalism-cache && rm -rf .tmp",
     },
     nodeModulesDir: "auto",
   };
@@ -3295,12 +3295,12 @@ await sdb.done();
     writeFileSync(
       ".gitignore",
       currentGitignore + "\n" +
-        "node_modules\n.tmp\n.sda-cache\n.journalism\nsda/data\nenv.\n.DS_Store",
+        "node_modules\n.tmp\n.sda-cache\n.journalism-cache\nsda/data\nenv.\n.DS_Store",
     );
   } else {
     writeFileSync(
       ".gitignore",
-      "node_modules\n.tmp\n.sda-cache\n.journalism\nsda/data\n.env\n.DS_Store",
+      "node_modules\n.tmp\n.sda-cache\n.journalism-cache\nsda/data\n.env\n.DS_Store",
     );
     console.log("    => .gitignore has been created.");
   }
