@@ -3023,6 +3023,14 @@ Toronto,2010.0,9.9
   if (runtime === "nodejs") {
     if (existsSync("package.json")) {
       console.log("    => package.json already exists.");
+      const currentPackageJson = JSON.parse(
+        readFileSync("package.json", "utf-8"),
+      );
+      currentPackageJson.scripts = {
+        ...currentPackageJson.scripts,
+        ...packageJson.scripts,
+      };
+      console.log("    => package.json has been modified.");
     } else {
       writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
       console.log("    => package.json has been created.");
@@ -3041,6 +3049,14 @@ Toronto,2010.0,9.9
 
     if (existsSync("package.json")) {
       console.log("    => package.json already exists.");
+      const currentPackageJson = JSON.parse(
+        readFileSync("package.json", "utf-8"),
+      );
+      currentPackageJson.scripts = {
+        ...currentPackageJson.scripts,
+        ...packageJson.scripts,
+      };
+      console.log("    => package.json has been modified.");
     } else {
       writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
       console.log("    => package.json has been created.");
@@ -3055,6 +3071,15 @@ Toronto,2010.0,9.9
   } else if (runtime === "deno") {
     if (existsSync("deno.json")) {
       console.log("    => deno.json already exists.");
+      const currentDenoJson = JSON.parse(
+        readFileSync("deno.json", "utf-8"),
+      );
+      currentDenoJson.tasks = {
+        ...currentDenoJson.tasks,
+        ...denoJson.tasks,
+      };
+      writeFileSync("deno.json", JSON.stringify(currentDenoJson, null, 2));
+      console.log("   => deno.json has been modified.");
     } else {
       writeFileSync("deno.json", JSON.stringify(denoJson, null, 2));
       console.log("    => deno.json has been created.");
@@ -3067,12 +3092,12 @@ Toronto,2010.0,9.9
     writeFileSync(
       ".gitignore",
       currentGitignore + "\n" +
-        "node_modules\n.tmp\n.sda-cache\n.journalism-cache\nsda/data\nenv.\n.DS_Store",
+        "# Added by setup-sda\nnode_modules\n.tmp\n.sda-cache\n.journalism-cache\nsda/data\nenv.\n.DS_Store",
     );
   } else {
     writeFileSync(
       ".gitignore",
-      "node_modules\n.tmp\n.sda-cache\n.journalism-cache\nsda/data\nenv.\n.DS_Store",
+      "# Added by setup-sda\nnode_modules\n.tmp\n.sda-cache\n.journalism-cache\nsda/data\nenv.\n.DS_Store",
     );
     console.log("    => .gitignore has been created.");
   }
