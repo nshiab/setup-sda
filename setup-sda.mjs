@@ -469,12 +469,12 @@ export default function getTempChange(
     writeFileSync(
       ".gitignore",
       currentGitignore +
-        "\ndist/\nnode_modules/\nyarn-error.log\n.tmp\n.sda-cache\n.journalism-cache\nsda/data\n.env\n.DS_Store",
+        "\n# Added by setup-sda\n\ndist/\nnode_modules/\nyarn-error.log\n.tmp\n.sda-cache\n.journalism-cache\nsda/data\n.env\n.DS_Store",
     );
   } else {
     writeFileSync(
       ".gitignore",
-      "dist/\nnode_modules/\nyarn-error.log\n.tmp\n.sda-cache\n.journalism-cache\nsda/data\n.env\n.DS_Store",
+      "#Added by setup-sda\n\ndist/\nnode_modules/\nyarn-error.log\n.tmp\n.sda-cache\n.journalism-cache\nsda/data\n.env\n.DS_Store",
     );
     console.log("    => .gitignore has been created.");
   }
@@ -978,7 +978,7 @@ Thumbs.db
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
-# SDA
+# Added by setup-sda
 .tmp
 .sda-cache
 .journalism-cache
@@ -2463,7 +2463,7 @@ export default function getTempChange(
     const currentGitignore = readFileSync(".gitignore", "utf-8");
     writeFileSync(
       ".gitignore",
-      currentGitignore + "\n" +
+      currentGitignore + "\n\n# Added by setup-sda\n" +
         gitignore,
     );
   } else {
@@ -3111,12 +3111,12 @@ Toronto,2010.0,9.9
     writeFileSync(
       ".gitignore",
       currentGitignore + "\n" +
-        "# Added by setup-sda\nnode_modules\n.tmp\n.sda-cache\n.journalism-cache\nsda/data\nenv.\n.DS_Store",
+        "\n# Added by setup-sda\nnode_modules\n.tmp\n.sda-cache\n.journalism-cache\nsda/data\nenv.\n.DS_Store",
     );
   } else {
     writeFileSync(
       ".gitignore",
-      "# Added by setup-sda\nnode_modules\n.tmp\n.sda-cache\n.journalism-cache\nsda/data\nenv.\n.DS_Store",
+      "\n# Added by setup-sda\nnode_modules\n.tmp\n.sda-cache\n.journalism-cache\nsda/data\nenv.\n.DS_Store",
     );
     console.log("    => .gitignore has been created.");
   }
@@ -3372,12 +3372,12 @@ await sdb.done();
     writeFileSync(
       ".gitignore",
       currentGitignore + "\n" +
-        "node_modules\n.tmp\n.sda-cache\n.journalism-cache\nsda/data\nenv.\n.DS_Store",
+        "\n# Added by setup-sda\nnode_modules\n.tmp\n.sda-cache\n.journalism-cache\nsda/data\nenv.\n.DS_Store",
     );
   } else {
     writeFileSync(
       ".gitignore",
-      "node_modules\n.tmp\n.sda-cache\n.journalism-cache\nsda/data\n.env\n.DS_Store",
+      "# Added by setup-sda\nnode_modules\n.tmp\n.sda-cache\n.journalism-cache\nsda/data\n.env\n.DS_Store",
     );
     console.log("    => .gitignore has been created.");
   }
