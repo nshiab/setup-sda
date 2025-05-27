@@ -1,5 +1,5 @@
 The library is maintained by [Nael Shiab](http://naelshiab.com/), computational
-journalist and senior data producer for [CBC News](https://www.cbc.ca/news).
+journalist and senior data producer at [CBC News](https://www.cbc.ca/news).
 
 You might also find the
 [journalism library](https://github.com/nshiab/journalism) and
@@ -23,16 +23,19 @@ bunx --bun setup-sda
 
 Here are the different options:
 
-- `--example`: adds example files
-- `--scrape`: adds web scraping dependencies
-- `--svelte`: adds a Svelte project
-- `--pages`: adds a GitHub Pages Actions workflow (works just with `--svelte`)
-- `--git`: initializes a git repository and commits the initial files
+- `--example`: Adds example files.
+- `--scrape`: Adds web scraping dependencies.
+- `--svelte`: Adds a Svelte project.
+- `--pages`: Adds a GitHub Pages Actions workflow (works only with `--svelte`).
+- `--git`: Initializes a git repository and commits the initial files.
+- `--env`: Creates a `.env` file for environment variables and loads them when
+  running.
 
-You can combine options, for example, this will install web scraping
+You can combine options. For example, this command will install web scraping
 dependencies, set up a Svelte project with example files, initialize a git
-repository and make a first commit, and add a GitHub Pages Actions workflow:
+repository and make the first commit, add a GitHub Pages Actions workflow, and
+create a `.env` file:
 
 ```
-deno -A jsr:@nshiab/setup-sda --scrape --svelte --example --pages --git
+deno -A jsr:@nshiab/setup-sda --scrape --svelte --example --pages --git --env
 ```
