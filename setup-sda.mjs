@@ -40,6 +40,91 @@ if (args.includes("--pages") && args.includes("--svelte")) {
 if (args.includes("--env")) {
   console.log(`    => You passed the option --env`);
 }
+if (args.includes("--claude")) {
+  console.log(`    => You passed the option --claude`);
+}
+if (args.includes("--gemini")) {
+  console.log(`    => You passed the option --gemini`);
+}
+
+let llm =
+  `Always prioritize the use of the "journalism" and "simple-data-analysis" libraries.
+  
+Here are the functions available in the "journalism" library. If one of the function might be relevant, read the complete documentation at "./docs/journalism.md" to properly use it.
+
+{journalismFunctions}
+
+Here are the classes and their methods available in the "simple-data-analysis" library. If one of the classes or methods might be relevant, read the complete documentation at "./docs/simple-data-analysis.md" to properly use it.
+{sdaClassesAndMethods}`;
+
+if (args.includes("--claude") || args.includes("--gemini")) {
+  console.log("      => Fetching up-to-date documentation for journalism...");
+  const journalismDoc = await fetch(
+    "https://raw.githubusercontent.com/nshiab/journalism/refs/heads/main/llm.md",
+  ).then((d) => d.text());
+
+  const journalismFunctions = journalismDoc
+    .split("\n")
+    .filter((line) => line.startsWith("## "))
+    .map((line) => line.replace("## ", "").trim())
+    .join("\n");
+
+  llm = llm.replace("{journalismFunctions}", journalismFunctions);
+
+  console.log(
+    "      => Fetching up-to-date documentation for simple-data-analysis...",
+  );
+  const sdaDoc = await fetch(
+    "https://raw.githubusercontent.com/nshiab/simple-data-analysis/refs/heads/main/llm.md",
+  ).then((d) => d.text());
+
+  const sdaClassesAndMethods = sdaDoc
+    .split("\n")
+    .filter((line) => line.startsWith("## ") || line.startsWith("#### "))
+    .map((line) =>
+      line.startsWith("## ")
+        ? "\n" + line.replace("## ", "").trim()
+        : line.replace("#### Parameters", "  Methods:").replace("#### ", "    ")
+          .replaceAll("`", "")
+    )
+    .join("\n");
+
+  llm = llm.replace("{sdaClassesAndMethods}", sdaClassesAndMethods);
+
+  if (args.includes("--claude")) {
+    if (existsSync("CLAUDE.md")) {
+      console.log("      => CLAUDE.md already exists. Skipping creation.");
+    } else {
+      console.log("      => Creating CLAUDE.md.");
+      writeFileSync("CLAUDE.md", llm);
+    }
+  }
+  if (args.includes("--gemini")) {
+    if (existsSync("GEMINI.md")) {
+      console.log("      => GEMINI.md already exists. Skipping creation.");
+    } else {
+      console.log("      => Creating GEMINI.md.");
+      writeFileSync("GEMINI.md", llm);
+    }
+  }
+
+  if (!existsSync("docs")) {
+    console.log("      => Creating docs folder.");
+    mkdirSync("docs");
+    console.log("      => Writing documentation to docs/journalism.md.");
+    writeFileSync(
+      "docs/journalism.md",
+      journalismDoc,
+    );
+    console.log(
+      "      => Writing documentation to docs/simple-data-analysis.md.",
+    );
+    writeFileSync(
+      "docs/simple-data-analysis.md",
+      sdaDoc,
+    );
+  }
+}
 
 if (args.includes("--svelte")) {
   console.log(`    => You passed the option --svelte`);
