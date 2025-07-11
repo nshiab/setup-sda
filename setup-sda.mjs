@@ -48,7 +48,11 @@ if (args.includes("--gemini")) {
 }
 
 let llm =
-  `Always prioritize the use of the "journalism" and "simple-data-analysis" libraries.
+  `Always verify if there is a deno.json or package.json file in the root of the project and familiarize yourself with the scripts available in it.
+
+Always use "sda/main.ts" as the entry point. If you need to create other TypeScript files, create them in the "sda/helpers" folder.
+
+Always prioritize the use of the "journalism" and "simple-data-analysis" libraries.
   
 Here are the functions available in the "journalism" library. If one of the function might be relevant, read the complete documentation at "./docs/journalism.md" to properly use it.
 
