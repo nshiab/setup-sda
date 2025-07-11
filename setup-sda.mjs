@@ -46,6 +46,9 @@ if (args.includes("--claude")) {
 if (args.includes("--gemini")) {
   console.log(`    => You passed the option --gemini`);
 }
+if (args.includes("--copilot")) {
+  console.log(`    => You passed the option --copilot`);
+}
 
 let llm =
   `Always verify if there is a deno.json or package.json file in the root of the project and familiarize yourself with the scripts available in it and the libraries already installed in the project.
@@ -69,7 +72,10 @@ Here are the functions available in the "journalism" library. If one of the func
 Here are the classes and their methods available in the "simple-data-analysis" library. If one of the classes or methods might be relevant, read the complete documentation at "./docs/simple-data-analysis.md" to properly use it.
 {sdaClassesAndMethods}`;
 
-if (args.includes("--claude") || args.includes("--gemini")) {
+if (
+  args.includes("--claude") || args.includes("--gemini") ||
+  args.includes("--copilot")
+) {
   console.log("      => Fetching up-to-date documentation for journalism...");
   const journalismDoc = await fetch(
     "https://raw.githubusercontent.com/nshiab/journalism/refs/heads/main/llm.md",
@@ -117,6 +123,26 @@ if (args.includes("--claude") || args.includes("--gemini")) {
     } else {
       console.log("      => Creating GEMINI.md.");
       writeFileSync("GEMINI.md", llm);
+    }
+  }
+  if (args.includes("--copilot")) {
+    if (existsSync(".github")) {
+      console.log("      => .github folder already exists. Skipping creation.");
+      if (existsSync(".github/copilot-instructions.md")) {
+        console.log(
+          "      => .github/copilot-instructions.md already exists. Skipping creation.",
+        );
+      } else {
+        console.log("      => Creating .github/copilot-instructions.md.");
+        writeFileSync(".github/copilot-instructions.md", llm);
+      }
+    } else {
+      console.log("      => Creating .github folder.");
+      mkdirSync(".github");
+      console.log(
+        "      => Writing Copilot instructions to .github/copilot-instructions.md.",
+      );
+      writeFileSync(".github/copilot-instructions.md", llm);
     }
   }
 
