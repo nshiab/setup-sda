@@ -50,7 +50,7 @@ if (args.includes("--gemini")) {
 let llm =
   `Always verify if there is a deno.json or package.json file in the root of the project and familiarize yourself with the scripts available in it and the libraries already installed in the project.
 
-If it's a Deno project, always run \`deno lint\` and \`deno check\` before handing off your work. Fix any mistakes or warnings that you find.
+If it's a Deno project, always run \`deno lint\`, \`deno check\`, and \`deno fmt\` before handing off your work. Fix any mistakes or warnings that you find.
 
 Always use "sda/main.ts" as the entry point. If you need to create other TypeScript files, create them in the "sda/helpers" folder.
 
