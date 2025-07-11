@@ -69,7 +69,7 @@ Here are the functions available in the "journalism" library. If one of the func
 
 {journalismFunctions}
 
-Here are the classes and their methods available in the "simple-data-analysis" library. If one of the classes or methods might be relevant, read the complete documentation at "./docs/simple-data-analysis.md" to properly use it.
+Here are the classes and their methods available in the "simple-data-analysis" library. If one of the classes or methods might be relevant, read the complete documentation at "./docs/simple-data-analysis.md" to properly use it. Remember that almost all methods are asynchronous, so you need to use \`await\` when calling them.
 {sdaClassesAndMethods}`;
 
 if (
