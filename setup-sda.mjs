@@ -54,6 +54,8 @@ If it's a Deno project, always run \`deno lint\` and \`deno check\` before handi
 
 Always use "sda/main.ts" as the entry point. If you need to create other TypeScript files, create them in the "sda/helpers" folder.
 
+If you need to output data to a file, always put the file in the "sda/output" folder.
+
 Always prioritize the use of the "journalism" and "simple-data-analysis" libraries. These libraries are already installed in the project and can be used directly like this:
 \`\`\`typescript
 import { formatDate } from "@nshiab/journalism";
