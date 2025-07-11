@@ -50,9 +50,15 @@ if (args.includes("--gemini")) {
 let llm =
   `Always verify if there is a deno.json or package.json file in the root of the project and familiarize yourself with the scripts available in it and the libraries already installed in the project.
 
+If it's a Deno project, always run \`deno lint\` and \`deno check\` before handing off your work. Fix any mistakes or warnings that you find.
+
 Always use "sda/main.ts" as the entry point. If you need to create other TypeScript files, create them in the "sda/helpers" folder.
 
-Always prioritize the use of the "journalism" and "simple-data-analysis" libraries. These libraries are already installed in the project and can be used directly.
+Always prioritize the use of the "journalism" and "simple-data-analysis" libraries. These libraries are already installed in the project and can be used directly like this:
+\`\`\`typescript
+import { formatDate } from "@nshiab/journalism";
+import { SimpleDB } from "@nshiab/simple-data-analysis";
+\`\`\`
   
 Here are the functions available in the "journalism" library. If one of the function might be relevant, read the complete documentation at "./docs/journalism.md" to properly use it.
 
