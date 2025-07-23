@@ -55,7 +55,7 @@ let llm =
 
 If it's a Deno project, always run \`deno run -A --node-modules-dir=auto --env-file --check sda/main.ts\` to test your code. Before handing off your work, always run \`deno lint\` and \`deno fmt\` as well. Fix any errors or warnings triggered along the way.
 
-If it's a Node.js project, always run \`node --env-file=.env --experimental-strip-types --no-warnings --watch sda/main.ts\` to test your code. Before handing off your work, always fix any errors or warnings triggered along the way.
+If it's a Node.js project, always run \`node --env-file=.env --experimental-strip-types --no-warnings sda/main.ts\` to test your code. Before handing off your work, always fix any errors or warnings triggered along the way.
 
 Always use "sda/main.ts" as the entry point. If you need to create other TypeScript files, create them in the "sda/helpers" folder.
 
