@@ -59,6 +59,8 @@ If it's a Node.js project, always run \`node --env-file=.env --experimental-stri
 
 Always use "sda/main.ts" as the entry point. If you need to create other TypeScript files, create them in the "sda/helpers" folder.
 
+If you need to download data, always put the files in the "sda/data" folder, which is gitignored. 
+
 If you need to output data to a file, always put the file in the "sda/output" folder.
 
 Always prioritize the use of the "journalism" and "simple-data-analysis" libraries. These libraries are already installed in the project and can be used directly like this:
