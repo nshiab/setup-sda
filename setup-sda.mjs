@@ -57,7 +57,9 @@ If it's a Deno project, always run \`deno run -A --node-modules-dir=auto --env-f
 
 If it's a Node.js project, always run \`node --env-file=.env --experimental-strip-types --no-warnings sda/main.ts\` to test your code. Before handing off your work, always fix any errors or warnings triggered along the way.
 
-Always use "sda/main.ts" as the entry point. If you need to create other TypeScript files, create them in the "sda/helpers" folder.
+Always use "sda/main.ts" as the entry point.
+
+If you need to create other TypeScript files, create them in the "sda/helpers" folder. Prioritize the use of helper functions to keep the code well organized and maintainable, with one helper function per file, with the file named after the function. Prioritize default exports for helper functions.
 
 If you need to download data, always put the files in the "sda/data" folder, which is gitignored. 
 
