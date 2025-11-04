@@ -2386,7 +2386,7 @@ export default function getTempChange(
     };
     writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
     execSync(
-      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium@1.51.1",
+      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium",
       {
         stdio: "ignore",
       },
@@ -2751,14 +2751,14 @@ Toronto,2010.0,9.9
   } else if (runtime === "deno") {
     console.log("\n3 - Installing libraries with Deno...");
     execSync(
-      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium@1.50.0 jsr:@nshiab/simple-data-analysis",
+      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium jsr:@nshiab/simple-data-analysis",
       {
         stdio: "ignore",
       },
     );
     console.log("    => simple-data-analysis has been installed from JSR.");
     execSync(
-      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium@1.50.0 jsr:@nshiab/journalism",
+      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium jsr:@nshiab/journalism",
       {
         stdio: "ignore",
       },
