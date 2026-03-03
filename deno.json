@@ -3,6 +3,7 @@
   "version": "1.14.15",
   "exports": "./setup-sda.mjs",
   "tasks": {
+    "build": "deno run -A scripts/build.ts",
     "patch": "deno run -A incrementVersion.js patch && npm publish",
     "minor": "deno run -A incrementVersion.js minor && npm publish",
     "major": "deno run -A incrementVersion.js major && npm publish"
