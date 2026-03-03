@@ -28,6 +28,11 @@ jobs:
         with:
           bun-version: latest
 
+      - name: Configure Git
+        run: |
+          git config --global user.email "you@example.com"
+          git config --global user.name "Your Name"
+
       - name: Build
         run: deno task build
 
