@@ -2223,10 +2223,6 @@ export default function getTempChange(
         stdio: "ignore",
       });
       console.log("    => cheerio has been installed from NPM.");
-      execSync("npm i playwright-chromium", {
-        stdio: "ignore",
-      });
-      console.log("    => playwright-chromium has been installed from NPM.");
       execSync("npx jsr add @std/fs", {
         stdio: "ignore",
       });
@@ -2302,10 +2298,6 @@ export default function getTempChange(
         stdio: "ignore",
       });
       console.log("    => cheerio has been installed from NPM.");
-      execSync("bun add playwright-chromium", {
-        stdio: "ignore",
-      });
-      console.log("    => playwright-chromium has been installed from NPM.");
       execSync("bunx jsr add @std/fs", {
         stdio: "ignore",
       });
@@ -2386,7 +2378,7 @@ export default function getTempChange(
     };
     writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
     execSync(
-      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium",
+      "deno install --node-modules-dir=auto",
       {
         stdio: "ignore",
       },
@@ -2402,13 +2394,6 @@ export default function getTempChange(
         stdio: "ignore",
       });
       console.log("    => cheerio has been installed from NPM.");
-      execSync(
-        "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium npm:playwright-chromium",
-        {
-          stdio: "ignore",
-        },
-      );
-      console.log("    => playwright-chromium has been installed from NPM.");
       execSync("deno install --node-modules-dir=auto jsr:@std/fs", {
         stdio: "ignore",
       });
@@ -2751,19 +2736,19 @@ Toronto,2010.0,9.9
   } else if (runtime === "deno") {
     console.log("\n3 - Installing libraries with Deno...");
     execSync(
-      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium jsr:@nshiab/simple-data-analysis",
+      "deno install --node-modules-dir=auto jsr:@nshiab/simple-data-analysis",
       {
         stdio: "ignore",
       },
     );
     console.log("    => simple-data-analysis has been installed from JSR.");
     execSync(
-      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium jsr:@nshiab/journalism",
+      "deno install --node-modules-dir=auto jsr:@nshiab/journalism",
       {
         stdio: "ignore",
       },
     );
-    console.log("    => journalism has been installed JSR.");
+    console.log("    => journalism has been installed from JSR.");
     execSync("deno install --node-modules-dir=auto npm:@observablehq/plot", {
       stdio: "ignore",
     });
@@ -2997,10 +2982,6 @@ await sdb.done();
         stdio: "ignore",
       });
       console.log("    => cheerio has been installed from NPM.");
-      execSync("npm i playwright-chromium", {
-        stdio: "ignore",
-      });
-      console.log("    => playwright-chromium has been installed from NPM.");
       execSync("npx jsr add @std/fs", {
         stdio: "ignore",
       });
@@ -3026,10 +3007,6 @@ await sdb.done();
         stdio: "ignore",
       });
       console.log("    => cheerio has been installed from NPM.");
-      execSync("bun add playwright-chromium", {
-        stdio: "ignore",
-      });
-      console.log("    => playwright-chromium has been installed from NPM.");
       execSync("bunx jsr add @std/fs", {
         stdio: "ignore",
       });
@@ -3038,14 +3015,14 @@ await sdb.done();
   } else if (runtime === "deno") {
     console.log("\n3 - Installing libraries with Deno...");
     execSync(
-      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium jsr:@nshiab/simple-data-analysis",
+      "deno install --node-modules-dir=auto jsr:@nshiab/simple-data-analysis",
       {
         stdio: "ignore",
       },
     );
     console.log("    => simple-data-analysis has been installed from JSR.");
     execSync(
-      "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium jsr:@nshiab/journalism",
+      "deno install --node-modules-dir=auto jsr:@nshiab/journalism",
       {
         stdio: "ignore",
       },
@@ -3060,13 +3037,6 @@ await sdb.done();
         stdio: "ignore",
       });
       console.log("    => cheerio has been installed from NPM.");
-      execSync(
-        "deno install --node-modules-dir=auto --allow-scripts=npm:playwright-chromium npm:playwright-chromium",
-        {
-          stdio: "ignore",
-        },
-      );
-      console.log("    => playwright-chromium has been installed from NPM.");
       execSync("deno install --node-modules-dir=auto jsr:@std/fs", {
         stdio: "ignore",
       });
