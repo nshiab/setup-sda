@@ -24,6 +24,10 @@ if (userAgent.includes("bun")) {
 
 const args = process.argv.slice(2);
 
+const sdaCourseVersion = args.includes("--course") ? "@5.6.12" : "";
+const journalismCourseVersion = args.includes("--course") ? "@1.28.10" : "";
+const plotCourseVersion = args.includes("--course") ? "@0.6.17" : "";
+
 if (args.includes("--git")) {
   console.log(`    => You passed the option --git`);
 }
@@ -48,6 +52,11 @@ if (args.includes("--gemini")) {
 }
 if (args.includes("--copilot")) {
   console.log(`    => You passed the option --copilot`);
+}
+if (args.includes("--course")) {
+  console.log(
+    `    => You passed the option --course. Installing specific versions for the Code Like a Journalist course (https://www.code-like-a-journalist.com/)`,
+  );
 }
 
 let llm =
@@ -2203,17 +2212,17 @@ export default function getTempChange(
     });
     console.log("    => highlight.js has been installed from NPM.");
 
-    execSync("npm i @observablehq/plot", {
+    execSync(`npm i @observablehq/plot${plotCourseVersion}`, {
       stdio: "ignore",
     });
     console.log("    => @observablehq/plot has been installed from NPM.");
 
-    execSync("npx jsr add @nshiab/simple-data-analysis", {
+    execSync(`npx jsr add @nshiab/simple-data-analysis${sdaCourseVersion}`, {
       stdio: "ignore",
     });
     console.log("    => simple-data-analysis has been installed from JSR.");
 
-    execSync("npx jsr add @nshiab/journalism", {
+    execSync(`npx jsr add @nshiab/journalism${journalismCourseVersion}`, {
       stdio: "ignore",
     });
     console.log("    => journalism has been installed from JSR.");
@@ -2278,17 +2287,17 @@ export default function getTempChange(
     });
     console.log("    => highlight.js has been installed from NPM.");
 
-    execSync("bun add @observablehq/plot", {
+    execSync(`bun add @observablehq/plot${plotCourseVersion}`, {
       stdio: "ignore",
     });
     console.log("    => @observablehq/plot has been installed from NPM.");
 
-    execSync("bunx jsr add @nshiab/simple-data-analysis", {
+    execSync(`bunx jsr add @nshiab/simple-data-analysis${sdaCourseVersion}`, {
       stdio: "ignore",
     });
     console.log("    => simple-data-analysis has been installed from JSR.");
 
-    execSync("bunx jsr add @nshiab/journalism", {
+    execSync(`bunx jsr add @nshiab/journalism${journalismCourseVersion}`, {
       stdio: "ignore",
     });
     console.log("    => journalism has been installed from JSR.");
@@ -2362,18 +2371,24 @@ export default function getTempChange(
     });
     console.log("    => highlight.js has been installed from NPM.");
 
-    execSync("deno install --node-modules-dir=auto npm:@observablehq/plot", {
-      stdio: "ignore",
-    });
+    execSync(
+      `deno install --node-modules-dir=auto npm:@observablehq/plot${plotCourseVersion}`,
+      {
+        stdio: "ignore",
+      },
+    );
     console.log("    => @observablehq/plot has been installed from NPM.");
 
     writeFileSync(".npmrc", "@jsr:registry=https://npm.jsr.io");
+    const journalismVersion = args.includes("--course") ? "1.28.10" : "^1.27.7";
+    const sdaVersion = args.includes("--course") ? "5.6.12" : "^5.1.7";
     const packageJson = {
       "type": "module",
       "dependencies": {
-        "@nshiab/journalism": "npm:@jsr/nshiab__journalism@^1.27.7",
+        "@nshiab/journalism":
+          `npm:@jsr/nshiab__journalism@${journalismVersion}`,
         "@nshiab/simple-data-analysis":
-          "npm:@jsr/nshiab__simple-data-analysis@^5.1.7",
+          `npm:@jsr/nshiab__simple-data-analysis@${sdaVersion}`,
       },
     };
     writeFileSync("package.json", JSON.stringify(packageJson, null, 2));
@@ -2707,51 +2722,54 @@ Toronto,2010.0,9.9
 
   if (runtime === "nodejs") {
     console.log("\n3 - Installing libraries...");
-    execSync("npx jsr add @nshiab/simple-data-analysis", {
+    execSync(`npx jsr add @nshiab/simple-data-analysis${sdaCourseVersion}`, {
       stdio: "ignore",
     });
     console.log("    => simple-data-analysis has been installed from JSR.");
-    execSync("npx jsr add @nshiab/journalism", {
+    execSync(`npx jsr add @nshiab/journalism${journalismCourseVersion}`, {
       stdio: "ignore",
     });
     console.log("    => journalism has been installed from JSR.");
-    execSync("npm i @observablehq/plot", {
+    execSync(`npm i @observablehq/plot${plotCourseVersion}`, {
       stdio: "ignore",
     });
     console.log("    => @observablehq/plot has been installed from NPM.");
   } else if (runtime === "bun") {
     console.log("\n3 - Installing libraries with Bun...");
-    execSync("bunx jsr add @nshiab/simple-data-analysis", {
+    execSync(`bunx jsr add @nshiab/simple-data-analysis${sdaCourseVersion}`, {
       stdio: "ignore",
     });
     console.log("    => simple-data-analysis has been installed from JSR.");
-    execSync("bunx jsr add @nshiab/journalism", {
+    execSync(`bunx jsr add @nshiab/journalism${journalismCourseVersion}`, {
       stdio: "ignore",
     });
     console.log("    => journalism has been installed from JSR.");
-    execSync("bun add @observablehq/plot", {
+    execSync(`bun add @observablehq/plot${plotCourseVersion}`, {
       stdio: "ignore",
     });
     console.log("    => @observablehq/plot has been installed from NPM.");
   } else if (runtime === "deno") {
     console.log("\n3 - Installing libraries with Deno...");
     execSync(
-      "deno install --node-modules-dir=auto jsr:@nshiab/simple-data-analysis",
+      `deno install --node-modules-dir=auto jsr:@nshiab/simple-data-analysis${sdaCourseVersion}`,
       {
         stdio: "ignore",
       },
     );
     console.log("    => simple-data-analysis has been installed from JSR.");
     execSync(
-      "deno install --node-modules-dir=auto jsr:@nshiab/journalism",
+      `deno install --node-modules-dir=auto jsr:@nshiab/journalism${journalismCourseVersion}`,
       {
         stdio: "ignore",
       },
     );
     console.log("    => journalism has been installed from JSR.");
-    execSync("deno install --node-modules-dir=auto npm:@observablehq/plot", {
-      stdio: "ignore",
-    });
+    execSync(
+      `deno install --node-modules-dir=auto npm:@observablehq/plot${plotCourseVersion}`,
+      {
+        stdio: "ignore",
+      },
+    );
     console.log("    => @observablehq/plot has been installed from NPM.");
   }
 
@@ -2964,15 +2982,15 @@ await sdb.done();
 
   if (runtime === "nodejs") {
     console.log("\n3 - Installing libraries...");
-    execSync("npx jsr add @nshiab/simple-data-analysis", {
+    execSync(`npx jsr add @nshiab/simple-data-analysis${sdaCourseVersion}`, {
       stdio: "ignore",
     });
     console.log("    => simple-data-analysis has been installed from JSR.");
-    execSync("npx jsr add @nshiab/journalism", {
+    execSync(`npx jsr add @nshiab/journalism${journalismCourseVersion}`, {
       stdio: "ignore",
     });
     console.log("    => journalism has been installed from JSR.");
-    execSync("npm i @observablehq/plot", {
+    execSync(`npm i @observablehq/plot${plotCourseVersion}`, {
       stdio: "ignore",
     });
     console.log("    => @observablehq/plot has been installed from NPM.");
@@ -2989,15 +3007,15 @@ await sdb.done();
     }
   } else if (runtime === "bun") {
     console.log("\n3 - Installing libraries with Bun...");
-    execSync("bunx jsr add @nshiab/simple-data-analysis", {
+    execSync(`bunx jsr add @nshiab/simple-data-analysis${sdaCourseVersion}`, {
       stdio: "ignore",
     });
     console.log("    => simple-data-analysis has been installed from JSR.");
-    execSync("bunx jsr add @nshiab/journalism", {
+    execSync(`bunx jsr add @nshiab/journalism${journalismCourseVersion}`, {
       stdio: "ignore",
     });
     console.log("    => journalism has been installed from JSR.");
-    execSync("bun add @observablehq/plot", {
+    execSync(`bun add @observablehq/plot${plotCourseVersion}`, {
       stdio: "ignore",
     });
     console.log("    => @observablehq/plot has been installed from NPM.");
@@ -3015,22 +3033,25 @@ await sdb.done();
   } else if (runtime === "deno") {
     console.log("\n3 - Installing libraries with Deno...");
     execSync(
-      "deno install --node-modules-dir=auto jsr:@nshiab/simple-data-analysis",
+      `deno install --node-modules-dir=auto jsr:@nshiab/simple-data-analysis${sdaCourseVersion}`,
       {
         stdio: "ignore",
       },
     );
     console.log("    => simple-data-analysis has been installed from JSR.");
     execSync(
-      "deno install --node-modules-dir=auto jsr:@nshiab/journalism",
+      `deno install --node-modules-dir=auto jsr:@nshiab/journalism${journalismCourseVersion}`,
       {
         stdio: "ignore",
       },
     );
     console.log("    => journalism has been installed from JSR.");
-    execSync("deno install --node-modules-dir=auto npm:@observablehq/plot", {
-      stdio: "ignore",
-    });
+    execSync(
+      `deno install --node-modules-dir=auto npm:@observablehq/plot${plotCourseVersion}`,
+      {
+        stdio: "ignore",
+      },
+    );
     console.log("    => @observablehq/plot has been installed from NPM.");
     if (args.includes("--scrape")) {
       execSync("deno install --node-modules-dir=auto npm:cheerio", {
@@ -3063,6 +3084,12 @@ await sdb.done();
   }
 
   console.log("\nCheck the README.md and have fun. ^_^\n");
+
+  if (!args.includes("--course")) {
+    console.log(
+      "PS: If you are taking the 'Code Like a Journalist' (https://www.code-like-a-journalist.com/) course, use the --course option to install compatible versions of libraries.\n",
+    );
+  }
 }
 
 if (args.includes("--pages") && args.includes("--svelte")) {

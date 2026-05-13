@@ -33,6 +33,9 @@ Here are the different options:
 - `--git`: Initializes a git repository and commits the initial files.
 - `--env`: Creates a `.env` file for environment variables and loads them when
   running.
+- `--course`: Installs specific versions of libraries (simple-data-analysis,
+  journalism, and plot) for compatibility with the
+  [Code Like a Journalist](https://www.code-like-a-journalist.com/) course.
 
 You can combine options. For example, this command will install web scraping
 dependencies, set up a Svelte project with example files, initialize a git
