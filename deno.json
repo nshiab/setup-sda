@@ -1,6 +1,6 @@
 {
   "name": "@nshiab/setup-sda",
-  "version": "1.14.19",
+  "version": "1.14.20",
   "exports": "./setup-sda.mjs",
   "tasks": {
     "patch": "deno run -A incrementVersion.js patch && npm publish",

@@ -28,6 +28,15 @@ const sdaCourseVersion = args.includes("--course") ? "@5.6.12" : "";
 const journalismCourseVersion = args.includes("--course") ? "@1.28.10" : "";
 const plotCourseVersion = args.includes("--course") ? "@0.6.17" : "";
 
+const kitVersion = args.includes("--course") ? "@2.59.1" : "";
+const adapterAutoVersion = args.includes("--course") ? "@3.4.0" : "";
+const adapterStaticVersion = args.includes("--course") ? "@3.1.0" : "";
+const vitePluginSvelteVersion = args.includes("--course") ? "@7.1.2" : "";
+const svelteVersion = args.includes("--course") ? "@5.55.5" : "";
+const svelteCheckVersion = args.includes("--course") ? "@4.4.8" : "";
+const tsVersion = args.includes("--course") ? "@5.8.3" : "";
+const viteVersion = args.includes("--course") ? "@8.0.12" : "";
+
 if (args.includes("--git")) {
   console.log(`    => You passed the option --git`);
 }
@@ -2165,44 +2174,50 @@ export default function getTempChange(
   if (runtime === "nodejs") {
     console.log("\n3 - Installing libraries with NPM...");
 
-    execSync("npm i @sveltejs/adapter-auto  --save-dev", {
+    execSync(`npm i @sveltejs/adapter-auto${adapterAutoVersion} --save-dev`, {
       stdio: "ignore",
     });
     console.log("    => @sveltejs/adapter-auto has been installed from NPM.");
 
-    execSync("npm i @sveltejs/adapter-static  --save-dev", {
-      stdio: "ignore",
-    });
+    execSync(
+      `npm i @sveltejs/adapter-static${adapterStaticVersion} --save-dev`,
+      {
+        stdio: "ignore",
+      },
+    );
     console.log("    => @sveltejs/adapter-static has been installed from NPM.");
 
-    execSync("npm i @sveltejs/kit  --save-dev", {
+    execSync(`npm i @sveltejs/kit${kitVersion} --save-dev`, {
       stdio: "ignore",
     });
     console.log("    => @sveltejs/kit has been installed from NPM.");
 
-    execSync("npm i @sveltejs/vite-plugin-svelte  --save-dev", {
-      stdio: "ignore",
-    });
+    execSync(
+      `npm i @sveltejs/vite-plugin-svelte${vitePluginSvelteVersion} --save-dev`,
+      {
+        stdio: "ignore",
+      },
+    );
     console.log(
       "    => @sveltejs/vite-plugin-svelte has been installed from NPM.",
     );
 
-    execSync("npm i svelte  --save-dev", {
+    execSync(`npm i svelte${svelteVersion} --save-dev`, {
       stdio: "ignore",
     });
     console.log("    => svelte has been installed from NPM.");
 
-    execSync("npm i svelte-check  --save-dev", {
+    execSync(`npm i svelte-check${svelteCheckVersion} --save-dev`, {
       stdio: "ignore",
     });
     console.log("    => svelte-check has been installed from NPM.");
 
-    execSync("npm i typescript  --save-dev", {
+    execSync(`npm i typescript${tsVersion} --save-dev`, {
       stdio: "ignore",
     });
     console.log("    => typescript has been installed from NPM.");
 
-    execSync("npm i vite  --save-dev", {
+    execSync(`npm i vite${viteVersion} --save-dev`, {
       stdio: "ignore",
     });
     console.log("    => vite has been installed from NPM.");
@@ -2240,44 +2255,47 @@ export default function getTempChange(
   } else if (runtime === "bun") {
     console.log("\n3 - Installing libraries with Bun...");
 
-    execSync("bun add @sveltejs/adapter-auto --dev", {
+    execSync(`bun add @sveltejs/adapter-auto${adapterAutoVersion} --dev`, {
       stdio: "ignore",
     });
     console.log("    => @sveltejs/adapter-auto has been installed from NPM.");
 
-    execSync("bun add @sveltejs/adapter-static --dev", {
+    execSync(`bun add @sveltejs/adapter-static${adapterStaticVersion} --dev`, {
       stdio: "ignore",
     });
     console.log("    => @sveltejs/adapter-static has been installed from NPM.");
 
-    execSync("bun add @sveltejs/kit --dev", {
+    execSync(`bun add @sveltejs/kit${kitVersion} --dev`, {
       stdio: "ignore",
     });
     console.log("    => @sveltejs/kit has been installed from NPM.");
 
-    execSync("bun add @sveltejs/vite-plugin-svelte --dev", {
-      stdio: "ignore",
-    });
+    execSync(
+      `bun add @sveltejs/vite-plugin-svelte${vitePluginSvelteVersion} --dev`,
+      {
+        stdio: "ignore",
+      },
+    );
     console.log(
       "    => @sveltejs/vite-plugin-svelte has been installed from NPM.",
     );
 
-    execSync("bun add svelte --dev", {
+    execSync(`bun add svelte${svelteVersion} --dev`, {
       stdio: "ignore",
     });
     console.log("    => svelte has been installed from NPM.");
 
-    execSync("bun add svelte-check --dev", {
+    execSync(`bun add svelte-check${svelteCheckVersion} --dev`, {
       stdio: "ignore",
     });
     console.log("    => svelte-check has been installed from NPM.");
 
-    execSync("bun add typescript --dev", {
+    execSync(`bun add typescript${tsVersion} --dev`, {
       stdio: "ignore",
     });
     console.log("    => typescript has been installed from NPM.");
 
-    execSync("bun add vite --dev", {
+    execSync(`bun add vite${viteVersion} --dev`, {
       stdio: "ignore",
     });
     console.log("    => vite has been installed from NPM.");
@@ -2316,7 +2334,7 @@ export default function getTempChange(
     console.log("\n3 - Installing libraries with Deno...");
 
     execSync(
-      "deno install --node-modules-dir=auto --dev --allow-scripts=npm:@sveltejs/kit npm:@sveltejs/adapter-auto",
+      `deno install --node-modules-dir=auto --dev --allow-scripts=npm:@sveltejs/kit npm:@sveltejs/adapter-auto${adapterAutoVersion}`,
       {
         stdio: "ignore",
       },
@@ -2324,20 +2342,23 @@ export default function getTempChange(
     console.log("    => @sveltejs/adapter-auto has been installed from NPM.");
 
     execSync(
-      "deno install --node-modules-dir=auto --dev npm:@sveltejs/adapter-static",
+      `deno install --node-modules-dir=auto --dev npm:@sveltejs/adapter-static${adapterStaticVersion}`,
       {
         stdio: "ignore",
       },
     );
     console.log("    => @sveltejs/adapter-static has been installed from NPM.");
 
-    execSync("deno install --node-modules-dir=auto --dev npm:@sveltejs/kit", {
-      stdio: "ignore",
-    });
+    execSync(
+      `deno install --node-modules-dir=auto --dev npm:@sveltejs/kit${kitVersion}`,
+      {
+        stdio: "ignore",
+      },
+    );
     console.log("    => @sveltejs/kit has been installed from NPM.");
 
     execSync(
-      "deno install --node-modules-dir=auto --dev npm:@sveltejs/vite-plugin-svelte",
+      `deno install --node-modules-dir=auto --dev npm:@sveltejs/vite-plugin-svelte${vitePluginSvelteVersion}`,
       {
         stdio: "ignore",
       },
@@ -2346,24 +2367,36 @@ export default function getTempChange(
       "    => @sveltejs/vite-plugin-svelte has been installed from NPM.",
     );
 
-    execSync("deno install --node-modules-dir=auto --dev npm:svelte", {
-      stdio: "ignore",
-    });
+    execSync(
+      `deno install --node-modules-dir=auto --dev npm:svelte${svelteVersion}`,
+      {
+        stdio: "ignore",
+      },
+    );
     console.log("    => svelte has been installed from NPM.");
 
-    execSync("deno install --node-modules-dir=auto --dev npm:svelte-check", {
-      stdio: "ignore",
-    });
+    execSync(
+      `deno install --node-modules-dir=auto --dev npm:svelte-check${svelteCheckVersion}`,
+      {
+        stdio: "ignore",
+      },
+    );
     console.log("    => svelte-check has been installed from NPM.");
 
-    execSync("deno install --node-modules-dir=auto --dev npm:typescript", {
-      stdio: "ignore",
-    });
+    execSync(
+      `deno install --node-modules-dir=auto --dev npm:typescript${tsVersion}`,
+      {
+        stdio: "ignore",
+      },
+    );
     console.log("    => typescript has been installed from NPM.");
 
-    execSync("deno install --node-modules-dir=auto --dev npm:vite", {
-      stdio: "ignore",
-    });
+    execSync(
+      `deno install --node-modules-dir=auto --dev npm:vite${viteVersion}`,
+      {
+        stdio: "ignore",
+      },
+    );
     console.log("    => vite has been installed from NPM.");
 
     execSync("deno install --node-modules-dir=auto npm:highlight.js", {
